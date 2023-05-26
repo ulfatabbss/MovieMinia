@@ -56,17 +56,26 @@ const Signup = ({navigation}) => {
                 // value={password}
                 // onChangeText={text => setPassword(text)}
               />
-              <TouchableOpacity style={styles.signinBtn} 
-              onPress={() => navigation.navigate('Dashboard')}>
+              <TouchableOpacity
+                style={styles.signinBtn}
+                onPress={() => navigation.navigate('Dashboard')}>
                 <Text style={styles.signinTxt}>Sign Up</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => navigation.navigate('Signin')}>
-                <Text style={styles.signupTxt}>
-                  Already have an account? Sign In
-                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: 15,
+                  }}>
+                  <Text style={styles.signupTxt}>Already have an account?  </Text>
+                  <Text style={[styles.signupTxt, {color: '#E7442E'}]}>
+                    Sign In
+                  </Text>
+                </View>
               </TouchableOpacity>
             </View>
           </View>
@@ -89,16 +98,16 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '60%',
   },
   form: {
-    height: 400,
     width: '90%',
     backgroundColor: '#000',
     flexDirection: 'column',
     borderRadius: 20,
-    padding: 20,
+    paddingHorizontal:20,
     justifyContent: 'center',
+    paddingBottom:50,
+    paddingTop: 30,
   },
   normalTxt: {
     fontSize: 30,
@@ -138,7 +147,6 @@ const styles = StyleSheet.create({
   signupTxt: {
     fontSize: 15,
     textAlign: 'center',
-    margin: 15,
     color: '#ccc',
     fontWeight: 500,
   },

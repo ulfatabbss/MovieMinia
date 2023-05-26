@@ -2,17 +2,27 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Dashboard from '../Dashboard';
-import Signin from '../Signin';
 import TvShowes from '../TvShowes';
 import Cartoons from '../Cartoons';
 import Find from '../Find';
+import { Primary, black } from '../../utillis/colors';
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
   return (
     <View style={{flex: 1}}>
-      <Tab.Navigator screenOptions={{headerShown:false,tabBarShowLabel:false}}>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarActiveTintColor: Primary,
+          tabBarInactiveBackgroundColor: black,
+          tabBarActiveBackgroundColor: black,
+          tabBarStyle: {
+            borderTopWidth: 0,
+          },
+        }}>
         <Tab.Screen
           name="Dashboard"
           component={Dashboard}
@@ -21,16 +31,16 @@ const Tabs = () => {
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
                 <Image
                   style={{
-                    height: 30,
-                    width: 30,
-                    tintColor: focused ? '#1d5d58' : 'lightgray',
+                    height: 20,
+                    width: 20,
+                    tintColor: focused ? '#E7442E' : 'gray',
                   }}
                   source={require('../../assets/home.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? '#1d5d58' : 'lightgray',
+                    color: focused ? '#E7442E' : 'gray',
                     fontSize: 10,
                   }}>
                   Home
@@ -47,16 +57,16 @@ const Tabs = () => {
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
                 <Image
                   style={{
-                    height: 30,
-                    width: 30,
-                    tintColor: focused ? '#1d5d58' : 'lightgray',
+                    height: 20,
+                    width: 20,
+                    tintColor: focused ? '#E7442E' : 'gray',
                   }}
                   source={require('../../assets/tvshow.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? '#1d5d58' : 'lightgray',
+                    color: focused ? '#E7442E' : 'gray',
                     fontSize: 10,
                   }}>
                   TV Showes
@@ -73,16 +83,16 @@ const Tabs = () => {
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
                 <Image
                   style={{
-                    height: 30,
-                    width: 30,
-                    tintColor: focused ? '#1d5d58' : 'lightgray',
+                    height: 20,
+                    width: 20,
+                    tintColor: focused ? '#E7442E' : 'gray',
                   }}
                   source={require('../../assets/cartoon.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? '#1d5d58' : 'lightgray',
+                    color: focused ? '#E7442E' : 'gray',
                     fontSize: 10,
                   }}>
                   Cartoons
@@ -99,16 +109,16 @@ const Tabs = () => {
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
                 <Image
                   style={{
-                    height: 30,
-                    width: 30,
-                    tintColor: focused ? '#1d5d58' : 'lightgray',
+                    height: 20,
+                    width: 20,
+                    tintColor: focused ? '#E7442E' : 'gray',
                   }}
                   source={require('../../assets/search.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? '#1d5d58' : 'lightgray',
+                    color: focused ? '#E7442E' : 'gray',
                     fontSize: 10,
                   }}>
                   Find

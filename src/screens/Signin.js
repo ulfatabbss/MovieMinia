@@ -44,21 +44,31 @@ const Signin = ({navigation}) => {
                 // value={password}
                 // onChangeText={text => setPassword(text)}
               />
-              <TouchableOpacity style={styles.signinBtn} 
-              onPress={() => navigation.navigate('Dashboard')}>
+              <TouchableOpacity
+                style={styles.signinBtn}
+                onPress={() => navigation.navigate('Dashboard')}>
                 <Text style={styles.signinTxt}>Sign In</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => navigation.navigate('Signup')}>
-                <Text style={styles.signupTxt}>New to MovieMania? Sign Up</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginTop: 15,
+                  }}>
+                  <Text style={styles.signupTxt}>New to MovieMania? </Text>
+                  <Text style={[styles.signupTxt, {color: '#E7442E'}]}>
+                    Sign Up
+                  </Text>
+                </View>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </ImageBackground>
-
     </View>
   );
 };
@@ -66,7 +76,7 @@ const Signin = ({navigation}) => {
 export default Signin;
 
 const styles = StyleSheet.create({
-  container: {backgroundColor: 'red', flex: 1},
+  container: {flex: 1, },
   bgImage: {flex: 1},
   overlay: {
     flex: 1,
@@ -76,16 +86,15 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '60%',
   },
   form: {
-    height: 400,
     width: '90%',
     backgroundColor: '#000',
-    flexDirection: 'column',
+    // flexDirection: 'column',
     borderRadius: 20,
-    padding: 20,
-    justifyContent: 'center',
+    paddingHorizontal:20,
+    paddingBottom:50,
+    paddingTop:30,
   },
   normalTxt: {
     fontSize: 30,
@@ -116,7 +125,7 @@ const styles = StyleSheet.create({
   signupTxt: {
     fontSize: 15,
     textAlign: 'center',
-    margin: 15,
+
     color: '#ccc',
     fontWeight: 500,
   },
