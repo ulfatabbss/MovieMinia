@@ -3,14 +3,20 @@ import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Routes from './src/routes/routes';
-
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {persistor, store} from './src/redux/store';
 const App = () => {
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Routes />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <Routes />
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </PersistGate>
+    </Provider>
   );
 };
 
