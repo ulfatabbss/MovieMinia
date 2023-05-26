@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import { black } from '../utillis/colors'
 
 const TvShowes = () => {
   return (
-    <View >
-      <Text>TvShowes</Text>
+    <View style={{flex:1, backgroundColor: black, justifyContent: 'center', alignItems: 'center'}}>
+      <Text style={{fontSize:20, color: '#fff'}}>Tv Showes</Text>
     </View>
   )
 }
