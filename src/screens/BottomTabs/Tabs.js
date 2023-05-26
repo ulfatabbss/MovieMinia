@@ -5,7 +5,7 @@ import Dashboard from '../Dashboard';
 import TvShowes from '../TvShowes';
 import Cartoons from '../Cartoons';
 import Find from '../Find';
-import { Primary, black } from '../../utillis/colors';
+import {Primary, black} from '../../utillis/colors';
 
 const Tab = createBottomTabNavigator();
 

@@ -41,7 +41,7 @@ const Movies = [
     id: 5,
     name: 'Krish',
     Image:
-      'https://media.comicbook.com/2017/10/iron-man-movie-poster-marvel-cinematic-universe-1038878.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRShaCrkUtI3vvauPwvNXYsJ3PIFU276-HQtsrFymxHlQ&s',
   },
   {
     id: 6,
@@ -55,7 +55,7 @@ const Dashboard = () => {
     <View
       style={{
         backgroundColor: 'white',
-        height: 160,
+
         width: 160,
         marginHorizontal: 10,
         borderRadius: 10,
@@ -70,7 +70,7 @@ const Dashboard = () => {
     <View style={styles.container}>
       <Text style={styles.Heading}>Trending</Text>
       <FlatList horizontal data={Movies} renderItem={MoviesView} />
-      <Text style={styles.Heading}>Trending</Text>
+      <Text style={styles.Heading}>Popular</Text>
 
       <FlatList horizontal data={Movies} renderItem={MoviesView} />
     </View>
