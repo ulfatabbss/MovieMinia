@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React from 'react';
 
-const Signup = ({navigation}) => {
+const Signin = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -28,19 +28,7 @@ const Signup = ({navigation}) => {
 
           <View style={styles.formWrapper}>
             <View style={styles.form}>
-              <Text style={styles.normalTxt}>Sign Up</Text>
-              <View style={styles.nameFields}>
-                <TextInput
-                  placeholder="First Name"
-                  placeholderTextColor="grey"
-                  style={styles.inputnameTxt}
-                />
-                <TextInput
-                  placeholder="Last Name"
-                  placeholderTextColor="grey"
-                  style={styles.inputnameTxt}
-                />
-              </View>
+              <Text style={styles.normalTxt}>Sign In</Text>
               <TextInput
                 placeholder="Enter your email"
                 placeholderTextColor="grey"
@@ -58,28 +46,27 @@ const Signup = ({navigation}) => {
               />
               <TouchableOpacity style={styles.signinBtn} 
               onPress={() => navigation.navigate('Dashboard')}>
-                <Text style={styles.signinTxt}>Sign Up</Text>
+                <Text style={styles.signinTxt}>Sign In</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 activeOpacity={0.5}
-                onPress={() => navigation.navigate('Signin')}>
-                <Text style={styles.signupTxt}>
-                  Already have an account? Sign In
-                </Text>
+                onPress={() => navigation.navigate('Signup')}>
+                <Text style={styles.signupTxt}>New to MovieMania? Sign Up</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </ImageBackground>
+
     </View>
   );
 };
 
-export default Signup;
+export default Signin;
 
 const styles = StyleSheet.create({
-  container: {backgroundColor: '#fff', flex: 1},
+  container: {backgroundColor: 'red', flex: 1},
   bgImage: {flex: 1},
   overlay: {
     flex: 1,
@@ -108,16 +95,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   inputTxt: {
-    width: '100%',
-    height: 50,
-    padding: 10,
-    borderRadius: 15,
-    backgroundColor: '#333333',
-    color: '#fff',
-    marginTop: 10,
-  },
-  inputnameTxt: {
-    width: '49%',
+    width: '95%',
     height: 50,
     padding: 10,
     borderRadius: 15,
@@ -133,7 +111,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     backgroundColor: '#E7442E',
-    width: '100%',
+    width: '95%',
   },
   signupTxt: {
     fontSize: 15,
@@ -141,9 +119,5 @@ const styles = StyleSheet.create({
     margin: 15,
     color: '#ccc',
     fontWeight: 500,
-  },
-  nameFields: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 });

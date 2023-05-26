@@ -1,25 +1,31 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import Login from '../screens/Login';
 import {StatusBar} from 'react-native';
+import Signup from '../screens/Signup';
+import Signin from '../screens/Signin';
+import Dashboard from '../screens/Dashboard';
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
   return (
     <>
-      <StatusBar
-        barStyle="dark-content"
-        translucent
-        backgroundColor="transparent"
-      />
+      <StatusBar translucent backgroundColor="transparent" />
       <Stack.Navigator>
         <Stack.Screen
-          name="Login"
-          component={Login}
+          name="Signin"
+          component={Signin}
           options={{
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
+          options={{
+            headerShown: false,
+          }}
+        />
+
       </Stack.Navigator>
     </>
   );
