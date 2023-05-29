@@ -15,9 +15,11 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.12",
     "@reduxjs/toolkit": "^1.9.5",
-    "deprecated-react-native-prop-types": "^2.2.0",
+    "@rneui/base": "^4.0.0-rc.7",
+    "@rneui/themed": "^4.0.0-rc.7",
     "react": "18.2.0",
     "react-native": "0.71.8",
+    "react-native-formik": "^1.7.8",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-media-controls": "^2.3.0",
     "react-native-safe-area-context": "^4.5.3",
@@ -26,7 +28,9 @@
     "react-native-video": "^5.2.1",
     "react-native-webview": "^12.1.0",
     "react-redux": "^8.0.5",
-    "redux-persist": "^6.0.0"
+    "redux": "^4.2.1",
+    "redux-persist": "^6.0.0",
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

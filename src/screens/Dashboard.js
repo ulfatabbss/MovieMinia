@@ -13,6 +13,7 @@ import {
 import React from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
+import Header from '../components/Header';
 const back = ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.7)'];
 const Movies = [
   {
@@ -95,6 +96,7 @@ const Dashboard = ({navigation}) => {
   );
   return (
     <View style={styles.container}>
+      <Header/>
       <ScrollView>
         <View style={{height: 450}}>
           <ImageBackground
