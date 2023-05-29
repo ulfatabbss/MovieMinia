@@ -6,7 +6,7 @@ const Routes = () => {
   return (
     <SafeAreaProvider>
       {/* {isLogin == true ? <MainStack /> : <AuthStack />} */}
-      <MainStack/>
+      <MainStack />
     </SafeAreaProvider>
   );
 };
