@@ -4,8 +4,9 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Dashboard from '../Dashboard';
 import TvShowes from '../TvShowes';
 import Cartoons from '../Cartoons';
-import Find from '../Find';
+import Find from '../PlayList';
 import {Primary, black} from '../../utillis/colors';
+import PlayList from '../PlayList';
 
 const Tab = createBottomTabNavigator();
 
@@ -104,8 +105,8 @@ const Tabs = () => {
           }}
         />
         <Tab.Screen
-          name="Find"
-          component={Find}
+          name="PlayList"
+          component={PlayList}
           options={{
             tabBarIcon: ({focused}) => (
               <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -115,7 +116,7 @@ const Tabs = () => {
                     width: 20,
                     tintColor: focused ? '#E7442E' : 'gray',
                   }}
-                  source={require('../../assets/search.png')}
+                  source={require('../../assets/playlist.png')}
                   resizeMode="contain"
                 />
                 <Text
@@ -123,7 +124,7 @@ const Tabs = () => {
                     color: focused ? '#E7442E' : 'gray',
                     fontSize: 10,
                   }}>
-                  Find
+                  PlayList
                 </Text>
               </View>
             ),

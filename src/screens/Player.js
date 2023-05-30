@@ -1,10 +1,5 @@
-// React Native Video Library to Play Video in Android and IOS
-// https://aboutreact.com/react-native-video/
-
-// import React in our code
 import React, {useState, useRef} from 'react';
 
-// import all the components we are going to use
 import {
   FlatList,
   SafeAreaView,
@@ -12,12 +7,14 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,
+  Modal,
+  Pressable,
+  Share,
 } from 'react-native';
 
 //Import React Native Video to play video
 import Video from 'react-native-video';
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 //Media Controls to control Play/Pause/Seek and full screen
 import MediaControls, {PLAYER_STATES} from 'react-native-media-controls';
 import {Movies} from './Dashboard';
@@ -41,6 +38,17 @@ const Player = ({navigation, route}) => {
   const onSeek = seek => {
     //Handler for change in seekbar
     videoPlayer.current.seek(seek);
+  };
+  const shareData = async (item) => {
+    try {
+      await Share.share({
+        message: 'Check out this link',
+        // url: item.uri,
+        //here we can add our app link to share our app with peoples
+      });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const onPaused = playerState => {
@@ -104,7 +112,7 @@ const Player = ({navigation, route}) => {
     } else if (focused == false) setFocused(true);
     setModalVisible(false);
   };
-  const MovieListView = ({item}) => (
+const MovieListView = ({item}) => (
     <View
       style={{
         height: 60,
@@ -149,8 +157,8 @@ const Player = ({navigation, route}) => {
         <Image
           source={require('../assets/more.png')}
           style={{
-            width: 10,
-            height: 15,
+            width: 20,
+            height: 20,
             tintColor: 'gray',
             marginTop: 5,
             marginStart: 15,
@@ -202,22 +210,22 @@ const Player = ({navigation, route}) => {
       />
       {/* Modal Start */}
 
-      <View style={styles.modalContainer}>
+      <View style={{flex: 1}}>
         <Modal
-          onBackdropPress={() => setModalVisible(false)}
           animationType="slide"
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}>
-          <View style={styles.centeredView}>
+          <Pressable
+            onPress={() => setModalVisible(false)}
+            style={styles.centeredView}>
             <View style={styles.modalView}>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-
                   borderBottomColor: 'gray',
                   borderBottomWidth: 1,
                   paddingBottom: 10,
@@ -253,7 +261,7 @@ const Player = ({navigation, route}) => {
                     marginRight: 20,
                     tintColor: focused ? Primary : 'gray',
                   }}
-                  source={require('../assets/heart.png')}
+                  source={require('../assets/plus.png')}
                 />
                 <Text style={{color: 'white', fontWeight: '500', fontSize: 14}}>
                   Liked
@@ -264,7 +272,8 @@ const Player = ({navigation, route}) => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   marginTop: 12,
-                }}>
+                }}
+                onPress={() => shareData()}>
                 <Image
                   style={{
                     width: 25,
@@ -279,7 +288,7 @@ const Player = ({navigation, route}) => {
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </Pressable>
         </Modal>
       </View>
       {/* Modal Ends */}
@@ -309,11 +318,12 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    // padding: 30,
+    width: '100%',
   },
   centeredView: {
     flex: 1,
-    // justifyContent: 'center',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.7)',
   },
   modalView: {
     backgroundColor: '#555555',
