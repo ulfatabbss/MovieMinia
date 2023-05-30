@@ -1,10 +1,5 @@
-// React Native Video Library to Play Video in Android and IOS
-// https://aboutreact.com/react-native-video/
-
-// import React in our code
 import React, {useState, useRef} from 'react';
 
-// import all the components we are going to use
 import {
   FlatList,
   SafeAreaView,
@@ -15,10 +10,9 @@ import {
   Alert,
 } from 'react-native';
 
-//Import React Native Video to play video
 import Video from 'react-native-video';
 import Modal from 'react-native-modal';
-//Media Controls to control Play/Pause/Seek and full screen
+
 import MediaControls, {PLAYER_STATES} from 'react-native-media-controls';
 import {Movies} from './Dashboard';
 import {Image} from '@rneui/base';
@@ -39,24 +33,20 @@ const Player = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemDetail, setItemDetail] = useState('');
   const onSeek = seek => {
-    //Handler for change in seekbar
     videoPlayer.current.seek(seek);
   };
 
   const onPaused = playerState => {
-    //Handler for Video Pause
     setPaused(!paused);
     setPlayerState(playerState);
   };
 
   const onReplay = () => {
-    //Handler for Replay
     setPlayerState(PLAYER_STATES.PLAYING);
     videoPlayer.current.seek(0);
   };
 
   const onProgress = data => {
-    // Video Player will progress continue even if it ends
     if (!isLoading && playerState !== PLAYER_STATES.ENDED) {
       setCurrentTime(data.currentTime);
     }
@@ -70,14 +60,6 @@ const Player = ({navigation, route}) => {
   const onLoadStart = data => setIsLoading(true);
 
   const onEnd = () => setPlayerState(PLAYER_STATES.ENDED);
-
-  const onError = () => alert('Oh! ', error);
-
-  const exitFullScreen = () => {
-    alert('Exit full screen');
-  };
-
-  const enterFullScreen = () => {};
 
   const onFullScreen = () => {
     setFull(true);
@@ -145,7 +127,7 @@ const Player = ({navigation, route}) => {
         ) : null}
       </View>
       <TouchableOpacity
-        onPress={() => setItemDetail(item) || setModalVisible(true)}>
+        onPress={() => setModalVisible(true) || setItemDetail(item)}>
         <Image
           source={require('../assets/more.png')}
           style={{

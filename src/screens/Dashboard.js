@@ -126,6 +126,7 @@ const Dashboard = ({navigation}) => {
         overflow: 'hidden',
       }}>
       <Image
+        resizeMode="cover"
         style={{height: '100%', width: '100%'}}
         source={{uri: item.Image}}></Image>
     </TouchableOpacity>
@@ -142,19 +143,19 @@ const Dashboard = ({navigation}) => {
             source={{
               uri: 'https://w0.peakpx.com/wallpaper/902/32/HD-wallpaper-heimdall-thor-comics-holi-hollywood-idris-elba-marvel-marvel-cinematic-universe-marvel-comics-marvel-movies-movie-movie-poster-orange-poster-thor-ragnarok.jpg',
             }}>
-            <Header />
             <LinearGradient
               style={{
                 height: '100%',
                 width: '100%',
                 position: 'absolute',
-                justifyContent: 'flex-end',
+                justifyContent: 'space-between',
                 padding: 10,
                 alignItems: 'center',
               }}
               colors={back}
               start={{x: 0, y: 0.1}}
               end={{x: 0, y: 0.9}}>
+              <Header />
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Player', {
@@ -175,12 +176,6 @@ const Dashboard = ({navigation}) => {
                   source={require('../assets/play.png')}></Image>
                 <Text>Play</Text>
               </TouchableOpacity>
-              <Text
-                style={{color: 'gray', fontSize: 10, marginTop: 5}}
-                numberOfLines={1}
-                ellipsizeMode="clip">
-                Thor Ragmarok by MARVEL STUDIOS
-              </Text>
             </LinearGradient>
           </ImageBackground>
         </View>

@@ -21,17 +21,6 @@ const Header = ({navigation}) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Image style={styles.logo} source={require('../assets/logo.png')} />
-        <View style={styles.category}>
-          <TextInput
-            placeholder="Search"
-            color="black"
-            placeholderTextColor={'white'}
-            style={styles.searchTxt}></TextInput>
-          <Image
-            style={styles.categoryImg}
-            source={require('../assets/search.png')}
-          />
-        </View>
 
         <TouchableOpacity onPress={() => store.dispatch(setIsLogin(false))}>
           <Image
@@ -59,7 +48,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     with: '100%',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   category: {
     height: 40,
