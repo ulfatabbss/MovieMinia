@@ -25,7 +25,6 @@ const AuthStack = () => {
             headerShown: false,
           }}
         />
-
       </Stack.Navigator>
     </>
   );

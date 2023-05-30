@@ -12,9 +12,21 @@ const MainStack = () => {
     <>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
       <Stack.Navigator>
-        <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false, }} />
-       
-
+        <Stack.Screen
+          name="Tabs"
+          component={Tabs}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Player"
+          component={Player}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MovieDiscription"
+          component={MovieDiscription}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </>
   );

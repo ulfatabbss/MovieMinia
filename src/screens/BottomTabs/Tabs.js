@@ -49,6 +49,7 @@ const Tabs = () => {
             ),
           }}
         />
+
         <Tab.Screen
           name="TvShowes"
           component={TvShowes}
@@ -75,6 +76,7 @@ const Tabs = () => {
             ),
           }}
         />
+
         <Tab.Screen
           name="Cartoons"
           component={Cartoons}
