@@ -14,6 +14,7 @@ import React from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../components/Header';
+import { black } from '../utillis/colors';
 const back = ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.7)'];
 export const Movies = [
   {
@@ -164,7 +165,7 @@ const TvShowes = ({navigation}) => {
                 style={{
                   flexDirection: 'row',
                   height: 36,
-                  width: 120,
+                  width: 100,
                   backgroundColor: 'lightgray',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -173,7 +174,7 @@ const TvShowes = ({navigation}) => {
                 <Image
                   style={{height: 30, width: 30}}
                   source={require('../assets/play.png')}></Image>
-                <Text>Play</Text>
+                <Text style={{color: black, fontSize:14, fontWeight: '600', marginStart: 5 }}>Play</Text>
               </TouchableOpacity>
             </LinearGradient>
           </ImageBackground>

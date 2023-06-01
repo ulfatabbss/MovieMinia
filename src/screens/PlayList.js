@@ -5,13 +5,40 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  TextInput,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Primary, black, white} from '../utillis/colors';
 import {Movies} from './Dashboard';
 import AnimatedLottieView from 'lottie-react-native';
+import Header2 from '../components/Header2';
+
 
 const PlayList = ({navigation}) => {
+  const [movie, setMovie] = useState([]);
+  const [masterData, setMasterData] = useState([]);
+  const [search, setSearch] = useState('');
+  const searchFilter =(text)=>{
+    if (text) {
+      const newData= masterData.filter((item)=>{
+        const itemData = item.name? item.name.toUpperCase(): '' .toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      })
+      setMovie(newData);
+      setSearch(text);
+    }
+    else
+    {
+      setMovie(masterData);
+      setSearch(text);
+    }
+      }
+  useEffect(()=> {
+    setMovie(Movies)
+    setMasterData(Movies)
+  },[])
+  
   const PlayList = ({item}) => (
     <View
       style={{
@@ -60,13 +87,31 @@ const PlayList = ({navigation}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text style={{fontSize: 20, color: '#fff', marginVertical: 20}}>
+        <Header2 navigation={navigation} text={'Play List'} color={white}/>
+      {/* <Text style={{fontSize: 20, color: '#fff', marginVertical: 20}}>
         Play List
-      </Text>
+      </Text> */}
+      <View style={styles.searchInput}>
+        <TextInput
+          style={styles.inputTxt}
+          value={search}
+          onChangeText={(text)=> searchFilter(text)}
+          placeholder="Search"
+          clearButtonMode='true'
+        />
+        <TouchableOpacity>
+        <Image
+          source={require('../assets/cancel.png')}
+          style={styles.searchIcon}
+        />
+        </TouchableOpacity>
+      </View>
+
       <FlatList
-        data={Movies}
+        data={movie}
         showsVerticalScrollIndicator={false}
         renderItem={PlayList}
+        keyExtractor={item => item.id.toString()}
       />
     </View>
   );
@@ -74,4 +119,27 @@ const PlayList = ({navigation}) => {
 
 export default PlayList;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  searchInput: {
+    width: '90%',
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 15,
+    // justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputTxt: {
+    width: '85%',
+    height: 40,
+    paddingStart: 20,
+  },
+  searchIcon: {
+    width: 15,
+    height: 15,
+    tintColor: 'gray',
+    marginTop: 5,
+    marginStart: 15,
+    
+  },
+});

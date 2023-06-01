@@ -14,6 +14,7 @@ import React from 'react';
 
 import LinearGradient from 'react-native-linear-gradient';
 import Header from '../components/Header';
+import { Primary, black } from '../utillis/colors';
 const back = ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.7)'];
 export const Movies = [
   {
@@ -26,12 +27,12 @@ export const Movies = [
   },
   {
     id: 2,
-    name: 'Jocker',
+    name: 'John Wick: Chapter 4 (2023)',
     Image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZlk3SnJbs7RR2-tbuPD7P0mYRzuwHt_LGFcA0j0uCHA&s',
+      'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
     detail:
-      'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
+      'With the price on his head ever increasing, John Wick uncovers a path to defeating The High Table.',
   },
   {
     id: 3,
@@ -114,6 +115,7 @@ const Dashboard = ({navigation}) => {
           url: item.uri,
           thumbnail: item.Image,
           detail: item.detail,
+          name: item.detail,
         })
       }
       style={{
@@ -164,7 +166,7 @@ const Dashboard = ({navigation}) => {
                 style={{
                   flexDirection: 'row',
                   height: 36,
-                  width: 120,
+                  width: 100,
                   backgroundColor: 'lightgray',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -173,7 +175,7 @@ const Dashboard = ({navigation}) => {
                 <Image
                   style={{height: 30, width: 30}}
                   source={require('../assets/play.png')}></Image>
-                <Text>Play</Text>
+                <Text style={{color: black, fontSize:14, fontWeight: '600', marginStart: 5 }}>Play</Text>
               </TouchableOpacity>
             </LinearGradient>
           </ImageBackground>
