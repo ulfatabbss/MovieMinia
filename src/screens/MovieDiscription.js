@@ -6,75 +6,122 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
+  FlatList,
 } from 'react-native';
 import React from 'react';
-import {black, gray, white} from '../utillis/colors';
+import {Primary, black, gray, white} from '../utillis/colors';
 import LinearGradient from 'react-native-linear-gradient';
-
+import {h1, h2, h3, logoIcon, movieTitle} from '../utillis/Styles';
+export const Cast = [
+  {
+    id: 1,
+    name: 'Krish',
+    Image:
+      'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/4D0PpNI0kmP58hgrwGC3wCjxhnm.jpg',
+    uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    detail:
+      'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
+  },
+  {
+    id: 2,
+    name: 'John Wick: Chapter 4 (2023)',
+    Image:
+      'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/hTlhrrZMj8hZVvD17j4KyAFWBHc.jpg',
+    uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+    detail:
+      'With the price on his head ever increasing, John Wick uncovers a path to defeating The High Table.',
+  },
+  {
+    id: 3,
+    name: 'BatMan',
+    Image:
+      'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/cFQN6rLSSLhGx8NQI7krYWwdRpl.jpg',
+    uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+    detail:
+      'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
+  },
+  {
+    id: 4,
+    name: 'SherLock Homes',
+    Image:
+      'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/q9qKbux5Jo76Sj8g3luxBt6rYtz.jpg',
+    uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+    detail:
+      'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
+  },
+  {
+    id: 5,
+    name: 'Fast & Furrios X',
+    Image:
+      'https://www.themoviedb.org/t/p/w138_and_h175_face/6XLANVi8CtFaxf1KL3LDZDiW07J.jpg',
+    uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+    detail:
+      'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
+  },
+];
 const MovieDiscription = ({navigation, route}) => {
   const {url, thumbnail, detail, name} = route.params;
+  const CastView = ({item}) => (
+    <View
+      style={{
+        backgroundColor: 'white',
+        height: 160,
+        width: 140,
+        marginHorizontal: 10,
+        borderRadius: 10,
+        overflow: 'hidden',
+      }}>
+      <Image
+        resizeMode="cover"
+        style={{height: '100%', width: '100%'}}
+        source={{uri: item.Image}}></Image>
+    </View>
+  );
   const back = ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.7)'];
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        style={{}}
-        source={{
-          uri: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg',
-        }}>
-        <LinearGradient
-          style={{
-            height: '100%',
-            width: '100%',
-            padding: 20,
-          }}
-          colors={back}
-          start={{x: 0, y: 0.1}}
-          end={{x: 0, y: 0.1}}>
-          <View style={styles.mainCard}>
-            <View
+    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <View style={{paddingBottom: 40}}>
+        <View style={styles.mainCard}>
+          <ImageBackground
+            style={{
+              width: '100%',
+              height: 330,
+              borderBottomRightRadius: 25,
+              borderBottomLeftRadius: 25,
+              overflow: 'hidden',
+            }}
+            source={{
+              uri: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg',
+            }}>
+            <LinearGradient
               style={{
-                width: 150,
-                height: 250,
-              }}>
-              <Image
-                resizeMode="cover"
-                source={{
-                  uri: thumbnail,
-                }}
-                style={{
-                  width: '100%',
-                  height: 250,
-                  borderRadius: 16,
-                }}></Image>
-            </View>
-            <View style={styles.movieDetail}>
-              <Text style={styles.h1}>John Wick: Chapter 4</Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-evenly',
-                  marginBottom: 8,
-                }}>
-                <View style={styles.TitleTxt}>
-                  <Text style={styles.movieDetailTxt}>22 Mar 2023</Text>
+                height: 330,
+                width: '100%',
+                padding: 20,
+                borderBottomRightRadius: 25,
+                borderBottomLeftRadius: 25,
+              }}
+              colors={back}
+              start={{x: 0, y: 4}}
+              end={{x: 0, y: 2}}>
+              <View style={styles.movieDetail}>
+                <Image
+                  source={require('../assets/logo.png')}
+                  style={logoIcon}
+                />
+                <Text style={movieTitle}>John Wick : Chapter 4</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={styles.TitleTxt}>
+                    <Text style={styles.movieDetailTxt}>Action</Text>
+                  </View>
+                  <View style={styles.TitleTxt}>
+                    <Text style={styles.movieDetailTxt}>Thriller</Text>
+                  </View>
+                  <View style={styles.TitleTxt}>
+                    <Text style={styles.movieDetailTxt}>Crime</Text>
+                  </View>
                 </View>
-                <View style={styles.TitleTxt}>
-                  <Text style={styles.movieDetailTxt}>2h 50m</Text>
-                </View>
-              </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                <View style={styles.TitleTxt}>
-                  <Text style={styles.movieDetailTxt}>Action</Text>
-                </View>
-                <View style={styles.TitleTxt}>
-                  <Text style={styles.movieDetailTxt}>Thriller</Text>
-                </View>
-                <View style={styles.TitleTxt}>
-                  <Text style={styles.movieDetailTxt}>Crime</Text>
-                </View>
-              </View>
-              <TouchableOpacity
+                {/* <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Player', {
                     url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
@@ -102,140 +149,158 @@ const MovieDiscription = ({navigation, route}) => {
                   }}>
                   Play
                 </Text>
+              </TouchableOpacity> */}
+              </View>
+            </LinearGradient>
+          </ImageBackground>
+          <View style={styles.overviewCard}>
+            <View style={{alignItems: 'center'}}>
+              <Image
+                style={{
+                  height: 20,
+                  width: 20,
+                  marginBottom: 7,
+                  tintColor: Primary,
+                }}
+                source={require('../assets/shared.png')}
+              />
+              <Text style={h3}>Share</Text>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <Image
+                style={{
+                  height: 20,
+                  width: 20,
+                  marginBottom: 7,
+                  tintColor: Primary,
+                }}
+                source={require('../assets/liked.png')}
+              />
+              <Text style={h3}>Like</Text>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('Player', {
+                    url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                  });
+                }}
+                style={{}}>
+                <Image
+                  style={{
+                    height: 20,
+                    width: 20,
+                    marginBottom: 7,
+                    tintColor: Primary,
+                  }}
+                  source={require('../assets/play2.png')}
+                />
               </TouchableOpacity>
+              <Text style={h3}>Play</Text>
+            </View>
+            <View style={{alignItems: 'center'}}>
+              <Image
+                style={{
+                  height: 20,
+                  width: 20,
+                  marginBottom: 7,
+                  tintColor: Primary,
+                }}
+                source={require('../assets/download.png')}
+              />
+              <Text style={h3}>Download</Text>
             </View>
           </View>
-          <View style={styles.overviewCard}>
-            <View style={styles.overviewCardTitle}>
-              <Text style={styles.overViewTitle}>Overview</Text>
-            </View>
+        </View>
+        <View style={styles.overViewDetail}>
+          <View style={{flexDirection: 'row',}}>
             <Text
               style={[
-                styles.overViewTitle,
-                {
-                  fontWeight: '400',
-                  textAlign: 'justify',
-                  paddingHorizontal: 5,
-                  paddingVertical: 10,
-                  color: 'lightgray',
-                },
+                h2,
+                {color: 'green', marginRight: 10, fontWeight: '800'},
               ]}>
-              With the price on his head ever increasing, John Wick uncovers a
-              path to defeating The High Table. But before he can earn his
-              freedom, Wick must face off against a new enemy with powerful
-              alliances across the globe and forces that turn old friends into
-              foes.
+              84% match
             </Text>
+            <Text style={[h2, {marginRight: 10}]}>2018</Text>
+            <Text style={[h2, {marginRight: 10}]}>1h 34m</Text>
           </View>
-          <View style={styles.overviewCard}>
-            <View style={styles.overviewCardTitle}>
-              <Text style={styles.overViewTitle}>About movie</Text>
+          <Text
+            style={[
+              h2,
+              {
+                marginRight: 10,
+                marginTop: 10,
+                borderBottomWidth: 1,
+                paddingBottom: 15,
+                borderColor: 'gray',
+              },
+            ]}>
+            {detail}
+          </Text>
+        </View>
+        <View style={{paddingHorizontal: 10}}>
+          <View
+            style={{
+              borderBottomWidth: 1,
+              paddingBottom: 15,
+              borderColor: 'gray',
+              marginBottom: 15,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginVertical: 10,
+              }}>
+              <Text style={[h1, {}]}>Cast & Crew</Text>
+              {/* <TouchableOpacity>
+                <Text style={[h2, {color: Primary}]}>See All</Text>
+              </TouchableOpacity> */}
             </View>
-            <View style={{flexDirection: 'row', marginBottom:5,}}>
-              <Image
-                style={{height: 30, width: 30, marginLeft: 10, marginTop: 5}}
-                source={require('../assets/play.png')}
-              />
-              <Image
-                style={{height: 30, width: 30, marginLeft: 10, marginTop: 5}}
-                source={require('../assets/play.png')}
-              />
-              <Image
-                style={{height: 30, width: 30, marginLeft: 10, marginTop: 5}}
-                source={require('../assets/play.png')}
-              />
-              <Image
-                style={{height: 30, width: 30, marginLeft: 10, marginTop: 5}}
-                source={require('../assets/play.png')}
-              />
-            </View>
-            <Text
-              style={[
-                styles.overViewTitle,
-                {
-                  fontWeight: '600',
-                  textAlign: 'justify',
-                  paddingHorizontal: 5,
-                  color: 'gray',
-                },
-              ]}>
-              Status
-            </Text>
-            <Text
-              style={[
-                styles.overViewTitle,
-                {
-                  fontWeight: '600',
-                  textAlign: 'justify',
-                  paddingHorizontal: 5,
-                  
-                  color: 'lightgray',
-                },
-              ]}>
-              Released
-            </Text>
-            <Text
-              style={[
-                styles.overViewTitle,
-                {
-                  fontWeight: '600',
-                  textAlign: 'justify',
-                  paddingHorizontal: 5,
-                  color: 'gray',
-                },
-              ]}>
-              Original Language
-            </Text>
-            <Text
-              style={[
-                styles.overViewTitle,
-                {
-                  fontWeight: '600',
-                  textAlign: 'justify',
-                  paddingHorizontal: 5,
-                  
-                  color: 'lightgray',
-                },
-              ]}>
-              English
-            </Text>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={Cast}
+              renderItem={CastView}
+            />
           </View>
-        </LinearGradient>
-      </ImageBackground>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Player', {
-            url: url,
-          });
-        }}
-        style={{
-          flexDirection: 'row',
-          height: 36,
-          width: 100,
-          marginTop: 16,
-          backgroundColor: 'lightgray',
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderRadius: 5,
-        }}>
-        <Image
-          style={{height: 30, width: 30}}
-          source={require('../assets/play.png')}></Image>
-        <Text
-          style={{
-            color: black,
-            fontSize: 14,
-            fontWeight: '600',
-            marginStart: 5,
-          }}>
-          Play
-        </Text>
-      </TouchableOpacity>
-      {/* <View>
-        <Text style={styles.overTxt}>Overview</Text>
-        <Text style={styles.h3}>{detail}</Text>
-      </View> */}
-    </View>
+          <View
+            style={{
+              borderBottomWidth: 1,
+              paddingBottom: 15,
+              borderColor: 'gray',
+              marginTop:15,
+              flexDirection: 'row',
+              width: '100%',
+            }}>
+            <Image
+              resizeMode="cover"
+              style={{height: 180, width: 150, borderRadius: 10}}
+              source={{
+                uri: 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/eRCryGwKDH4XqUlrdkERmeBWPo8.jpg',
+              }}
+            />
+            <View
+              style={{
+                marginLeft: 10,
+                justifyContent: 'space-evenly',
+                width: '55%',
+              }}>
+              <Text style={[h1, {fontWeight: 'normal'}]}>Dricter</Text>
+              <Text style={[h2, {fontWeight: 'normal'}]}>
+                Chad Stahelski is an American stuntman and film director. He is
+                known for directing 2014 film John Wick along with David Leitch,
+                and for doubling Brandon Lee after the fatal accident involving.
+              </Text>
+              <Text style={[h2, {fontWeight: 'normal', color: Primary}]}>
+                Cast & Crew
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -244,24 +309,28 @@ export default MovieDiscription;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: gray,
   },
   mainCard: {
     width: '100%',
     flexDirection: 'row',
+    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 25,
   },
   TitleTxt: {
-    paddingHorizontal: 5,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
     backgroundColor: gray,
     borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: 7,
+    marginRight: 7,
   },
   movieDetail: {
-    marginLeft: 15,
-    width: '55%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: '100%',
+    position: 'absolute',
+    bottom: 50,
+    start: 20,
   },
   movieDetailTxt: {
     color: white,
@@ -271,26 +340,32 @@ const styles = StyleSheet.create({
   overviewCard: {
     backgroundColor: gray,
     width: '100%',
-    paddingBottom:10,
+    paddingVertical: 10,
     borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 15,
-    marginTop: 20,
+    borderRadius: 30,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width: '70%',
+    position: 'absolute',
+    top: '90%',
+    left: '15%',
+    zIndex: 1,
   },
-  overviewCardTitle: {
+  overViewDetail: {
     width: '100%',
-    height: 35,
-    // borderColor: 'gray',
-    // borderBottomWidth: 1,
-    justifyContent: 'center',
-    paddingLeft: 10,
+    paddingBottom: 10,
+    marginTop: 50,
+    paddingHorizontal:10,
   },
-  overViewTitle: {
-    color: white,
-    fontSize: 14,
-    fontWeight: '600',
-    marginStart: 5,
-  },
+  // overviewCardTitle: {
+  //   width: '100%',
+  //   height: 35,
+  //   borderColor: 'gray',
+  //   // borderBottomWidth: 1,
+  //   // justifyContent: 'center',
+  //   // paddingLeft: 10,
+  // },
   h1: {
     fontSize: 16,
     color: 'white',
@@ -307,40 +382,6 @@ const styles = StyleSheet.create({
     color: 'lightgray',
     marginTop: 10,
     // textAlign: 'justify',
-    width: '60%',
-  },
-  overTxt: {
-    fontSize: 18,
-    color: white,
-    marginTop: 15,
-  },
-  subContainer: {
-    width: '70%',
-    marginTop: 20,
-    // backgroundColor: 'gray',
-  },
-  subTitleContainer: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: 'lightgray',
-    paddingBottom: 10,
-    marginBottom: 20,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '78%',
-  },
-  personalInfoTxt: {
-    color: '#fff',
-    fontSize: 14,
-    marginVertical: 5,
-    fontWeight: 500,
-  },
-  basicInfoTxt: {
-    color: '#fff',
-    fontSize: 12,
-  },
-  employeeInfo: {
-    flexDirection: 'row',
-    marginVertical: 10,
+    width: '100%',
   },
 });
