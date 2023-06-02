@@ -18,15 +18,14 @@ const Tabs = () => {
           headerShown: false,
           tabBarShowLabel: false,
           tabBarActiveTintColor: Primary,
-          tabBarInactiveBackgroundColor: 'rgba(51,51,51,1)',
-           tabBarActiveBackgroundColor: 'rgba(51,51,51,0.9)',
-          
+          tabBarInactiveBackgroundColor: 'rgba(51,51,51,0.8)',
+           tabBarActiveBackgroundColor: 'rgba(51,51,51,0.8)',
           borderRadius:25,
           tabBarStyle: {
             borderTopWidth: 0,
             bottom:15,
-            width:'70%',
-            left:'15%',
+            width:'80%',
+            left:'10%',
             borderRadius:25,
             justifyContent: 'center',
             position: 'absolute',
@@ -40,7 +39,7 @@ const Tabs = () => {
           component={Dashboard}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center', borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(51,51,51,0.9)',width:'100%',height:'100%'}}>
+              <View style={{alignItems: 'center', justifyContent: 'center', borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
                 <Image
                   style={{
                     height: focused ? 23: 20,
@@ -68,7 +67,7 @@ const Tabs = () => {
           borderRadius={true}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center', borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(51,51,51,0.9)',width:'100%',height:'100%'}}>
+              <View style={{alignItems: 'center', justifyContent: 'center', borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
                 <Image
                   style={{
                     height: focused ? 23: 20,
@@ -95,7 +94,7 @@ const Tabs = () => {
           component={Cartoons}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center',borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(51,51,51,0.9)',width:'100%',height:'100%'}}>
+              <View style={{alignItems: 'center', justifyContent: 'center',borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
                 <Image
                   style={{
                     height: focused ? 23: 20,
@@ -121,7 +120,7 @@ const Tabs = () => {
           component={PlayList}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center',borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(51,51,51,0.9)',width:'100%',height:'100%'}}>
+              <View style={{alignItems: 'center', justifyContent: 'center',borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
                 <Image
                   style={{
                     height: focused ? 23: 20,

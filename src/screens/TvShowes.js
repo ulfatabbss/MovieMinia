@@ -133,7 +133,7 @@ const TvShowes = ({navigation}) => {
   );
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{height: 450}}>
           <ImageBackground
             style={{

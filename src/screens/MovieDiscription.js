@@ -64,7 +64,7 @@ const MovieDiscription = ({navigation, route}) => {
   const CastView = ({item}) => (
     <View
       style={{
-        backgroundColor: 'white',
+        backgroundColor: white,
         height: 160,
         width: 140,
         marginHorizontal: 10,
