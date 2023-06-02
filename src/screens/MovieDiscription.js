@@ -287,14 +287,14 @@ const MovieDiscription = ({navigation, route}) => {
                 justifyContent: 'space-evenly',
                 width: '55%',
               }}>
-              <Text style={[h1, {fontWeight: 'normal'}]}>Dricter</Text>
+              <Text style={[h1, {fontWeight: 'normal'}]}>Director</Text>
               <Text style={[h2, {fontWeight: 'normal'}]}>
                 Chad Stahelski is an American stuntman and film director. He is
                 known for directing 2014 film John Wick along with David Leitch,
                 and for doubling Brandon Lee after the fatal accident involving.
               </Text>
               <Text style={[h2, {fontWeight: 'normal', color: Primary}]}>
-                Cast & Crew
+                Know more
               </Text>
             </View>
           </View>
@@ -340,12 +340,14 @@ const styles = StyleSheet.create({
   overviewCard: {
     backgroundColor: gray,
     width: '100%',
-    paddingVertical: 10,
+    paddingTop:10,
+    paddingBottom:7,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 30,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent:'space-evenly',
+    alignItems: 'center',
     width: '70%',
     position: 'absolute',
     top: '90%',
