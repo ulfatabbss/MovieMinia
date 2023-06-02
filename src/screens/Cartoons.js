@@ -176,7 +176,6 @@ const Cartoons = ({navigation}) => {
         elevation: 10,
         shadowColor: 'white',
         marginBottom: 20,
-        marginTop: 10,
       }}>
       <Image
         resizeMode="stretch"
@@ -209,13 +208,12 @@ const Cartoons = ({navigation}) => {
         />
         <View
           style={{
-            marginTop: 10,
             marginHorizontal: 2,
 
             borderRadius: 20,
           }}>
           <Text style={styles.Heading}>Trending</Text>
-          <View style={{height: 180, marginTop: 20}}>
+          <View style={{marginTop: 10}}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
@@ -223,23 +221,18 @@ const Cartoons = ({navigation}) => {
               renderItem={MoviesView}
             />
           </View>
-
           <TouchableOpacity
             style={{
               flexDirection: 'row',
               alignItems: 'baseline',
-
-              alignSelf: 'flex-end',
+              justifyContent: 'flex-end',
+              marginTop: 10,
+              marginRight: 10,
             }}>
-            <Text style={{color: Primary, marginRight: 2}}>More</Text>
+            <Text style={{color: Primary}}>More</Text>
             <Image
-              source={require('../assets/expand.png')}
-              style={{
-                height: 10,
-                width: 10,
-                tintColor: Primary,
-                marginRight: 10,
-              }}></Image>
+              style={{height: 10, width: 10, tintColor: Primary}}
+              source={require('../assets/expand.png')}></Image>
           </TouchableOpacity>
         </View>
         <View
@@ -257,25 +250,20 @@ const Cartoons = ({navigation}) => {
               data={Movies}
               renderItem={MoviesView}
             />
-          </View>
-
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'baseline',
-
-              alignSelf: 'flex-end',
-            }}>
-            <Text style={{color: Primary, marginRight: 2}}>More</Text>
-            <Image
-              source={require('../assets/expand.png')}
+            <TouchableOpacity
               style={{
-                height: 10,
-                width: 10,
-                tintColor: Primary,
+                flexDirection: 'row',
+                alignItems: 'baseline',
+                justifyContent: 'flex-end',
+                marginTop: 10,
                 marginRight: 10,
-              }}></Image>
-          </TouchableOpacity>
+              }}>
+              <Text style={{color: Primary}}>More</Text>
+              <Image
+                style={{height: 10, width: 10, tintColor: Primary}}
+                source={require('../assets/expand.png')}></Image>
+            </TouchableOpacity>
+          </View>
         </View>
         <View
           style={{
@@ -291,25 +279,20 @@ const Cartoons = ({navigation}) => {
               data={Movies}
               renderItem={MoviesView}
             />
-          </View>
-
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'baseline',
-
-              alignSelf: 'flex-end',
-            }}>
-            <Text style={{color: Primary, marginRight: 2}}>More</Text>
-            <Image
-              source={require('../assets/expand.png')}
+            <TouchableOpacity
               style={{
-                height: 10,
-                width: 10,
-                tintColor: Primary,
+                flexDirection: 'row',
+                alignItems: 'baseline',
+                justifyContent: 'flex-end',
+                marginTop: 10,
                 marginRight: 10,
-              }}></Image>
-          </TouchableOpacity>
+              }}>
+              <Text style={{color: Primary}}>More</Text>
+              <Image
+                style={{height: 10, width: 10, tintColor: Primary}}
+                source={require('../assets/expand.png')}></Image>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </View>

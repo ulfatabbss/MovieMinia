@@ -10,6 +10,8 @@ import {
 import React, {useEffect, useState} from 'react';
 import {Primary, black, white} from '../utillis/colors';
 import {Movies} from './Dashboard';
+import AnimatedLottieView from 'lottie-react-native';
+import Header2 from '../components/Header2';
 
 const PlayList = ({navigation}) => {
   const [movie, setMovie] = useState([]);
@@ -82,19 +84,21 @@ const PlayList = ({navigation}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text style={{fontSize: 20, color: '#fff', marginVertical: 20}}>
+      <Header2 navigation={navigation} text={'Play List'} color={white} />
+      {/* <Text style={{fontSize: 20, color: '#fff', marginVertical: 20}}>
         Play List
-      </Text>
+      </Text> */}
       <View style={styles.searchInput}>
         <TextInput
           style={styles.inputTxt}
           value={search}
           onChangeText={text => searchFilter(text)}
           placeholder="Search"
+          clearButtonMode="true"
         />
         <TouchableOpacity>
           <Image
-            source={require('../assets/search.png')}
+            source={require('../assets/cancel.png')}
             style={styles.searchIcon}
           />
         </TouchableOpacity>
@@ -128,8 +132,8 @@ const styles = StyleSheet.create({
     paddingStart: 20,
   },
   searchIcon: {
-    width: 20,
-    height: 20,
+    width: 15,
+    height: 15,
     tintColor: 'gray',
     marginTop: 5,
     marginStart: 15,

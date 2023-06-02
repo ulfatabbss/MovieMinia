@@ -243,15 +243,15 @@ const Player = ({navigation, route}) => {
                 }}>
                 <Image
                   style={{
-                    width: 25,
-                    height: 25,
+                    width: 18,
+                    height: 18,
                     marginRight: 20,
                     tintColor: focused ? Primary : 'gray',
                   }}
                   source={require('../assets/plus.png')}
                 />
                 <Text style={{color: 'white', fontWeight: '500', fontSize: 14}}>
-                  Liked
+                  Add to PlayList
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -263,8 +263,8 @@ const Player = ({navigation, route}) => {
                 onPress={() => shareData()}>
                 <Image
                   style={{
-                    width: 25,
-                    height: 25,
+                    width: 18,
+                    height: 18,
                     marginRight: 20,
                     tintColor: 'gray',
                   }}
