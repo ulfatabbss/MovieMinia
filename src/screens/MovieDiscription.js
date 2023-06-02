@@ -70,6 +70,6 @@ const styles = StyleSheet.create({
   h3: {
     color: 'lightgray',
     marginTop: 16,
-    textAlign: 'center',
+    textAlign: 'justify',
   },
 });

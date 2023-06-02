@@ -20,8 +20,19 @@ const Header = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.logo} source={require('../assets/logo.png')} />
-
+        <Image
+          resizeMode="contain"
+          style={[
+            styles.logo,
+            {tintColor: 'white', height: 24, width: 24, marginLeft: 10},
+          ]}
+          source={require('../assets/drawer.png')}
+        />
+        <Image
+          resizeMode="contain"
+          style={styles.logo}
+          source={require('../assets/logo.png')}
+        />
         <TouchableOpacity onPress={() => store.dispatch(setIsLogin(false))}>
           <Image
             resizeMode="contain"
