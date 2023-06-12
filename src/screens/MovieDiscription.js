@@ -11,7 +11,7 @@ import {
 import React from 'react';
 import {Primary, black, gray, white} from '../utillis/colors';
 import LinearGradient from 'react-native-linear-gradient';
-import {h1, h2, h3, logoIcon, movieTitle} from '../utillis/Styles';
+import {h1, h2, h3, logoIcon, movieTitle} from '../utillis/styles';
 export const Cast = [
   {
     id: 1,
@@ -83,6 +83,7 @@ const MovieDiscription = ({navigation, route}) => {
       <View style={{paddingBottom: 40}}>
         <View style={styles.mainCard}>
           <ImageBackground
+          resizeMode='cover'
             style={{
               width: '100%',
               height: 330,
@@ -91,7 +92,7 @@ const MovieDiscription = ({navigation, route}) => {
               overflow: 'hidden',
             }}
             source={{
-              uri: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg',
+              uri: thumbnail,
             }}>
             <LinearGradient
               style={{
@@ -106,8 +107,9 @@ const MovieDiscription = ({navigation, route}) => {
               end={{x: 0, y: 2}}>
               <View style={styles.movieDetail}>
                 <Image
+                  resizeMode="contain"
                   source={require('../assets/logo.png')}
-                  style={logoIcon}
+                  style={[logoIcon, {}]}
                 />
                 <Text style={movieTitle}>John Wick : Chapter 4</Text>
                 <View style={{flexDirection: 'row'}}>
@@ -121,35 +123,6 @@ const MovieDiscription = ({navigation, route}) => {
                     <Text style={styles.movieDetailTxt}>Crime</Text>
                   </View>
                 </View>
-                {/* <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Player', {
-                    url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                  });
-                }}
-                style={{
-                  flexDirection: 'row',
-                  height: 36,
-                  width: 180,
-                  backgroundColor: 'lightgray',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 5,
-                  marginTop: 20,
-                }}>
-                <Image
-                  style={{height: 30, width: 30}}
-                  source={require('../assets/play.png')}></Image>
-                <Text
-                  style={{
-                    color: black,
-                    fontSize: 14,
-                    fontWeight: '600',
-                    marginStart: 5,
-                  }}>
-                  Play
-                </Text>
-              </TouchableOpacity> */}
               </View>
             </LinearGradient>
           </ImageBackground>
@@ -213,7 +186,7 @@ const MovieDiscription = ({navigation, route}) => {
           </View>
         </View>
         <View style={styles.overViewDetail}>
-          <View style={{flexDirection: 'row',}}>
+          <View style={{flexDirection: 'row'}}>
             <Text
               style={[
                 h2,
@@ -270,7 +243,7 @@ const MovieDiscription = ({navigation, route}) => {
               borderBottomWidth: 1,
               paddingBottom: 15,
               borderColor: 'gray',
-              marginTop:15,
+              marginTop: 15,
               flexDirection: 'row',
               width: '100%',
             }}>
@@ -310,6 +283,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: gray,
+    
   },
   mainCard: {
     width: '100%',
@@ -340,13 +314,13 @@ const styles = StyleSheet.create({
   overviewCard: {
     backgroundColor: gray,
     width: '100%',
-    paddingTop:10,
-    paddingBottom:7,
+    paddingTop: 10,
+    paddingBottom: 7,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 30,
     flexDirection: 'row',
-    justifyContent:'space-evenly',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     width: '70%',
     position: 'absolute',
@@ -358,7 +332,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingBottom: 10,
     marginTop: 50,
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
   },
   // overviewCardTitle: {
   //   width: '100%',

@@ -12,26 +12,26 @@ const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
   return (
-    <View style={{flex: 1,}}>
+    <View style={{flex: 1}}>
       <Tab.Navigator
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
           tabBarActiveTintColor: Primary,
           tabBarInactiveBackgroundColor: 'rgba(51,51,51,0.8)',
-           tabBarActiveBackgroundColor: 'rgba(51,51,51,0.8)',
-          borderRadius:25,
+          tabBarActiveBackgroundColor: 'rgba(51,51,51,0.8)',
+
+          borderRadius: 25,
           tabBarStyle: {
             borderTopWidth: 0,
-            bottom:15,
-            width:'80%',
-            left:'10%',
-            borderRadius:25,
+            bottom: 15,
+            width: '80%',
+            left: '10%',
+            borderRadius: 25,
             justifyContent: 'center',
             position: 'absolute',
             overflow: 'hidden',
             backgroundColor: 'transparent',
-        
           },
         }}>
         <Tab.Screen
@@ -39,11 +39,21 @@ const Tabs = () => {
           component={Dashboard}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center', borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 25,
+                  backgroundColor: focused
+                    ? 'rgba(255,255,255,0.2)'
+                    : 'rgba(0,0,0,0)',
+                  width: '100%',
+                  height: '100%',
+                }}>
                 <Image
                   style={{
-                    height: focused ? 23: 20,
-                    width: focused ? 23: 20,
+                    height: focused ? 23 : 20,
+                    width: focused ? 23 : 20,
                     tintColor: focused ? white : white,
                   }}
                   source={require('../../assets/home.png')}
@@ -67,11 +77,21 @@ const Tabs = () => {
           borderRadius={true}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center', borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 25,
+                  backgroundColor: focused
+                    ? 'rgba(255,255,255,0.2)'
+                    : 'rgba(0,0,0,0)',
+                  width: '100%',
+                  height: '100%',
+                }}>
                 <Image
                   style={{
-                    height: focused ? 23: 20,
-                    width: focused ? 23: 20,
+                    height: focused ? 23 : 20,
+                    width: focused ? 23 : 20,
                     tintColor: focused ? white : white,
                   }}
                   source={require('../../assets/tvshow.png')}
@@ -94,11 +114,21 @@ const Tabs = () => {
           component={Cartoons}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center',borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 25,
+                  backgroundColor: focused
+                    ? 'rgba(255,255,255,0.2)'
+                    : 'rgba(0,0,0,0)',
+                  width: '100%',
+                  height: '100%',
+                }}>
                 <Image
                   style={{
-                    height: focused ? 23: 20,
-                    width: focused ? 23: 20,
+                    height: focused ? 23 : 20,
+                    width: focused ? 23 : 20,
                     tintColor: focused ? white : white,
                   }}
                   source={require('../../assets/cartoon.png')}
@@ -120,11 +150,21 @@ const Tabs = () => {
           component={PlayList}
           options={{
             tabBarIcon: ({focused}) => (
-              <View style={{alignItems: 'center', justifyContent: 'center',borderRadius:25,backgroundColor:focused?'rgba(255,255,255,0.2)':'rgba(0,0,0,0)',width:'100%',height:'100%'}}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 25,
+                  backgroundColor: focused
+                    ? 'rgba(255,255,255,0.2)'
+                    : 'rgba(0,0,0,0)',
+                  width: '100%',
+                  height: '100%',
+                }}>
                 <Image
                   style={{
-                    height: focused ? 23: 20,
-                    width: focused ? 23: 20,
+                    height: focused ? 23 : 20,
+                    width: focused ? 23 : 20,
                     tintColor: focused ? white : white,
                   }}
                   source={require('../../assets/playlist.png')}

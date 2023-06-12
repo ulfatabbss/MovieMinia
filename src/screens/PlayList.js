@@ -13,32 +13,29 @@ import {Movies} from './Dashboard';
 import AnimatedLottieView from 'lottie-react-native';
 import Header2 from '../components/Header2';
 
-
 const PlayList = ({navigation}) => {
   const [movie, setMovie] = useState([]);
   const [masterData, setMasterData] = useState([]);
   const [search, setSearch] = useState('');
-  const searchFilter =(text)=>{
+  const searchFilter = text => {
     if (text) {
-      const newData= masterData.filter((item)=>{
-        const itemData = item.name? item.name.toUpperCase(): '' .toUpperCase();
+      const newData = masterData.filter(item => {
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
-      })
+      });
       setMovie(newData);
       setSearch(text);
-    }
-    else
-    {
+    } else {
       setMovie(masterData);
       setSearch(text);
     }
-      }
-  useEffect(()=> {
-    setMovie(Movies)
-    setMasterData(Movies)
-  },[])
-  
+  };
+  useEffect(() => {
+    setMovie(Movies);
+    setMasterData(Movies);
+  }, []);
+
   const PlayList = ({item}) => (
     <View
       style={{
@@ -87,7 +84,7 @@ const PlayList = ({navigation}) => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-        <Header2 navigation={navigation} text={'Play List'} color={white}/>
+      <Header2 navigation={navigation} text={'Play List'} color={white} />
       {/* <Text style={{fontSize: 20, color: '#fff', marginVertical: 20}}>
         Play List
       </Text> */}
@@ -95,15 +92,15 @@ const PlayList = ({navigation}) => {
         <TextInput
           style={styles.inputTxt}
           value={search}
-          onChangeText={(text)=> searchFilter(text)}
+          onChangeText={text => searchFilter(text)}
           placeholder="Search"
-          clearButtonMode='true'
+          clearButtonMode="true"
         />
         <TouchableOpacity>
-        <Image
-          source={require('../assets/cancel.png')}
-          style={styles.searchIcon}
-        />
+          <Image
+            source={require('../assets/cancel.png')}
+            style={styles.searchIcon}
+          />
         </TouchableOpacity>
       </View>
 
@@ -140,6 +137,5 @@ const styles = StyleSheet.create({
     tintColor: 'gray',
     marginTop: 5,
     marginStart: 15,
-    
   },
 });

@@ -10,35 +10,35 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-
-import LinearGradient from 'react-native-linear-gradient';
+import React, {useRef, useEffect, useState} from 'react';
+import Carousel from 'react-native-snap-carousel';
+import {Primary} from '../utillis/colors';
 import Header from '../components/Header';
-import { Primary, black } from '../utillis/colors';
-const back = ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.7)'];
+
 export const Movies = [
   {
     id: 1,
     name: 'Krish',
-    Image:'https://media.comicbook.com/2017/10/iron-man-movie-poster-marvel-cinematic-universe-1038878.jpg',
+    Image:
+      'https://c4.wallpaperflare.com/wallpaper/1022/525/87/movies-the-lord-of-the-rings-aragorn-viggo-mortensen-movie-posters-posters-the-return-of-the-king-entertainment-movies-hd-art-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
   },
   {
     id: 2,
-    name: 'John Wick: Chapter 4 (2023)',
+    name: 'Jocker',
     Image:
-      'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vZloFAK7NmvMGKE7VkF5UHaz0I.jpg',
+      'https://c4.wallpaperflare.com/wallpaper/675/275/718/joker-2019-movie-joker-joaquin-phoenix-actor-men-hd-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
     detail:
-      'With the price on his head ever increasing, John Wick uncovers a path to defeating The High Table.',
+      'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
   },
   {
     id: 3,
     name: 'BatMan',
     Image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRShaCrkUtI3vvauPwvNXYsJ3PIFU276-HQtsrFymxHlQ&s',
+      'https://c4.wallpaperflare.com/wallpaper/649/1012/960/john-wick-movie-poster-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
@@ -47,7 +47,7 @@ export const Movies = [
     id: 4,
     name: 'SherLock Homes',
     Image:
-      'https://media.comicbook.com/2017/10/iron-man-movie-poster-marvel-cinematic-universe-1038878.jpg',
+      'https://c4.wallpaperflare.com/wallpaper/462/216/45/movies-dark-wednesday-addams-wednesday-tv-series-movie-poster-hd-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
@@ -56,7 +56,7 @@ export const Movies = [
     id: 5,
     name: 'Fast & Furrios X',
     Image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRShaCrkUtI3vvauPwvNXYsJ3PIFU276-HQtsrFymxHlQ&s',
+      'https://c4.wallpaperflare.com/wallpaper/796/310/540/jurassic-park-logos-movie-posters-1972x3014-entertainment-movies-hd-art-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
@@ -65,7 +65,7 @@ export const Movies = [
     id: 6,
     name: 'Need for Speed',
     Image:
-      'https://bollywoodmovieposters.com/wp-content/uploads/2021/02/shahrukh-khan-film-poster-chennai-express.jpg',
+      'https://c4.wallpaperflare.com/wallpaper/144/450/423/star-wars-movies-star-wars-the-last-jedi-poster-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
@@ -74,7 +74,7 @@ export const Movies = [
     id: 7,
     name: 'Need for Speed',
     Image:
-      'https://bollywoodmovieposters.com/wp-content/uploads/2021/02/shahrukh-khan-film-poster-chennai-express.jpg',
+      'https://c4.wallpaperflare.com/wallpaper/913/715/744/godzilla-vs-kong-godzilla-king-kong-movies-battle-hd-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
@@ -83,7 +83,7 @@ export const Movies = [
     id: 8,
     name: 'Need for Speed',
     Image:
-      'https://bollywoodmovieposters.com/wp-content/uploads/2021/02/shahrukh-khan-film-poster-chennai-express.jpg',
+      'https://c4.wallpaperflare.com/wallpaper/929/709/303/aquaman-dc-comics-justice-league-warner-brothers-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
@@ -92,7 +92,7 @@ export const Movies = [
     id: 9,
     name: 'Need for Speed',
     Image:
-      'https://bollywoodmovieposters.com/wp-content/uploads/2021/02/shahrukh-khan-film-poster-chennai-express.jpg',
+      'https://c4.wallpaperflare.com/wallpaper/687/356/960/joker-2019-movie-joker-smile-digital-art-poster-hd-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
@@ -101,13 +101,20 @@ export const Movies = [
     id: 10,
     name: 'Need for Speed',
     Image:
-      'https://bollywoodmovieposters.com/wp-content/uploads/2021/02/shahrukh-khan-film-poster-chennai-express.jpg',
+      'https://c4.wallpaperflare.com/wallpaper/472/602/561/moana-2016-film-poster-movie-man-wallpaper-preview.jpg',
     uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4',
     detail:
       'When Walt Disney Pictures announced that The Little Mermaid would receive a live-action remake, many super fans worried that the studio would not be able to do the fairytale justice. The redhead mermaid, Ariel, the daughter of King Triton, has been beloved by viewers of all ages for her curiosity, innocence, and wonder. Finding the perfect actress to fill the mermaid’s tail was no small feat. However, Halle Bailey successfully swims into view with a bright voice worthy of the sea princess.',
   },
 ];
 const Dashboard = ({navigation}) => {
+  const carouselRef = useRef(null);
+  const [entries, setEntries] = useState([]);
+  const sliderWidth = Dimensions.get('window').width; // Replace with your desired value
+  const itemWidth = Dimensions.get('window').width - 90; // Replace with your desired value
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const initialIndex = 1; // Index of the item to start from
+
   const MoviesView = ({item}) => (
     <TouchableOpacity
       onPress={() =>
@@ -115,79 +122,200 @@ const Dashboard = ({navigation}) => {
           url: item.uri,
           thumbnail: item.Image,
           detail: item.detail,
-          name: item.detail,
         })
       }
       style={{
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         height: 160,
-        width: 140,
-        marginHorizontal: 10,
+        width: 120,
+        marginHorizontal: 6,
         borderRadius: 10,
         overflow: 'hidden',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        elevation: 10,
+
+        shadowColor: 'black',
+      }}>
+      <ImageBackground
+        resizeMode="cover"
+        style={{
+          height: '100%',
+          width: '100%',
+          justifyContent: 'flex-end',
+        }}
+        source={{uri: item.Image}}>
+        <View
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            width: '100%',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'white', fontSize: 12, marginTop: 4}}>
+            {item.name}
+          </Text>
+          <Image
+            style={{height: 20, width: 20, marginVertical: 5}}
+            source={require('../assets/play.png')}></Image>
+          {/* <Text style={{color: 'white', fontSize: 8}}>watch Now</Text> */}
+        </View>
+      </ImageBackground>
+    </TouchableOpacity>
+  );
+  const MovieCards = ({item}) => (
+    <View
+      style={{
+        height: 220,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        elevation: 10,
+        shadowColor: 'white',
+        marginBottom: 20,
       }}>
       <Image
-        resizeMode="cover"
-        style={{height: '100%', width: '100%'}}
-        source={{uri: item.Image}}></Image>
-    </TouchableOpacity>
+        resizeMode="stretch"
+        source={{uri: item.Image}}
+        style={{height: '100%', width: '100%', borderRadius: 10}}></Image>
+    </View>
   );
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{height: 450}}>
-          <ImageBackground
-            style={{
-              height: '100%',
-              width: '100%',
-            }}
-            source={{
-              uri: 'https://w0.peakpx.com/wallpaper/902/32/HD-wallpaper-heimdall-thor-comics-holi-hollywood-idris-elba-marvel-marvel-cinematic-universe-marvel-comics-marvel-movies-movie-movie-poster-orange-poster-thor-ragnarok.jpg',
-            }}>
-            <LinearGradient
-              style={{
-                height: '100%',
-                width: '100%',
-                position: 'absolute',
-                justifyContent: 'space-between',
-                padding: 10,
-                alignItems: 'center',
-              }}
-              colors={back}
-              start={{x: 0, y: 0.1}}
-              end={{x: 0, y: 0.9}}>
-              <Header />
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('Player', {
-                    url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                  });
-                }}
-                style={{
-                  flexDirection: 'row',
-                  height: 36,
-                  width: 100,
-                  backgroundColor: 'lightgray',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: 5,
-                }}>
-                <Image
-                  style={{height: 30, width: 30}}
-                  source={require('../assets/play.png')}></Image>
-                <Text style={{color: black, fontSize:14, fontWeight: '600', marginStart: 5 }}>Play</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-          </ImageBackground>
-        </View>
-        <View style={{margin: 10}}>
-          <Text style={styles.Heading}>Trending</Text>
-          <FlatList horizontal data={Movies} renderItem={MoviesView} />
-          <Text style={styles.Heading}>Popular</Text>
+        <Header />
+        <Carousel
+          ref={carouselRef}
+          data={Movies.concat(Movies[0])}
+          renderItem={MovieCards}
+          sliderWidth={sliderWidth}
+          itemWidth={itemWidth}
+          firstItem={initialIndex}
+          autoplay={true}
+          loop={true}
+          autoplayInterval={3000}
+          onSnapToItem={index => {
+            if (index === Movies.length) {
+              carouselRef.current.snapToItem(0, false);
+              setCurrentIndex(0);
+            } else {
+              setCurrentIndex(index);
+            }
+          }}
+        />
+        <View
+          style={{
+            marginHorizontal: 2,
 
-          <FlatList horizontal data={Movies} renderItem={MoviesView} />
-          <Text style={styles.Heading}>Punjabi</Text>
-          <FlatList horizontal data={Movies} renderItem={MoviesView} />
+            borderRadius: 20,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={styles.Heading}>Trending</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'baseline',
+                justifyContent: 'flex-end',
+                marginTop: 10,
+                marginRight: 10,
+              }}>
+              <Text style={{color: Primary, marginRight: 3}}>More</Text>
+              <Image
+                style={{height: 10, width: 10, tintColor: Primary}}
+                source={require('../assets/expand.png')}></Image>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{marginTop: 10}}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={Movies}
+              renderItem={MoviesView}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            marginHorizontal: 2,
+
+            borderRadius: 20,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={styles.Heading}>Popular</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'baseline',
+                justifyContent: 'flex-end',
+                marginTop: 10,
+                marginRight: 10,
+              }}>
+              <Text style={{color: Primary, marginRight: 3}}>More</Text>
+              <Image
+                style={{height: 10, width: 10, tintColor: Primary}}
+                source={require('../assets/expand.png')}></Image>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{height: 180, marginTop: 20}}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={Movies}
+              renderItem={MoviesView}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            marginHorizontal: 2,
+            borderRadius: 20,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={styles.Heading}>New This Year</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'baseline',
+                justifyContent: 'flex-end',
+                marginTop: 10,
+                marginRight: 10,
+              }}>
+              <Text style={{color: Primary, marginRight: 3}}>More</Text>
+              <Image
+                style={{height: 10, width: 10, tintColor: Primary}}
+                source={require('../assets/expand.png')}></Image>
+            </TouchableOpacity>
+          </View>
+          <View style={{height: 180, marginTop: 20}}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={Movies}
+              renderItem={MoviesView}
+            />
+
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -198,13 +326,14 @@ export default Dashboard;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black',
+    backgroundColor: '#333333',
     flex: 1,
+    
   },
   Heading: {
     color: 'white',
     fontSize: 18,
     fontWeight: '700',
-    margin: 20,
+    marginLeft: 16,
   },
 });
