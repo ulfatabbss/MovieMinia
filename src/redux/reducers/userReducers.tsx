@@ -3,6 +3,17 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState: any = {
   user: null,
   isLogin: false,
+  popularMoviesData: null,
+  hindiMoviesData: null,
+  punjabiMoviesData: null,
+  upcommingMoviesData: null,
+  dramaData: null,
+  sliderData: null,
+  cartoonData: null,
+  animated1Data: null,
+  animated2Data: null,
+  dramaSlider: null,
+  animatedSlider: null,
 };
 
 export const userReducer = createSlice({
@@ -16,9 +27,56 @@ export const userReducer = createSlice({
     setIsLogin: (state, action) => {
       state.isLogin = action.payload;
     },
+    setMoviesData: (state, action) => {
+      state.popularMoviesData = action.payload;
+    },
+    setHindiMoviesData: (state, action) => {
+      state.hindiMoviesData = action.payload;
+    },
+    setPunjabiMoviesData: (state, action) => {
+      state.punjabiMoviesData = action.payload;
+    },
+    setUpcommingMoviesData: (state, action) => {
+      state.upcommingMoviesData = action.payload;
+    },
+    setDramaData: (state, action) => {
+      state.dramaData = action.payload;
+    },
+    setSliderData: (state, action) => {
+      state.sliderData = action.payload;
+    },
+    setCartoonData: (state, action) => {
+      state.cartoonData = action.payload;
+    },
+    setAnimatedData: (state, action) => {
+      state.animated1Data = action.payload;
+    },
+    setAnimated2Data: (state, action) => {
+      state.animated2Data = action.payload;
+    },
+    setDramaSlider: (state, action) => {
+      state.dramaSlider = action.payload;
+    },
+    setAnimatedSlider: (state, action) => {
+      state.animatedSlider = action.payload;
+    },
   },
 });
 
-export const {setUser, setIsLogin} = userReducer.actions;
+export const {
+  setUser,
+  setIsLogin,
+  setMoviesData,
+  setHindiMoviesData,
+  setPunjabiMoviesData,
+  setUpcommingMoviesData,
+  setDramaData,
+  setSliderData,
+  setCartoonData,
+  setAnimatedData,
+  setAnimated2Data,
+  setDramaSlider,
+  setAnimatedSlider,
+} = userReducer.actions;
 
 export default userReducer.reducer;

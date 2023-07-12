@@ -7,11 +7,21 @@ import {
   ScrollView,
   ImageBackground,
   FlatList,
+  StatusBar,
+  Dimensions,
 } from 'react-native';
 import React from 'react';
-import {Primary, black, gray, white} from '../utillis/colors';
+import {Primary, black, gray, secondary, white} from '../utillis/colors';
 import LinearGradient from 'react-native-linear-gradient';
-import {h1, h2, h3, logoIcon, movieTitle} from '../utillis/styles';
+import {
+  Heading,
+  h1,
+  h2,
+  h3,
+  logoIcon,
+  movieTitle,
+  smalltext,
+} from '../utillis/styles';
 export const Cast = [
   {
     id: 1,
@@ -60,59 +70,64 @@ export const Cast = [
   },
 ];
 const MovieDiscription = ({navigation, route}) => {
-  const {url, thumbnail, detail, name} = route.params;
+  const {item, data, type} = route.params;
   const CastView = ({item}) => (
     <View
       style={{
-        backgroundColor: white,
-        height: 160,
-        width: 140,
-        marginHorizontal: 10,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        height: 150,
+        width: Dimensions.get('window').width / 3 - 10,
+        marginHorizontal: 5,
         borderRadius: 10,
-        overflow: 'hidden',
+        alignItems: 'center',
       }}>
       <Image
         resizeMode="cover"
-        style={{height: '100%', width: '100%'}}
-        source={{uri: item.Image}}></Image>
+        style={{height: 100, width: 100, borderRadius: 50, marginTop: 10}}
+        source={{uri: item.image}}
+      />
+      <Text numbersofline={1} style={[h1, {color: 'white', marginTop: 5}]}>
+        {item.name}
+      </Text>
     </View>
   );
   const back = ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.7)'];
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" />
       <View style={{paddingBottom: 40}}>
         <View style={styles.mainCard}>
           <ImageBackground
-          resizeMode='cover'
+            resizeMode="stretch"
             style={{
-              width: '100%',
+              width: Dimensions.get('window').width,
               height: 330,
-              borderBottomRightRadius: 25,
-              borderBottomLeftRadius: 25,
+              // borderBottomRightRadius: 25,
+              // borderBottomLeftRadius: 25,
               overflow: 'hidden',
             }}
             source={{
-              uri: thumbnail,
+              uri: item.poster[0].image,
             }}>
             <LinearGradient
               style={{
                 height: 330,
                 width: '100%',
-                padding: 20,
-                borderBottomRightRadius: 25,
-                borderBottomLeftRadius: 25,
               }}
-              colors={back}
-              start={{x: 0, y: 4}}
-              end={{x: 0, y: 2}}>
+              colors={[
+                'rgba(0,0,0,0.5)',
+                'rgba(0,0,0,0.7))',
+                'rgba(0,0,0,0.5)',
+                'rgba(0,0,0,1)',
+              ]}>
               <View style={styles.movieDetail}>
-                <Image
+                {/* <Image
                   resizeMode="contain"
                   source={require('../assets/logo.png')}
-                  style={[logoIcon, {}]}
-                />
-                <Text style={movieTitle}>John Wick : Chapter 4</Text>
-                <View style={{flexDirection: 'row'}}>
+                  style={logoIcon}
+                /> */}
+
+                {/* <View style={{flexDirection: 'row'}}>
                   <View style={styles.TitleTxt}>
                     <Text style={styles.movieDetailTxt}>Action</Text>
                   </View>
@@ -122,12 +137,25 @@ const MovieDiscription = ({navigation, route}) => {
                   <View style={styles.TitleTxt}>
                     <Text style={styles.movieDetailTxt}>Crime</Text>
                   </View>
-                </View>
+                </View> */}
               </View>
             </LinearGradient>
           </ImageBackground>
-          <View style={styles.overviewCard}>
-            <View style={{alignItems: 'center'}}>
+          <TouchableOpacity
+            style={styles.overviewCard}
+            onPress={() => {
+              navigation.navigate('Player', {
+                url: type == 'Drama' ? item.episods[0].url : item.url,
+                data: data,
+                type: type,
+              });
+            }}>
+            <Image
+              style={{height: 60, width: 60}}
+              source={require('../assets/play.png')}
+            />
+            {/* <Text style={Heading}>Play Now</Text> */}
+            {/* <View style={{alignItems: 'center'}}>
               <Image
                 style={{
                   height: 20,
@@ -155,7 +183,9 @@ const MovieDiscription = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Player', {
-                    url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                    url: type == 'Drama' ? item.episods[0].url : item.url,
+                    data: data,
+                    type: type,
                   });
                 }}
                 style={{}}>
@@ -182,9 +212,10 @@ const MovieDiscription = ({navigation, route}) => {
                 source={require('../assets/download.png')}
               />
               <Text style={h3}>Download</Text>
-            </View>
-          </View>
+            </View> */}
+          </TouchableOpacity>
         </View>
+        <Text style={[h1, {fontSize: 22}]}>{item.title}</Text>
         <View style={styles.overViewDetail}>
           <View style={{flexDirection: 'row'}}>
             <Text
@@ -192,10 +223,10 @@ const MovieDiscription = ({navigation, route}) => {
                 h2,
                 {color: 'green', marginRight: 10, fontWeight: '800'},
               ]}>
-              84% match
+              3 84% match
             </Text>
-            <Text style={[h2, {marginRight: 10}]}>2018</Text>
-            <Text style={[h2, {marginRight: 10}]}>1h 34m</Text>
+            <Text style={[h2, {marginRight: 10}]}>{item.releaseYear}</Text>
+            <Text style={[h2, {marginRight: 10}]}>{item.duration}</Text>
           </View>
           <Text
             style={[
@@ -208,37 +239,30 @@ const MovieDiscription = ({navigation, route}) => {
                 borderColor: 'gray',
               },
             ]}>
-            {detail}
+            {item.overView}
           </Text>
         </View>
-        <View style={{paddingHorizontal: 10}}>
-          <View
-            style={{
-              borderBottomWidth: 1,
-              paddingBottom: 15,
-              borderColor: 'gray',
-              marginBottom: 15,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginVertical: 10,
-              }}>
-              <Text style={[h1, {}]}>Cast & Crew</Text>
-              {/* <TouchableOpacity>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginVertical: 10,
+          }}>
+          <Text style={[h1, {fontSize: 20}]}>Cast</Text>
+          {/* <TouchableOpacity>
                 <Text style={[h2, {color: Primary}]}>See All</Text>
               </TouchableOpacity> */}
-            </View>
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={Cast}
-              renderItem={CastView}
-            />
-          </View>
-          <View
+        </View>
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={item.cast}
+          renderItem={CastView}
+        />
+
+        {/* <View
             style={{
               borderBottomWidth: 1,
               paddingBottom: 15,
@@ -249,7 +273,7 @@ const MovieDiscription = ({navigation, route}) => {
             }}>
             <Image
               resizeMode="cover"
-              style={{height: 180, width: 150, borderRadius: 10}}
+              style={{ height: 180, width: 150, borderRadius: 10 }}
               source={{
                 uri: 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/eRCryGwKDH4XqUlrdkERmeBWPo8.jpg',
               }}
@@ -260,18 +284,17 @@ const MovieDiscription = ({navigation, route}) => {
                 justifyContent: 'space-evenly',
                 width: '55%',
               }}>
-              <Text style={[h1, {fontWeight: 'normal'}]}>Director</Text>
-              <Text style={[h2, {fontWeight: 'normal'}]}>
+              <Text style={[h1, { fontWeight: 'normal' }]}>Director</Text>
+              <Text style={[h2, { fontWeight: 'normal' }]}>
                 Chad Stahelski is an American stuntman and film director. He is
                 known for directing 2014 film John Wick along with David Leitch,
                 and for doubling Brandon Lee after the fatal accident involving.
               </Text>
-              <Text style={[h2, {fontWeight: 'normal', color: Primary}]}>
+              <Text style={[h2, { fontWeight: 'normal', color: Primary }]}>
                 Know more
               </Text>
             </View>
-          </View>
-        </View>
+          </View> */}
       </View>
     </ScrollView>
   );
@@ -282,8 +305,7 @@ export default MovieDiscription;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: gray,
-    
+    backgroundColor: '#000',
   },
   mainCard: {
     width: '100%',
@@ -294,7 +316,7 @@ const styles = StyleSheet.create({
   TitleTxt: {
     paddingHorizontal: 7,
     paddingVertical: 4,
-    backgroundColor: gray,
+    backgroundColor: secondary,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 7,
@@ -312,26 +334,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   overviewCard: {
-    backgroundColor: gray,
+    width: 60,
     width: '100%',
-    paddingTop: 10,
-    paddingBottom: 7,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 30,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '70%',
     position: 'absolute',
-    top: '90%',
-    left: '15%',
+    // left: '15%',
     zIndex: 1,
+    elevation: 5,
+    alignSelf: 'center',
+    // shadowColor: 'white',
   },
   overViewDetail: {
     width: '100%',
     paddingBottom: 10,
-    marginTop: 50,
+    marginTop: 10,
     paddingHorizontal: 10,
   },
   // overviewCardTitle: {
@@ -346,7 +363,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     fontWeight: '800',
-    marginVertical: 10,
+    marginHorizontal: 12,
   },
   h2: {
     fontSize: 16,

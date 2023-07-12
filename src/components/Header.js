@@ -18,29 +18,21 @@ const Header = ({navigation}) => {
     setSearch(search);
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        {/* <Image
-          resizeMode="contain"
-          style={[
-            styles.logo,
-            {tintColor: 'white', height: 24, width: 24, marginLeft: 10},
-          ]}
-          source={require('../assets/drawer.png')}
-        /> */}
+    <View style={styles.header}>
+      <Image
+        resizeMode="contain"
+        style={styles.logo}
+        source={require('../assets/original.png')}
+      />
+      <TouchableOpacity onPress={() => store.dispatch(setIsLogin(false))}>
         <Image
           resizeMode="contain"
-          style={styles.logo}
-          source={require('../assets/logo.png')}
+          style={styles.logoutIcon}
+          source={{
+            uri: 'https://imgv3.fotor.com/images/gallery/AI-3D-Female-Profile-Picture.jpg',
+          }}
         />
-        <TouchableOpacity onPress={() => store.dispatch(setIsLogin(false))}>
-          <Image
-            resizeMode="contain"
-            style={styles.logoutIcon}
-            source={require('../assets/logout.png')}
-          />
-        </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -48,37 +40,25 @@ const Header = ({navigation}) => {
 export default Header;
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
   logo: {
-    width: 60,
+    tintColor: 'red',
     height: 60,
-    
+    width: '50%',
   },
   header: {
+    height: 60,
     flexDirection: 'row',
     alignItems: 'center',
     with: '100%',
     justifyContent: 'space-between',
-    paddingHorizontal:20,
+    paddingHorizontal: 20,
+    marginVertical: 5,
   },
-  category: {
-    height: 40,
-    borderRadius: 25,
-    borderWidth: 1,
-    borderColor: 'white',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '60%',
-    marginRight: 10,
-  },
-  categoryImg: {height: 20, width: 20, tintColor: 'white'},
-  searchTxt: {width: '80%', color: 'white'},
   logoutIcon: {
-    width: 25,
-    height: 25,
-    tintColor: 'white',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: 'red',
   },
 });

@@ -1,20 +1,24 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {Image} from '@rneui/base';
+import {StatusBar} from 'react-native';
+import {Primary, secondary} from '../utillis/colors';
 
 const Splash = ({navigation}) => {
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: 'black',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: secondary,
       }}>
+      <StatusBar hidden />
       <Image
         resizeMode="contain"
-        style={{height: 300, width: 300}}
-        source={require('../assets/logo.png')}></Image>
+        style={{height: 400, width: 400, tintColor: secondary}}
+        source={require('../assets/logo1.png')}
+      />
     </View>
   );
 };

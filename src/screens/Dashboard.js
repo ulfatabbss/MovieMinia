@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -12,8 +13,26 @@ import {
 } from 'react-native';
 import React, {useRef, useEffect, useState} from 'react';
 import Carousel from 'react-native-snap-carousel';
-import {Primary} from '../utillis/colors';
+import {Primary, secondary} from '../utillis/colors';
 import Header from '../components/Header';
+import {GetMovies, GetSlider, GetUpcomming} from '../services/AppServices';
+import {store} from '../redux/store';
+import {
+  setAnimated2Data,
+  setAnimatedData,
+  setAnimatedSlider,
+  setCartoonData,
+  setDramaSlider,
+  setHindiMoviesData,
+  setMoviesData,
+  setPunjabiMoviesData,
+  setSliderData,
+  setUpcommingMoviesData,
+} from '../redux/reducers/userReducers';
+import {useSelector} from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
+import {Heading, MovieView, smalltext} from '../utillis/styles';
+import GradientText from '../components/GradientText';
 
 export const Movies = [
   {
@@ -109,56 +128,157 @@ export const Movies = [
 ];
 const Dashboard = ({navigation}) => {
   const carouselRef = useRef(null);
-  const [entries, setEntries] = useState([]);
-  const sliderWidth = Dimensions.get('window').width; // Replace with your desired value
-  const itemWidth = Dimensions.get('window').width - 90; // Replace with your desired value
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const initialIndex = 1; // Index of the item to start from
+  const {width: screenWidth} = Dimensions.get('window');
+  const {
+    popularMoviesData,
+    hindiMoviesData,
+    punjabiMoviesData,
+    upcommingMoviesData,
+    sliderData,
+  } = useSelector(state => state.root.user);
+  const [loding, setLoding] = useState(true);
 
-  const MoviesView = ({item}) => (
+  useEffect(() => {
+    setLoding(true);
+    const integrate = async () => {
+      await GetMovies()
+        .then(async ({data}) => {
+          store.dispatch(
+            setMoviesData(data.filter(object => object.category === 'English')),
+          );
+          store.dispatch(
+            setHindiMoviesData(
+              data.filter(object => object.category === 'Hindi'),
+            ),
+          );
+          store.dispatch(
+            setPunjabiMoviesData(
+              data.filter(object => object.category === 'Punjabi'),
+            ),
+          );
+          const animatedObjects = data.filter(
+            object => object.category === 'Animated',
+          );
+          store.dispatch(setCartoonData(animatedObjects));
+          store.dispatch(
+            setAnimatedData(
+              data.filter(object => object.category === 'Animated1'),
+            ),
+          );
+          store.dispatch(
+            setAnimated2Data(
+              data.filter(object => object.category === 'Animated2'),
+            ),
+          );
+        })
+        .catch(err => {
+          console.log(err, 'errors');
+        });
+      await GetUpcomming()
+        .then(async ({data}) => {
+          store.dispatch(setUpcommingMoviesData(data));
+        })
+        .catch(err => {
+          console.log(err, 'errors');
+        });
+      await GetSlider()
+        .then(async ({data}) => {
+          store.dispatch(setSliderData(data[0].poster));
+          store.dispatch(setDramaSlider(data[1].poster));
+          store.dispatch(setAnimatedSlider(data[2].poster));
+          // console.log(data[0].poster);
+        })
+        .catch(err => {
+          console.log(err, 'errors');
+        });
+    };
+    integrate();
+    setLoding(false);
+  }, []);
+
+  const ListView = ({item, data}) => (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('MovieDiscription', {
-          url: item.uri,
-          thumbnail: item.Image,
-          detail: item.detail,
+          item: item,
+          data: data,
+          type: 'Movies',
         })
       }
       style={{
-        backgroundColor: 'black',
-        height: 160,
-        width: 120,
-        marginHorizontal: 6,
-        borderRadius: 10,
-        overflow: 'hidden',
-        justifyContent: 'space-around',
+        height: 80,
+        width: 80,
+        borderRadius: 40,
+        marginHorizontal: 5,
         alignItems: 'center',
-        elevation: 10,
-
-        shadowColor: 'black',
       }}>
       <ImageBackground
-        resizeMode="cover"
+        resizeMode="stretch"
+        source={{uri: item.poster[0].image}}
+        style={{
+          height: 80,
+          width: 80,
+          borderRadius: 40,
+          overflow: 'hidden',
+          position: 'absolute',
+          // borderColor: '#fff',
+          // borderWidth: 1,
+        }}>
+        <LinearGradient
+          start={{x: 0.0, y: 0.6}}
+          end={{x: 0.0, y: 1.0}}
+          colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.4)']}
+          style={{
+            height: 100,
+            width: 100,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          {/* <Text numberOfLines={2} style={{
+            margin: 5,
+            fontSize: 15, color: 'white', fontFamily: 'BebasNeue-Regular'
+          }}>{item.title}</Text> */}
+        </LinearGradient>
+      </ImageBackground>
+    </TouchableOpacity>
+  );
+  const MoviesView = ({item, data}) => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('MovieDiscription', {
+          item: item,
+          data: data,
+          type: 'Movies',
+        })
+      }
+      style={MovieView}>
+      <ImageBackground
+        // resizeMode="cover"
         style={{
           height: '100%',
           width: '100%',
           justifyContent: 'flex-end',
         }}
-        source={{uri: item.Image}}>
+        source={{uri: item.poster[0].image}}>
         <View
           style={{
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: 'rgba(0,0,0,0.9)',
             width: '100%',
+            height: '20%',
             justifyContent: 'space-evenly',
             alignItems: 'center',
+            padding: 4,
           }}>
-          <Text style={{color: 'white', fontSize: 12, marginTop: 4}}>
-            {item.name}
+          <Text
+            numberOfLines={1}
+            style={{
+              color: 'white',
+              fontSize: 14,
+              fontFamily: 'BebasNeue-Regular',
+            }}>
+            {item.title}
           </Text>
-          <Image
-            style={{height: 20, width: 20, marginVertical: 5}}
-            source={require('../assets/play.png')}></Image>
-          {/* <Text style={{color: 'white', fontSize: 8}}>watch Now</Text> */}
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -166,49 +286,63 @@ const Dashboard = ({navigation}) => {
   const MovieCards = ({item}) => (
     <View
       style={{
-        height: 220,
+        height: 200,
+        width: Dimensions.get('window').width - 40,
         backgroundColor: 'white',
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
-        elevation: 10,
+        elevation: 5,
         shadowColor: 'white',
-        marginBottom: 20,
+        marginBottom: 10,
+        alignSelf: 'center',
+        // borderWidth: 1,
+        // borderColor: 'white',
       }}>
       <Image
-        resizeMode="stretch"
-        source={{uri: item.Image}}
-        style={{height: '100%', width: '100%', borderRadius: 10}}></Image>
+        resizeMode="contain"
+        source={{uri: item?.image}}
+        style={{height: '100%', width: '100%', borderRadius: 10}}
+      />
     </View>
   );
+
+  if (loding) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size={'large'} color={'red'} />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
+      <StatusBar translucent backgroundColor="black" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
         <Carousel
+          layout={'default'}
+          layoutCardOffset={9}
           ref={carouselRef}
-          data={Movies.concat(Movies[0])}
+          data={sliderData.concat(sliderData[0])}
           renderItem={MovieCards}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
+          sliderWidth={screenWidth}
+          sliderHeight={screenWidth}
+          itemWidth={screenWidth - 45}
           firstItem={initialIndex}
           autoplay={true}
           loop={true}
           autoplayInterval={3000}
           onSnapToItem={index => {
-            if (index === Movies.length) {
+            if (index === sliderData.length) {
               carouselRef.current.snapToItem(0, false);
-              setCurrentIndex(0);
             } else {
-              setCurrentIndex(index);
             }
           }}
         />
         <View
           style={{
             marginHorizontal: 2,
-
             borderRadius: 20,
           }}>
           <View
@@ -216,8 +350,10 @@ const Dashboard = ({navigation}) => {
               alignItems: 'center',
               flexDirection: 'row',
               justifyContent: 'space-between',
+              marginTop: 15,
             }}>
-            <Text style={styles.Heading}>Trending</Text>
+            {/* <GradientText text={'Preview'}/> */}
+            <Text style={Heading}>Preview</Text>
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
@@ -226,57 +362,21 @@ const Dashboard = ({navigation}) => {
                 marginTop: 10,
                 marginRight: 10,
               }}>
-              <Text style={{color: Primary, marginRight: 3}}>More</Text>
-              <Image
-                style={{height: 10, width: 10, tintColor: Primary}}
-                source={require('../assets/expand.png')}></Image>
+              <Text style={smalltext}>More</Text>
+              {/* <Image
+                style={{ height: 10, width: 10, tintColor: Primary }}
+                source={require('../assets/expand.png')}></Image> */}
             </TouchableOpacity>
           </View>
 
-          <View style={{marginTop: 10}}>
+          <View style={{marginTop: 10, marginHorizontal: 10}}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
-              data={Movies}
-              renderItem={MoviesView}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            marginTop: 10,
-            marginHorizontal: 2,
-
-            borderRadius: 20,
-          }}>
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={styles.Heading}>Popular</Text>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'baseline',
-                justifyContent: 'flex-end',
-                marginTop: 10,
-                marginRight: 10,
-              }}>
-              <Text style={{color: Primary, marginRight: 3}}>More</Text>
-              <Image
-                style={{height: 10, width: 10, tintColor: Primary}}
-                source={require('../assets/expand.png')}></Image>
-            </TouchableOpacity>
-          </View>
-
-          <View style={{height: 180, marginTop: 20}}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={Movies}
-              renderItem={MoviesView}
+              data={upcommingMoviesData}
+              renderItem={({item}) =>
+                MoviesView({item: item, data: popularMoviesData})
+              }
             />
           </View>
         </View>
@@ -292,7 +392,7 @@ const Dashboard = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={styles.Heading}>New This Year</Text>
+            <Text style={Heading}>Popular</Text>
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
@@ -301,20 +401,97 @@ const Dashboard = ({navigation}) => {
                 marginTop: 10,
                 marginRight: 10,
               }}>
-              <Text style={{color: Primary, marginRight: 3}}>More</Text>
-              <Image
-                style={{height: 10, width: 10, tintColor: Primary}}
-                source={require('../assets/expand.png')}></Image>
+              <Text style={smalltext}>More</Text>
+              {/* <Image
+                style={{ height: 10, width: 10, tintColor: Primary }}
+                source={require('../assets/expand.png')}></Image> */}
             </TouchableOpacity>
           </View>
-          <View style={{height: 180, marginTop: 20}}>
+
+          <View style={{marginTop: 10, marginHorizontal: 10}}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
-              data={Movies}
-              renderItem={MoviesView}
+              data={popularMoviesData}
+              renderItem={({item}) =>
+                MoviesView({item: item, data: popularMoviesData})
+              }
             />
-
+          </View>
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            marginHorizontal: 2,
+            borderRadius: 20,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={Heading}>Indian</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'baseline',
+                justifyContent: 'flex-end',
+                marginTop: 10,
+                marginRight: 10,
+              }}>
+              <Text style={smalltext}>More</Text>
+              {/* <Image
+                style={{ height: 10, width: 10, tintColor: Primary }}
+                source={require('../assets/expand.png')}></Image> */}
+            </TouchableOpacity>
+          </View>
+          <View style={{marginTop: 10, marginHorizontal: 10, marginBottom: 10}}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={hindiMoviesData}
+              renderItem={({item}) =>
+                MoviesView({item: item, data: hindiMoviesData})
+              }
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            marginHorizontal: 2,
+            borderRadius: 20,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={Heading}>Punjabi</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'baseline',
+                justifyContent: 'flex-end',
+                marginTop: 10,
+                marginRight: 10,
+              }}>
+              <Text style={smalltext}>More</Text>
+              {/* <Image
+                style={{ height: 10, width: 10, tintColor: Primary }}
+                source={require('../assets/expand.png')}></Image> */}
+            </TouchableOpacity>
+          </View>
+          <View style={{marginTop: 10, marginHorizontal: 10, marginBottom: 10}}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={punjabiMoviesData}
+              renderItem={({item}) =>
+                MoviesView({item: item, data: punjabiMoviesData})
+              }
+            />
           </View>
         </View>
       </ScrollView>
@@ -326,14 +503,8 @@ export default Dashboard;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#333333',
+    backgroundColor: secondary,
     flex: 1,
-    
-  },
-  Heading: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '700',
-    marginLeft: 16,
+    marginTop: StatusBar.currentHeight,
   },
 });

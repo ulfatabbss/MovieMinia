@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 
 import {
   FlatList,
@@ -10,88 +10,33 @@ import {
   Modal,
   Pressable,
   Share,
+  StatusBar,
+  Dimensions,
 } from 'react-native';
-
-import Video from 'react-native-video';
-// import Modal from 'react-native-modal';
-//Media Controls to control Play/Pause/Seek and full screen
-import MediaControls, {PLAYER_STATES} from 'react-native-media-controls';
-import {Movies} from './Dashboard';
 import {Image} from '@rneui/base';
 import {Primary, white} from '../utillis/colors';
 import AnimatedLottieView from 'lottie-react-native';
+import {WebView} from 'react-native-webview';
+import {ActivityIndicator} from 'react-native';
+const height = Dimensions.get('window').height;
+const width = Dimensions.get('window').width;
 const Player = ({navigation, route}) => {
-  const {url} = route.params;
-  const videoPlayer = useRef(null);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [paused, setPaused] = useState(false);
-  const [playerState, setPlayerState] = useState(PLAYER_STATES.PLAYING);
-  const [Full, setFull] = useState(false);
-  const [screenType, setScreenType] = useState('content');
+  const {url, data, type} = route.params;
   const [focused, setFocused] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [itemDetail, setItemDetail] = useState('');
-  const onSeek = seek => {
-    videoPlayer.current.seek(seek);
-  };
+  const [visible, setVisible] = useState(false);
+  const [loding, setLoding] = useState(true);
   const shareData = async item => {
     try {
       await Share.share({
         message: 'Check out this link',
         // url: item.uri,
-        //here we can add our app link to share our app with peoples
       });
     } catch (error) {
       alert(error.message);
     }
   };
-
-  const onPaused = playerState => {
-    setPaused(!paused);
-    setPlayerState(playerState);
-  };
-
-  const onReplay = () => {
-    setPlayerState(PLAYER_STATES.PLAYING);
-    videoPlayer.current.seek(0);
-  };
-
-  const onProgress = data => {
-    if (!isLoading && playerState !== PLAYER_STATES.ENDED) {
-      setCurrentTime(data.currentTime);
-    }
-  };
-
-  const onLoad = data => {
-    setDuration(data.duration);
-    setIsLoading(false);
-  };
-
-  const onLoadStart = data => setIsLoading(true);
-
-  const onEnd = () => setPlayerState(PLAYER_STATES.ENDED);
-
-  const onFullScreen = () => {
-    setFull(true);
-
-    if (screenType == 'content') {
-      setScreenType('cover'), setFull(true);
-    } else {
-      setScreenType('content');
-      setFull(false);
-    }
-  };
-
-  const renderToolbar = () => (
-    <View>
-      <Text style={styles.toolbar}> toolbar </Text>
-    </View>
-  );
-
-  const onSeeking = currentTime => setCurrentTime(currentTime);
   const like = () => {
     if (focused == true) {
       setFocused(false);
@@ -103,31 +48,55 @@ const Player = ({navigation, route}) => {
     <View
       style={{
         height: 60,
+        width: Dimensions.get('window').width - 30,
+        alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 10,
-        marginTop: 20,
+        marginVertical: 5,
+        marginHorizontal: 10,
         backgroundColor: 'black',
         justifyContent: 'space-around',
       }}>
-      <Text style={{color: 'gray', margin: 8}}>{item.id}</Text>
+      {/* {console.log(item?.poster[0]?.image)} */}
+      {/* <Text style={{ color: 'gray', margin: 8 }}>{item.epi_no}</Text> */}
       <TouchableOpacity
         style={{flexDirection: 'row', alignItems: 'center'}}
-        onPress={() => navigation.replace('Player', {url: item.uri})}>
+        onPress={() =>
+          navigation.replace('Player', {url: item?.url, data: data, type: type})
+        }>
         <Image
-          style={{height: 50, width: 50, marginRight: 10, borderRadius: 90}}
-          source={{uri: item.Image}}></Image>
+          resizeMode="contain"
+          style={{
+            height: 50,
+            width: 50,
+            marginRight: 10,
+            borderRadius: 90,
+            borderWidth: 1,
+            borderColor: '#fff',
+          }}
+          source={{
+            uri:
+              type == 'Movies' ? item.poster[0].image : data?.poster[0].image,
+          }}
+        />
         <View>
-          <Text style={{color: url == item.uri ? Primary : 'white'}}>
-            {item.name}
+          <Text
+            numberOfLines={1}
+            style={{
+              width: Dimensions.get('window').width / 2,
+              color: url == item.uri ? Primary : 'white',
+            }}>
+            {type == 'Movies' ? item.title : data?.title}
           </Text>
-          <Text numberOfLines={1} style={{color: 'gray'}}>
-            Artist | song | Arjit singh from india
+          <Text
+            numberOfLines={1}
+            style={{color: 'gray', width: Dimensions.get('window').width / 2}}>
+            {type == 'Movies' ? item.title : `Episode No ${item?.epi_no}`}
           </Text>
         </View>
       </TouchableOpacity>
       <View style={{width: 30}}>
-        {url == item.uri ? (
+        {url == item?.url ? (
           <AnimatedLottieView
             autoPlay
             loop
@@ -155,48 +124,88 @@ const Player = ({navigation, route}) => {
     </View>
   );
 
+  const [show, setShow] = useState(false);
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => setLoding(false), 3 * 1000);
+
+      // this will clear Timeout
+      // when component unmount like in willComponentUnmount
+      // and show will not change to true
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    // useEffect will run only one time with empty []
+    // if you pass a value to array,
+    // like this - [data]
+    // than clearTimeout will run every time
+    // this value changes (useEffect re-run)
+    [],
+  );
+  const adBlockPattern = /ads\.example\.com/; // Add your ad domain pattern here
+
+  const shouldStartLoadWithRequest = request => {
+    const {url} = request;
+
+    if (adBlockPattern.test(url)) {
+      return false; // Block the request
+    }
+    return true; // Allow the request
+  };
+
+  if (loding) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size={'large'} color={'red'} />
+      </View>
+    );
+  }
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
-      <View style={{height: Full ? '100%' : '30%'}}>
-        <Video
-          onEnd={onEnd}
-          onLoad={onLoad}
-          onLoadStart={onLoadStart}
-          onProgress={onProgress}
-          paused={paused}
-          ref={videoPlayer}
-          resizeMode={screenType}
-          onFullScreen={isFullScreen}
+      <StatusBar translucent backgroundColor="#333333" />
+      <View
+        style={{
+          marginTop: StatusBar.currentHeight,
+          height: 300,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <WebView
+          onLoadStart={() => setVisible(true)}
+          onLoadEnd={() => setVisible(false)}
           source={{
             uri: url,
           }}
+          onShouldStartLoadWithRequest={shouldStartLoadWithRequest}
+          // injectedJavaScript={extractVideoUrl}
+          allowsFullscreenVideo
           style={styles.mediaPlayer}
-          volume={10}
+          scrollEnabled={false}
+          mediaPlaybackRequiresUserAction={true}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
         />
-        <MediaControls
-          duration={duration}
-          isLoading={isLoading}
-          mainColor="#333"
-          onFullScreen={onFullScreen}
-          onPaused={onPaused}
-          onReplay={onReplay}
-          onSeek={onSeek}
-          onSeeking={onSeeking}
-          playerState={playerState}
-          progress={currentTime}
-          toolbar={renderToolbar()}
-        />
+        {visible && (
+          <ActivityIndicator
+            size={'large'}
+            color={'red'}
+            style={{
+              position: 'absolute',
+              height: height / 2,
+              width: width / 2,
+            }}></ActivityIndicator>
+        )}
       </View>
       <Text style={{color: white, margin: 10, fontSize: 16}}>
         Releated Videos
       </Text>
       <FlatList
-        data={Movies}
+        data={type == 'Drama' ? data.episods : data}
         showsVerticalScrollIndicator={false}
         renderItem={MovieListView}
       />
-      {/* Modal Start */}
-
       <View style={{flex: 1}}>
         <Modal
           animationType="slide"
@@ -295,13 +304,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   mediaPlayer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+    height: 300,
+    width: Dimensions.get('window').width,
     backgroundColor: 'black',
-    justifyContent: 'center',
   },
   modalContainer: {
     flex: 1,

@@ -7,7 +7,6 @@ import Cartoons from '../Cartoons';
 import Find from '../PlayList';
 import {Primary, black, gray, white} from '../../utillis/colors';
 import PlayList from '../PlayList';
-
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
@@ -18,11 +17,11 @@ const Tabs = () => {
           headerShown: false,
           tabBarShowLabel: false,
           tabBarActiveTintColor: Primary,
-          tabBarInactiveBackgroundColor: 'rgba(51,51,51,0.8)',
-          tabBarActiveBackgroundColor: 'rgba(51,51,51,0.8)',
-
+          tabBarInactiveBackgroundColor: 'rgba(0,0,0,1)',
+          tabBarActiveBackgroundColor: 'rgba(0,0,0,1)',
           borderRadius: 25,
           tabBarStyle: {
+            height: 50,
             borderTopWidth: 0,
             bottom: 15,
             width: '80%',
@@ -30,8 +29,8 @@ const Tabs = () => {
             borderRadius: 25,
             justifyContent: 'center',
             position: 'absolute',
-            overflow: 'hidden',
             backgroundColor: 'transparent',
+            overflow: 'hidden',
           },
         }}>
         <Tab.Screen
@@ -43,26 +42,24 @@ const Tabs = () => {
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
+                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
+                  width: 50,
+                  height: 50,
                   borderRadius: 25,
-                  backgroundColor: focused
-                    ? 'rgba(255,255,255,0.2)'
-                    : 'rgba(0,0,0,0)',
-                  width: '100%',
-                  height: '100%',
                 }}>
                 <Image
                   style={{
-                    height: focused ? 23 : 20,
-                    width: focused ? 23 : 20,
-                    tintColor: focused ? white : white,
+                    height: focused ? 18 : 15,
+                    width: focused ? 18 : 15,
+                    tintColor: focused ? 'red' : white,
                   }}
                   source={require('../../assets/home.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? white : white,
-                    fontSize: 10,
+                    color: focused ? 'red' : white,
+                    fontSize: 8,
                   }}>
                   Home
                 </Text>
@@ -82,27 +79,26 @@ const Tabs = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 25,
-                  backgroundColor: focused
-                    ? 'rgba(255,255,255,0.2)'
-                    : 'rgba(0,0,0,0)',
-                  width: '100%',
-                  height: '100%',
+                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
                 }}>
                 <Image
                   style={{
-                    height: focused ? 23 : 20,
-                    width: focused ? 23 : 20,
-                    tintColor: focused ? white : white,
+                    height: focused ? 18 : 15,
+                    width: focused ? 18 : 15,
+                    tintColor: focused ? 'red' : white,
                   }}
                   source={require('../../assets/tvshow.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? white : white,
-                    fontSize: 10,
+                    color: focused ? 'red' : white,
+                    fontSize: 8,
                   }}>
-                  TV Showes
+                  Showes
                 </Text>
               </View>
             ),
@@ -119,25 +115,24 @@ const Tabs = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 25,
-                  backgroundColor: focused
-                    ? 'rgba(255,255,255,0.2)'
-                    : 'rgba(0,0,0,0)',
-                  width: '100%',
-                  height: '100%',
+                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
                 }}>
                 <Image
                   style={{
-                    height: focused ? 23 : 20,
-                    width: focused ? 23 : 20,
-                    tintColor: focused ? white : white,
+                    height: focused ? 18 : 15,
+                    width: focused ? 18 : 15,
+                    tintColor: focused ? 'red' : white,
                   }}
                   source={require('../../assets/cartoon.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? white : white,
-                    fontSize: 10,
+                    color: focused ? 'red' : white,
+                    fontSize: 8,
                   }}>
                   Cartoons
                 </Text>
@@ -155,25 +150,24 @@ const Tabs = () => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   borderRadius: 25,
-                  backgroundColor: focused
-                    ? 'rgba(255,255,255,0.2)'
-                    : 'rgba(0,0,0,0)',
-                  width: '100%',
-                  height: '100%',
+                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
                 }}>
                 <Image
                   style={{
-                    height: focused ? 23 : 20,
-                    width: focused ? 23 : 20,
-                    tintColor: focused ? white : white,
+                    height: focused ? 18 : 15,
+                    width: focused ? 18 : 15,
+                    tintColor: focused ? 'red' : white,
                   }}
                   source={require('../../assets/playlist.png')}
                   resizeMode="contain"
                 />
                 <Text
                   style={{
-                    color: focused ? white : white,
-                    fontSize: 10,
+                    color: focused ? 'red' : white,
+                    fontSize: 8,
                   }}>
                   PlayList
                 </Text>

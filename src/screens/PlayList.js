@@ -8,11 +8,9 @@ import {
   TextInput,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {Primary, black, white} from '../utillis/colors';
+import {secondary, white} from '../utillis/colors';
 import {Movies} from './Dashboard';
-import AnimatedLottieView from 'lottie-react-native';
 import Header2 from '../components/Header2';
-
 const PlayList = ({navigation}) => {
   const [movie, setMovie] = useState([]);
   const [masterData, setMasterData] = useState([]);
@@ -44,9 +42,13 @@ const PlayList = ({navigation}) => {
         alignItems: 'center',
         padding: 10,
         marginTop: 20,
-        backgroundColor: 'black',
+        alignSelf: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'space-evenly',
-        width: '100%',
+        width: '95%',
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: 20,
       }}>
       <Text style={{color: 'gray', margin: 8}}>{item.id}</Text>
       <TouchableOpacity
@@ -80,7 +82,7 @@ const PlayList = ({navigation}) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: black,
+        backgroundColor: secondary,
         justifyContent: 'center',
         alignItems: 'center',
       }}>

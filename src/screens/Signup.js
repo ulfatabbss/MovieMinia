@@ -63,11 +63,17 @@ const Signup = ({navigation}) => {
             resizeMode="cover"
             style={styles.bgImage}>
             <View style={styles.overlay}>
-              <View style={{justifyContent: 'center', alignSelf: 'center'}}>
-                <Image
-                  style={{height: 250, width: 250}}
-                  source={require('../assets/logo.png')}></Image>
-              </View>
+              <Image
+                resizeMode="contain"
+                style={{
+                  marginTop: '20%',
+                  height: 150,
+                  width: 200,
+                  tintColor: 'red',
+                  alignSelf: 'center',
+                }}
+                source={require('../assets/logo1.png')}
+              />
               <View style={styles.formWrapper}>
                 <View style={styles.form}>
                   <Text style={styles.normalTxt}>Sign Up</Text>
@@ -107,7 +113,7 @@ const Signup = ({navigation}) => {
                       autoCapitalize={'none'}
                       onChangeText={handleChange('password')}
                       secureTextEntry={PasswordVisibility}
-                      style={{width: 250}}
+                      style={{width: 250, fontFamily: 'BebasNeue-Regular'}}
                     />
                     <TouchableOpacity onPress={TogglePassword}>
                       <Image
@@ -121,26 +127,25 @@ const Signup = ({navigation}) => {
                   <TouchableOpacity
                     style={styles.signinBtn}
                     onPress={() => handleSubmit()}>
-                    <Text style={styles.signinTxt}>Sign Up</Text>
+                    <Text style={styles.signupTxt}>Sign Up</Text>
                   </TouchableOpacity>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        marginTop: 15,
-                      }}>
-                      <Text style={styles.signupTxt}>
-                        Already have an account?{' '}
-                      </Text>
-                      <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => navigation.navigate('Signin')}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      marginTop: 15,
+                    }}>
+                    <Text style={styles.signupTxt}>
+                      Already have an account?{' '}
+                    </Text>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => navigation.navigate('Signin')}>
                       <Text style={[styles.signupTxt, {color: '#E7442E'}]}>
                         Sign In
                       </Text>
-                      </TouchableOpacity>
-                    </View>
-                  
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
@@ -167,7 +172,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '90%',
-    backgroundColor: '#000',
+    backgroundColor: 'rgba(0,0,0,0.8)',
     flexDirection: 'column',
     borderRadius: 20,
     paddingHorizontal: 20,
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     margin: 10,
     textAlign: 'left',
-    fontWeight: 'bold',
+    fontFamily: 'BebasNeue-Regular',
   },
   inputTxt: {
     width: '100%',
@@ -190,6 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333333',
     color: '#fff',
     marginTop: 10,
+    fontFamily: 'BebasNeue-Regular',
   },
   inputnameTxt: {
     width: '49%',
@@ -199,6 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333333',
     color: '#fff',
     marginTop: 10,
+    fontFamily: 'BebasNeue-Regular',
   },
   signinBtn: {
     height: 50,
@@ -207,22 +214,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
-    backgroundColor: '#E7442E',
+    backgroundColor: Primary,
     width: '100%',
   },
   signupTxt: {
     fontSize: 15,
     textAlign: 'center',
     color: '#ccc',
-    fontWeight: 500,
+    fontFamily: 'BebasNeue-Regular',
   },
   nameFields: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    fontFamily: 'BebasNeue-Regular',
   },
-  errors:{
-    fontSize: 12,
-    marginStart:10,
+  errors: {
+    marginTop: 2,
+    fontSize: 8,
+    marginStart: 10,
     color: Primary,
+    fontFamily: 'BebasNeue-Regular',
   },
 });

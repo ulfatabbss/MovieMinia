@@ -12,8 +12,14 @@ import {
 } from 'react-native';
 import React, {useRef, useEffect, useState} from 'react';
 import Carousel from 'react-native-snap-carousel';
-import {Primary} from '../utillis/colors';
+import {Primary, secondary} from '../utillis/colors';
 import Header from '../components/Header';
+import {GetDrama} from '../services/AppServices';
+import {setDramaData} from '../redux/reducers/userReducers';
+import {useSelector} from 'react-redux';
+import {store} from '../redux/store';
+import {data} from 'cheerio/lib/api/attributes';
+import {Heading, MovieView, smalltext} from '../utillis/styles';
 
 export const Movies = [
   {
@@ -109,56 +115,63 @@ export const Movies = [
 ];
 const TvShowes = ({navigation}) => {
   const carouselRef = useRef(null);
-  const [entries, setEntries] = useState([]);
-  const sliderWidth = Dimensions.get('window').width; // Replace with your desired value
-  const itemWidth = Dimensions.get('window').width - 90; // Replace with your desired value
-  const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const initialIndex = 1; // Index of the item to start from
+  const {width: screenWidth} = Dimensions.get('window');
+  const {dramaData, sliderData, dramaSlider} = useSelector(
+    state => state.root.user,
+  );
+  const [indian, setIndian] = useState(null);
+  const [turkish, setTurkish] = useState(null);
 
+  useEffect(() => {
+    GetDrama()
+      .then(async ({data}) => {
+        store.dispatch(
+          setDramaData(data.filter(object => object.category === 'Urdu')),
+        );
+        setIndian(data.filter(object => object.category === 'Indian'));
+        setTurkish(data.filter(object => object.category === 'Turkish'));
+      })
+      .catch(err => {
+        console.log(err, 'errors');
+      });
+  }, []);
   const MoviesView = ({item}) => (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('MovieDiscription', {
-          url: item.uri,
-          thumbnail: item.Image,
-          detail: item.detail,
+          item: item,
+          type: 'Drama',
+          data: item,
         })
       }
-      style={{
-        backgroundColor: 'black',
-        height: 160,
-        width: 120,
-        marginHorizontal: 6,
-        borderRadius: 10,
-        overflow: 'hidden',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        elevation: 10,
-
-        shadowColor: 'black',
-      }}>
+      style={MovieView}>
       <ImageBackground
-        resizeMode="cover"
+        // resizeMode="cover"
         style={{
           height: '100%',
           width: '100%',
           justifyContent: 'flex-end',
         }}
-        source={{uri: item.Image}}>
+        source={{uri: item.poster[0].image}}>
         <View
           style={{
-            backgroundColor: 'rgba(0,0,0,0.7)',
+            backgroundColor: 'rgba(0,0,0,0.8)',
             width: '100%',
+            height: '20%',
             justifyContent: 'space-evenly',
             alignItems: 'center',
+            padding: 4,
           }}>
-          <Text style={{color: 'white', fontSize: 12, marginTop: 4}}>
-            {item.name}
+          <Text
+            numberOfLines={1}
+            style={{
+              color: 'white',
+              fontSize: 14,
+              fontFamily: 'BebasNeue-Regular',
+            }}>
+            {item.title}
           </Text>
-          <Image
-            style={{height: 20, width: 20, marginVertical: 5}}
-            source={require('../assets/play.png')}></Image>
-          {/* <Text style={{color: 'white', fontSize: 8}}>watch Now</Text> */}
         </View>
       </ImageBackground>
     </TouchableOpacity>
@@ -166,49 +179,52 @@ const TvShowes = ({navigation}) => {
   const MovieCards = ({item}) => (
     <View
       style={{
-        height: 220,
+        height: 200,
+        marginBottom: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
-        elevation: 10,
+        elevation: 5,
         shadowColor: 'white',
-        marginBottom: 20,
+        marginBottom: 10,
       }}>
       <Image
-        resizeMode="stretch"
-        source={{uri: item.Image}}
-        style={{height: '100%', width: '100%', borderRadius: 10}}></Image>
+        resizeMode="contain"
+        source={{uri: item.image}}
+        style={{height: '100%', width: '100%', borderRadius: 10}}
+      />
     </View>
   );
   return (
     <View style={styles.container}>
+      <StatusBar translucent backgroundColor="black" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
         <Carousel
+          layout={'default'}
+          layoutCardOffset={9}
           ref={carouselRef}
-          data={Movies.concat(Movies[0])}
+          data={dramaSlider.concat(dramaSlider[0])}
           renderItem={MovieCards}
-          sliderWidth={sliderWidth}
-          itemWidth={itemWidth}
+          sliderWidth={screenWidth}
+          sliderHeight={screenWidth}
+          itemWidth={screenWidth - 45}
           firstItem={initialIndex}
           autoplay={true}
           loop={true}
           autoplayInterval={3000}
           onSnapToItem={index => {
-            if (index === Movies.length) {
+            if (index === dramaSlider.length) {
               carouselRef.current.snapToItem(0, false);
-              setCurrentIndex(0);
             } else {
-              setCurrentIndex(index);
             }
           }}
         />
         <View
           style={{
             marginHorizontal: 2,
-
             borderRadius: 20,
           }}>
           <View
@@ -217,19 +233,18 @@ const TvShowes = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={styles.Heading}>Trending</Text>
+            <Text style={Heading}>Pakistani</Text>
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
                 justifyContent: 'flex-end',
-                marginTop: 10,
                 marginRight: 10,
               }}>
-              <Text style={{color: Primary, marginRight: 3}}>More</Text>
-              <Image
-                style={{height: 10, width: 10, tintColor: Primary}}
-                source={require('../assets/expand.png')}></Image>
+              <Text style={smalltext}>More</Text>
+              {/* <Image
+                style={{ height: 10, width: 10, tintColor: Primary }}
+                source={require('../assets/expand.png')}></Image> */}
             </TouchableOpacity>
           </View>
 
@@ -237,45 +252,7 @@ const TvShowes = ({navigation}) => {
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
-              data={Movies}
-              renderItem={MoviesView}
-            />
-          </View>
-        </View>
-        <View
-          style={{
-            marginTop: 10,
-            marginHorizontal: 2,
-
-            borderRadius: 20,
-          }}>
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={styles.Heading}>Popular</Text>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'baseline',
-                justifyContent: 'flex-end',
-                marginTop: 10,
-                marginRight: 10,
-              }}>
-              <Text style={{color: Primary, marginRight: 3}}>More</Text>
-              <Image
-                style={{height: 10, width: 10, tintColor: Primary}}
-                source={require('../assets/expand.png')}></Image>
-            </TouchableOpacity>
-          </View>
-
-          <View style={{height: 180, marginTop: 20}}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={Movies}
+              data={dramaData}
               renderItem={MoviesView}
             />
           </View>
@@ -292,29 +269,57 @@ const TvShowes = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={styles.Heading}>New This Year</Text>
+            <Text style={Heading}>Turkish</Text>
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
                 justifyContent: 'flex-end',
-                marginTop: 10,
                 marginRight: 10,
               }}>
-              <Text style={{color: Primary, marginRight: 3}}>More</Text>
-              <Image
-                style={{height: 10, width: 10, tintColor: Primary}}
-                source={require('../assets/expand.png')}></Image>
+              <Text style={smalltext}>More</Text>
+              {/* <Image
+                style={{ height: 10, width: 10, tintColor: Primary }}
+                source={require('../assets/expand.png')}></Image> */}
             </TouchableOpacity>
           </View>
-          <View style={{height: 180, marginTop: 20}}>
+
+          <View style={{height: 180, marginTop: 10}}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
-              data={Movies}
+              data={turkish}
               renderItem={MoviesView}
             />
-
+          </View>
+        </View>
+        <View
+          style={{
+            marginHorizontal: 2,
+            borderRadius: 20,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={Heading}>Indian</Text>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                marginRight: 10,
+              }}>
+              <Text style={smalltext}>More</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{height: 180, marginTop: 10}}>
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              horizontal
+              data={indian}
+              renderItem={MoviesView}
+            />
           </View>
         </View>
       </ScrollView>
@@ -326,8 +331,9 @@ export default TvShowes;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#333333',
+    backgroundColor: secondary,
     flex: 1,
+    marginTop: StatusBar.currentHeight,
   },
   Heading: {
     color: 'white',

@@ -12,8 +12,8 @@ import React, {useState} from 'react';
 import {LoginValidationSchema} from '../utillis/validationSchema';
 import {Formik} from 'formik';
 import {Primary} from '../utillis/colors';
-import { store } from '../redux/store';
-import { setIsLogin } from '../redux/reducers/userReducers';
+import {store} from '../redux/store';
+import {setIsLogin} from '../redux/reducers/userReducers';
 
 const Signin = ({navigation}) => {
   const [eyeIcon, setEyeIcon] = useState(require('../assets/close.png'));
@@ -65,11 +65,17 @@ const Signin = ({navigation}) => {
             resizeMode="cover"
             style={styles.bgImage}>
             <View style={styles.overlay}>
-              <View style={{justifyContent: 'center', alignSelf: 'center'}}>
-                <Image
-                  style={{height: 250, width: 250}}
-                  source={require('../assets/logo.png')}></Image>
-              </View>
+              <Image
+                resizeMode="contain"
+                style={{
+                  marginTop: '20%',
+                  height: 150,
+                  width: 200,
+                  tintColor: 'red',
+                  alignSelf: 'center',
+                }}
+                source={require('../assets/logo1.png')}
+              />
 
               <View style={styles.formWrapper}>
                 <View style={styles.form}>
@@ -97,13 +103,14 @@ const Signin = ({navigation}) => {
                       autoCapitalize={'none'}
                       onChangeText={handleChange('password')}
                       secureTextEntry={PasswordVisibility}
-                      style={{width: 250}}
+                      style={{width: '90%', fontFamily: 'BebasNeue-Regular'}}
                     />
 
                     <TouchableOpacity onPress={TogglePassword}>
                       <Image
                         style={{height: 22, width: 22, tintColor: Primary}}
-                        source={eyeIcon}></Image>
+                        source={eyeIcon}
+                      />
                     </TouchableOpacity>
                   </View>
                   {errors.email && touched.email ? (
@@ -112,27 +119,27 @@ const Signin = ({navigation}) => {
 
                   <TouchableOpacity
                     style={styles.signinBtn}
-                    onPress={()=>{store.dispatch(setIsLogin(true))}}>
-                    <Text style={styles.signinTxt}>Sign In</Text>
+                    onPress={() => {
+                      store.dispatch(setIsLogin(true));
+                    }}>
+                    <Text style={styles.signupTxt}>Sign In</Text>
                   </TouchableOpacity>
 
-
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        marginTop: 15,
-                      }}>
-                      <Text style={styles.signupTxt}>New to MovieMania? </Text>
-                      <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => navigation.navigate('Signup')}>
-                      <Text style={[styles.signupTxt, {color: '#E7442E'}]}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      marginTop: 15,
+                    }}>
+                    <Text style={styles.signupTxt}>New to MovieMania? </Text>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      onPress={() => navigation.navigate('Signup')}>
+                      <Text style={[styles.signupTxt, {color: Primary}]}>
                         Sign Up
                       </Text>
-                      </TouchableOpacity>
-                    </View>
-                  
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
@@ -150,7 +157,7 @@ const styles = StyleSheet.create({
   bgImage: {flex: 1},
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
   formWrapper: {
     width: '100%',
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
   },
   form: {
     width: '90%',
-    backgroundColor: '#000',
+    backgroundColor: 'rgba(0,0,0,0.8)',
     // flexDirection: 'column',
     borderRadius: 20,
     paddingHorizontal: 20,
@@ -171,7 +178,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     margin: 10,
     textAlign: 'left',
-    fontWeight: 'bold',
+    fontFamily: 'BebasNeue-Regular',
   },
   inputTxt: {
     width: '95%',
@@ -181,15 +188,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#333333',
     color: '#fff',
     marginTop: 10,
+    fontFamily: 'BebasNeue-Regular',
   },
   signinBtn: {
     height: 50,
-    color: '#fff',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
-    backgroundColor: '#E7442E',
+    backgroundColor: Primary,
     width: '95%',
   },
   signupTxt: {
@@ -197,10 +204,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#ccc',
     fontWeight: 500,
+    fontFamily: 'BebasNeue-Regular',
   },
-  errors:{
+  errors: {
     fontSize: 12,
-    marginStart:10,
+    marginStart: 10,
     color: Primary,
-  }
+  },
 });
