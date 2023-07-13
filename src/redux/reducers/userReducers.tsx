@@ -14,6 +14,7 @@ const initialState: any = {
   animated2Data: null,
   dramaSlider: null,
   animatedSlider: null,
+  playlist: [],
 };
 
 export const userReducer = createSlice({
@@ -60,6 +61,9 @@ export const userReducer = createSlice({
     setAnimatedSlider: (state, action) => {
       state.animatedSlider = action.payload;
     },
+    setPlaylist: (state, action) => {
+      state.playlist = action.payload;
+    },
   },
 });
 
@@ -77,6 +81,7 @@ export const {
   setAnimated2Data,
   setDramaSlider,
   setAnimatedSlider,
+  setPlaylist,
 } = userReducer.actions;
 
 export default userReducer.reducer;

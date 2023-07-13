@@ -140,6 +140,7 @@ const Dashboard = ({navigation}) => {
   const [loding, setLoding] = useState(true);
 
   useEffect(() => {
+    console.log(upcommingMoviesData, 'upcoming');
     setLoding(true);
     const integrate = async () => {
       await GetMovies()
@@ -355,6 +356,12 @@ const Dashboard = ({navigation}) => {
             {/* <GradientText text={'Preview'}/> */}
             <Text style={Heading}>Preview</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: upcommingMoviesData,
+                  popularMoviesData: popularMoviesData,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -394,6 +401,12 @@ const Dashboard = ({navigation}) => {
             }}>
             <Text style={Heading}>Popular</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: popularMoviesData,
+                  popularMoviesData: popularMoviesData,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -433,6 +446,12 @@ const Dashboard = ({navigation}) => {
             }}>
             <Text style={Heading}>Indian</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: hindiMoviesData,
+                  // popularMoviesData: hindiMoviesData,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -470,6 +489,12 @@ const Dashboard = ({navigation}) => {
             }}>
             <Text style={Heading}>Punjabi</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: punjabiMoviesData,
+                  // popularMoviesData: hindiMoviesData,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',

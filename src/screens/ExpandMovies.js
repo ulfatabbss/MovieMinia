@@ -12,21 +12,16 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {setPlaylist} from '../redux/reducers/userReducers';
+import React, {useState} from 'react';
+import {MovieView} from '../utillis/styles';
 
-const Playlist = ({navigation}) => {
+const ExpandMovies = ({route, navigation}) => {
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [deletedItems, setDeletedItems] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [deletedItems, setDramaSlider] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const dispatch = useDispatch();
+  const {popularMoviesData, upcommingMoviesData} = route.params;
 
-  const {playlist} = useSelector(state => state.root.user);
-  // useEffect(() => {
-  //   console.log(playlist, 'p');
-  // }, []);
   const data = [
     {
       id: 0,
@@ -71,56 +66,40 @@ const Playlist = ({navigation}) => {
       duration: '1h 23m',
     },
   ];
-  const filteredData = playlist.filter(item =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  const filteredData = data.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   const PlayMovie = item => {
     console.log('Movie is Played', item);
   };
-  // const DeleteMovie = item => {
-  //   setDeletedItems(prevDeletedItems => [...prevDeletedItems, item.id]);
-
-  //   // Remove the deleted item from the PlaylistData array
-  //   setPlaylistData(prevPlaylistData =>
-  //     prevPlaylistData.filter(dataItem => dataItem.id !== item.id),
-  //   );
-  // };
+  const DeleteMovie = item => {
+    setDeletedItems(prevDeletedItems => [...prevDeletedItems, item.id]);
+  };
 
   const toggleModal = item => {
     setIsModalVisible(!isModalVisible);
     setSelectedItem((item = item));
   };
   const handleDeleteConfirm = () => {
-    let clonedArray = JSON.parse(JSON.stringify(playlist));
-    clonedArray.splice(selectedItem, 1);
-
-    dispatch(setPlaylist(clonedArray));
-    // DeleteMovie(selectedItem);
+    setDeletedItems(prevDeletedItems => [...prevDeletedItems, selectedItem.id]);
     setIsModalVisible(false);
   };
-
-  // const PlaylistData = playlist;
-  const MyPlaylist = item => {
-    console.log(item.item.poster[0].image, 'item');
-    // if (deletedItems.includes(item.item.id)) {
-    //   return null; // Skip rendering the deleted item
-    // }
-
+  const Playlist = ({item}) => {
+    if (deletedItems.includes(item.id)) {
+      return null;
+    }
     return (
       <View style={styles.cards}>
         <Image
           style={{height: '100%', width: '30%'}}
-          source={{uri: item?.item?.poster[0]?.image}}
-          resizeMode={'contain'}
+          source={{uri: item.uri}}
         />
         <View style={styles.details_View}>
-          <Text style={[styles.h2]}>{item.item.title}</Text>
-          <Text style={[styles.h2, {marginTop: 10}]}>{item.item.genre}</Text>
-          <Text style={[styles.h2]}>{item.item.duration}</Text>
+          <Text style={[styles.h2]}>{item.name}</Text>
+          <Text style={[styles.h2, {marginTop: 10}]}>{item.duration}</Text>
         </View>
         <View style={styles.assets_Container}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Player', {url: item.item.url})}>
+          <TouchableOpacity onPress={() => PlayMovie((item = item))}>
             <Image
               style={styles.icons}
               resizeMode={'contain'}
@@ -142,11 +121,48 @@ const Playlist = ({navigation}) => {
       </View>
     );
   };
+  const MoviesView = ({item, data}) => (
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate('MovieDiscription', {
+          item: item,
+          data: data,
+          type: 'Movies',
+        })
+      }
+      style={[MovieView, {height: 100, width: 90, margin: 5}]}>
+      <ImageBackground
+        // resizeMode="cover"
+        style={{
+          height: '100%',
+          width: '100%',
+          justifyContent: 'flex-end',
+        }}
+        source={{uri: item.poster[0].image}}>
+        <View
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            width: '100%',
+            height: '20%',
+            justifyContent: 'space-evenly',
+            alignItems: 'center',
+            padding: 4,
+          }}>
+          <Text
+            numberOfLines={1}
+            style={{
+              color: 'white',
+              fontSize: 12,
+              fontFamily: 'BebasNeue-Regular',
+            }}>
+            {item.title}
+          </Text>
+        </View>
+      </ImageBackground>
+    </TouchableOpacity>
+  );
   const window_Width = Dimensions.get('window').width;
   const window_Height = Dimensions.get('window').height;
-  // useEffect(() => {
-  //   console.log(playlist, 'myPlaylist');
-  // }, []);
   return (
     <ImageBackground
       style={{
@@ -178,11 +194,18 @@ const Playlist = ({navigation}) => {
           />
         </View>
 
-        <FlatList
-          data={filteredData}
-          renderItem={MyPlaylist}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={{alignItems: 'center'}}>
+          <FlatList
+            numColumns={3}
+            data={upcommingMoviesData.filter(item =>
+              item.title.toLowerCase().includes(searchQuery.toLowerCase()),
+            )}
+            renderItem={({item}) =>
+              MoviesView({item: item, data: popularMoviesData})
+            }
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </View>
       <Modal
         animationType="fade"
@@ -221,7 +244,7 @@ const Playlist = ({navigation}) => {
   );
 };
 
-export default Playlist;
+export default ExpandMovies;
 
 const styles = StyleSheet.create({
   main_View: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 20},
@@ -235,8 +258,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
+    justifyContent: 'space-between',
   },
-  h2: {color: '#fff', fontSize: 12},
+  h2: {color: '#fff', fontSize: 14},
   h1: {color: '#fff', fontSize: 18},
   icons: {height: 25, width: 25},
   input_Container: {
@@ -296,8 +320,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   details_View: {
-    width: '40%',
-    justifyContent: 'center',
-    height: '100%',
+    height: '60%',
+    alignSelf: 'flex-end',
+    width: '35%',
+    paddingLeft: 20,
   },
 });

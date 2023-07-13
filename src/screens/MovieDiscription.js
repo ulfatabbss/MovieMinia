@@ -10,7 +10,7 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Primary, black, gray, secondary, white} from '../utillis/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -22,6 +22,8 @@ import {
   movieTitle,
   smalltext,
 } from '../utillis/styles';
+import {useDispatch, useSelector} from 'react-redux';
+import {setPlaylist} from '../redux/reducers/userReducers';
 export const Cast = [
   {
     id: 1,
@@ -70,6 +72,10 @@ export const Cast = [
   },
 ];
 const MovieDiscription = ({navigation, route}) => {
+  const {playlist} = useSelector(state => state.root.user);
+  console.log('ddd........', playlist);
+
+  const [playlistAdded, setPlaylistAdded] = useState(false);
   const {item, data, type} = route.params;
   const CastView = ({item}) => (
     <View
@@ -91,7 +97,28 @@ const MovieDiscription = ({navigation, route}) => {
       </Text>
     </View>
   );
+  // useEffect(() => {
+  //   console.log('my props item', item);
+  // }, []);
+  const dispatch = useDispatch();
+  const AddPlaylist = () => {
+    let clonedArray = JSON.parse(JSON.stringify(playlist));
+    clonedArray.push(item);
+    dispatch(setPlaylist(clonedArray));
+  };
   const back = ['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.7)'];
+  const handleCheck = () => {
+    const result = playlist?.some(i => i?.title === item?.title);
+    if (result) {
+      setPlaylistAdded(true);
+    } else {
+      setPlaylistAdded(false);
+    }
+  };
+  useEffect(() => {
+    handleCheck();
+  }, [playlist]);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -227,6 +254,45 @@ const MovieDiscription = ({navigation, route}) => {
             </Text>
             <Text style={[h2, {marginRight: 10}]}>{item.releaseYear}</Text>
             <Text style={[h2, {marginRight: 10}]}>{item.duration}</Text>
+            {/* Playlist_Button Here */}
+            <View
+              style={{
+                flexDirection: 'row',
+                borderColor: 'red',
+                position: 'absolute',
+                // justifyContent: 'flex-end',
+                alignItems: 'flex-end',
+                right: 20,
+                bottom: 0,
+              }}>
+              {playlistAdded ? (
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    color: 'green',
+                    fontSize: 12,
+                    fontWeight: 'bold',
+                    width: 60,
+                  }}>
+                  Added in Playlist
+                </Text>
+              ) : null}
+              <TouchableOpacity
+                disabled={playlistAdded}
+                onPress={() => {
+                  AddPlaylist(item);
+                }}
+                style={{}}>
+                <Image
+                  style={{height: 30, width: 30}}
+                  source={{
+                    uri: playlistAdded
+                      ? 'https://cdn-icons-png.flaticon.com/128/4315/4315445.png'
+                      : 'https://cdn-icons-png.flaticon.com/128/7719/7719900.png',
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <Text
             style={[

@@ -6,6 +6,7 @@ import Dashboard from '../screens/Dashboard';
 import Tabs from '../screens/BottomTabs/Tabs';
 import Player from '../screens/Player';
 import MovieDiscription from '../screens/MovieDiscription';
+import ExpandMovies from '../screens/ExpandMovies';
 const Stack = createNativeStackNavigator();
 const MainStack = () => {
   return (
@@ -25,6 +26,11 @@ const MainStack = () => {
         <Stack.Screen
           name="MovieDiscription"
           component={MovieDiscription}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ExpandMovies"
+          component={ExpandMovies}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
