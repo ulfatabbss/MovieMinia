@@ -508,7 +508,12 @@ const Dashboard = ({navigation}) => {
                 source={require('../assets/expand.png')}></Image> */}
             </TouchableOpacity>
           </View>
-          <View style={{marginTop: 10, marginHorizontal: 10, marginBottom: 10}}>
+          <View
+            style={{
+              marginTop: 10,
+              marginHorizontal: 10,
+              marginBottom: 80,
+            }}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal

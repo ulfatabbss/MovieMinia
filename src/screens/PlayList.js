@@ -9,12 +9,15 @@ import {
   Dimensions,
   Pressable,
   Modal,
+  StatusBar,
   Alert,
+  ToastAndroid,
   TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {setPlaylist} from '../redux/reducers/userReducers';
+import {secondary} from '../utillis/colors';
 
 const Playlist = ({navigation}) => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -97,6 +100,11 @@ const Playlist = ({navigation}) => {
     dispatch(setPlaylist(clonedArray));
     // DeleteMovie(selectedItem);
     setIsModalVisible(false);
+    ToastAndroid.showWithGravity(
+      'remove from list',
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER,
+    );
   };
 
   // const PlaylistData = playlist;
@@ -109,16 +117,92 @@ const Playlist = ({navigation}) => {
     return (
       <View style={styles.cards}>
         <Image
-          style={{height: '100%', width: '30%'}}
+          style={{
+            height: '100%',
+            width: '30%',
+            borderBottomLeftRadius: 10,
+            borderTopLeftRadius: 10,
+          }}
           source={{uri: item?.item?.poster[0]?.image}}
           resizeMode={'contain'}
         />
+
         <View style={styles.details_View}>
-          <Text style={[styles.h2]}>{item.item.title}</Text>
-          <Text style={[styles.h2, {marginTop: 10}]}>{item.item.genre}</Text>
-          <Text style={[styles.h2]}>{item.item.duration}</Text>
+          <Text style={styles.h2} numberOfLines={1}>
+            {item.item.title}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderColor: 'pink',
+            }}>
+            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+              Genre :
+            </Text>
+            <Text style={styles.h3}>{item.item.genre}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
+              overflow: 'hidden',
+              zIndex: 1,
+              borderColor: 'pink',
+            }}>
+            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+              Duration :
+            </Text>
+            <Text style={styles.h3}>{item.item.duration}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              zIndex: 5,
+              overflow: 'hidden',
+              borderColor: 'pink',
+            }}>
+            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+              Category :
+            </Text>
+            <Text style={styles.h3}>{item.item.category}</Text>
+          </View>
+          {/* <Text style={styles.h2}>{item.item.duration}</Text> */}
         </View>
-        <View style={styles.assets_Container}>
+
+        <View
+          style={{
+            width: 100,
+            position: 'absolute',
+            right: 0,
+            bottom: 5,
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+            justifyContent: 'space-evenly',
+          }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Player', {url: item.item.url})}>
+            <Image
+              style={[styles.icons, {alignSelf: 'baseline'}]}
+              resizeMode={'contain'}
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/128/1709/1709973.png',
+              }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => toggleModal((item = item))}>
+            <Image
+              style={styles.icons}
+              resizeMode={'contain'}
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/128/6460/6460112.png',
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* <View style={styles.assets_Container}>
           <TouchableOpacity
             onPress={() => navigation.navigate('Player', {url: item.item.url})}>
             <Image
@@ -138,7 +222,7 @@ const Playlist = ({navigation}) => {
               }}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     );
   };
@@ -148,16 +232,13 @@ const Playlist = ({navigation}) => {
   //   console.log(playlist, 'myPlaylist');
   // }, []);
   return (
-    <ImageBackground
-      style={{
-        height: window_Height,
-        width: window_Width,
-      }}
-      source={{
-        uri: 'https://w0.peakpx.com/wallpaper/863/138/HD-wallpaper-mortal-engines-entertainment-film-hollywood-movie-people-poster-woman.jpg',
-      }}>
-      <View style={styles.main_View}>
-        <Text style={styles.h1}>Playlist</Text>
+    <View style={{flex: 1, backgroundColor: secondary}}>
+      <View
+        style={{
+          marginTop: StatusBar.currentHeight,
+          flex: 1,
+          paddingBottom: 10,
+        }}>
         <View style={styles.input_Container}>
           <TextInput
             style={{
@@ -169,27 +250,30 @@ const Playlist = ({navigation}) => {
             autoCapitalize={'none'}
             onChangeText={text => setSearchQuery(text)}
             value={searchQuery}
+            placeholder={'search'}
+            placeholderTextColor={'gray'}
           />
           <Image
-            style={[styles.icons, {tintColor: '#fff'}]}
+            style={[styles.icons, {tintColor: 'gray'}]}
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/9479/9479251.png',
             }}
           />
         </View>
-
-        <FlatList
-          data={filteredData}
-          renderItem={MyPlaylist}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={{flex: 1}}>
+          <FlatList
+            data={filteredData}
+            renderItem={MyPlaylist}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </View>
       <Modal
         animationType="fade"
         transparent={true}
         visible={isModalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          // Alert.alert('Modal has been closed.');
           setIsModalVisible(!isModalVisible);
         }}>
         <View style={styles.centeredView}>
@@ -198,18 +282,27 @@ const Playlist = ({navigation}) => {
             <View
               style={{
                 flexDirection: 'row',
-                height: '40%',
-                alignSelf: 'flex-end',
+                height: '35%',
                 width: '100%',
+                position: 'absolute',
+                bottom: 0,
+                alignSelf: 'flex-end',
+                borderColor: '#fff',
                 justifyContent: 'space-between',
               }}>
               <Pressable
-                style={[styles.button, styles.buttonClose]}
+                style={[
+                  styles.button,
+                  {backgroundColor: 'green', borderTopRightRadius: 10},
+                ]}
                 onPress={() => setIsModalVisible(!isModalVisible)}>
                 <Text style={styles.textStyle}>No</Text>
               </Pressable>
               <Pressable
-                style={[styles.button, styles.buttonClose]}
+                style={[
+                  styles.button,
+                  {backgroundColor: 'red', borderTopLeftRadius: 10},
+                ]}
                 onPress={handleDeleteConfirm}>
                 <Text style={styles.textStyle}>Yes</Text>
               </Pressable>
@@ -217,7 +310,7 @@ const Playlist = ({navigation}) => {
           </View>
         </View>
       </Modal>
-    </ImageBackground>
+    </View>
   );
 };
 
@@ -227,61 +320,67 @@ const styles = StyleSheet.create({
   main_View: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 20},
   cards: {
     height: 100,
-    width: '100%',
-    borderWidth: 1,
+    width: '95%',
     flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
     marginTop: 10,
+    borderRadius: 10,
     borderColor: '#fff',
     backgroundColor: 'rgba(0,0,0,0.5)',
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
   },
-  h2: {color: '#fff', fontSize: 12},
+  h2: {color: '#fff', fontSize: 12, marginVertical: 5},
   h1: {color: '#fff', fontSize: 18},
-  icons: {height: 25, width: 25},
+  icons: {height: 20, width: 20},
   input_Container: {
     height: 50,
-    width: '100%',
-    borderWidth: 1,
+    marginVertical: 10,
+    paddingHorizontal: 5,
+    width: '98%',
+    borderWidth: 0.2,
+    borderColor: 'red',
     justifyContent: 'space-around',
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-    borderColor: '#fff',
     flexDirection: 'row',
+    borderRadius: 10,
+    alignSelf: 'center',
     alignItems: 'center',
-    marginBottom: 10,
   },
   assets_Container: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
     alignItems: 'center',
     height: '100%',
-    width: '25%',
   },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(0,0,0,0.9)',
     alignItems: 'center',
   },
   modalView: {
-    height: 80,
+    height: 100,
     width: '60%',
-    backgroundColor: 'white',
-    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 0.4,
+    borderColor: 'gray',
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   button: {
-    width: '40%',
+    width: '45%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 5,
+  },
+  h3: {
+    color: 'gray',
+    marginLeft: 5,
+    fontSize: 8,
   },
   buttonOpen: {
     backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: '#2196F3',
+    backgroundColor: 'red',
   },
   textStyle: {
     color: 'white',
@@ -289,15 +388,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalText: {
-    marginBottom: 15,
-    marginTop: 5,
-    color: '#000',
+    marginTop: 15,
+    color: '#fff',
     fontWeight: '600',
     textAlign: 'center',
   },
   details_View: {
-    width: '40%',
-    justifyContent: 'center',
     height: '100%',
+    width: '68%',
   },
 });

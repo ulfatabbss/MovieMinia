@@ -9,11 +9,13 @@ import {
   Dimensions,
   Pressable,
   Modal,
+  StatusBar,
   Alert,
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
 import {MovieView} from '../utillis/styles';
+import {secondary} from '../utillis/colors';
 
 const ExpandMovies = ({route, navigation}) => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -130,14 +132,14 @@ const ExpandMovies = ({route, navigation}) => {
           type: 'Movies',
         })
       }
-      style={[MovieView, {height: 100, width: 90, margin: 5}]}>
+      style={[MovieView, {height: 150, width: '30%', marginTop: 10}]}>
       <ImageBackground
-        // resizeMode="cover"
         style={{
           height: '100%',
           width: '100%',
           justifyContent: 'flex-end',
         }}
+        resizeMode={'stretch'}
         source={{uri: item.poster[0].image}}>
         <View
           style={{
@@ -164,16 +166,13 @@ const ExpandMovies = ({route, navigation}) => {
   const window_Width = Dimensions.get('window').width;
   const window_Height = Dimensions.get('window').height;
   return (
-    <ImageBackground
-      style={{
-        height: window_Height,
-        width: window_Width,
-      }}
-      source={{
-        uri: 'https://w0.peakpx.com/wallpaper/863/138/HD-wallpaper-mortal-engines-entertainment-film-hollywood-movie-people-poster-woman.jpg',
-      }}>
-      <View style={styles.main_View}>
-        <Text style={styles.h1}>Playlist</Text>
+    <View style={{flex: 1, backgroundColor: secondary}}>
+      <View
+        style={{
+          marginTop: StatusBar.currentHeight,
+          flex: 1,
+          paddingBottom: 10,
+        }}>
         <View style={styles.input_Container}>
           <TextInput
             style={{
@@ -185,29 +184,28 @@ const ExpandMovies = ({route, navigation}) => {
             autoCapitalize={'none'}
             onChangeText={text => setSearchQuery(text)}
             value={searchQuery}
+            placeholder={'search'}
+            placeholderTextColor={'gray'}
           />
           <Image
-            style={[styles.icons, {tintColor: '#fff'}]}
+            style={[styles.icons, {tintColor: 'gray'}]}
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/9479/9479251.png',
             }}
           />
         </View>
-
-        <View style={{alignItems: 'center'}}>
-          <FlatList
-            numColumns={3}
-            data={upcommingMoviesData.filter(item =>
-              item.title.toLowerCase().includes(searchQuery.toLowerCase()),
-            )}
-            renderItem={({item}) =>
-              MoviesView({item: item, data: popularMoviesData})
-            }
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
+        <FlatList
+          numColumns={3}
+          data={upcommingMoviesData.filter(item =>
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()),
+          )}
+          renderItem={({item}) =>
+            MoviesView({item: item, data: popularMoviesData})
+          }
+          showsVerticalScrollIndicator={false}
+        />
       </View>
-      <Modal
+      {/* <Modal
         animationType="fade"
         transparent={true}
         visible={isModalVisible}
@@ -239,15 +237,15 @@ const ExpandMovies = ({route, navigation}) => {
             </View>
           </View>
         </View>
-      </Modal>
-    </ImageBackground>
+      </Modal> */}
+    </View>
   );
 };
 
 export default ExpandMovies;
 
 const styles = StyleSheet.create({
-  main_View: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 20},
+  main_View: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'},
   cards: {
     height: 100,
     width: '100%',
@@ -262,18 +260,19 @@ const styles = StyleSheet.create({
   },
   h2: {color: '#fff', fontSize: 14},
   h1: {color: '#fff', fontSize: 18},
-  icons: {height: 25, width: 25},
+  icons: {height: 20, width: 20},
   input_Container: {
     height: 50,
-    width: '100%',
-    borderWidth: 1,
+    marginVertical: 10,
+    paddingHorizontal: 5,
+    width: '98%',
+    borderWidth: 0.2,
+    borderColor: 'red',
     justifyContent: 'space-around',
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-    borderColor: '#fff',
     flexDirection: 'row',
+    borderRadius: 10,
+    alignSelf: 'center',
     alignItems: 'center',
-    marginBottom: 10,
   },
   assets_Container: {
     flexDirection: 'row',

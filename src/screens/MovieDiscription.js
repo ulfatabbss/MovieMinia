@@ -9,6 +9,7 @@ import {
   FlatList,
   StatusBar,
   Dimensions,
+  ToastAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Primary, black, gray, secondary, white} from '../utillis/colors';
@@ -73,7 +74,7 @@ export const Cast = [
 ];
 const MovieDiscription = ({navigation, route}) => {
   const {playlist} = useSelector(state => state.root.user);
-  console.log('ddd........', playlist);
+  // console.log('ddd........', playlist);
 
   const [playlistAdded, setPlaylistAdded] = useState(false);
   const {item, data, type} = route.params;
@@ -111,6 +112,7 @@ const MovieDiscription = ({navigation, route}) => {
     const result = playlist?.some(i => i?.title === item?.title);
     if (result) {
       setPlaylistAdded(true);
+      console.log('added');
     } else {
       setPlaylistAdded(false);
     }
@@ -244,26 +246,35 @@ const MovieDiscription = ({navigation, route}) => {
         </View>
         <Text style={[h1, {fontSize: 22}]}>{item.title}</Text>
         <View style={styles.overViewDetail}>
-          <View style={{flexDirection: 'row'}}>
-            <Text
-              style={[
-                h2,
-                {color: 'green', marginRight: 10, fontWeight: '800'},
-              ]}>
-              3 84% match
-            </Text>
-            <Text style={[h2, {marginRight: 10}]}>{item.releaseYear}</Text>
-            <Text style={[h2, {marginRight: 10}]}>{item.duration}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingRight: 30,
+              width: '100%',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
+              <Text
+                style={[
+                  h2,
+                  {color: 'green', marginRight: 10, fontWeight: '800'},
+                ]}>
+                3 84% match
+              </Text>
+              <Text style={[h2, {marginRight: 10}]}>{item.releaseYear}</Text>
+              <Text style={[h2, {marginRight: 10}]}>{item.duration}</Text>
+            </View>
             {/* Playlist_Button Here */}
             <View
               style={{
                 flexDirection: 'row',
-                borderColor: 'red',
-                position: 'absolute',
-                // justifyContent: 'flex-end',
-                alignItems: 'flex-end',
-                right: 20,
-                bottom: 0,
+                borderWidth: playlistAdded ? 0.2 : 0,
+                padding: 2,
+                borderColor: 'gray',
               }}>
               {playlistAdded ? (
                 <Text
@@ -272,26 +283,27 @@ const MovieDiscription = ({navigation, route}) => {
                     color: 'green',
                     fontSize: 12,
                     fontWeight: 'bold',
-                    width: 60,
                   }}>
                   Added in Playlist
                 </Text>
-              ) : null}
-              <TouchableOpacity
-                disabled={playlistAdded}
-                onPress={() => {
-                  AddPlaylist(item);
-                }}
-                style={{}}>
-                <Image
-                  style={{height: 30, width: 30}}
-                  source={{
-                    uri: playlistAdded
-                      ? 'https://cdn-icons-png.flaticon.com/128/4315/4315445.png'
-                      : 'https://cdn-icons-png.flaticon.com/128/7719/7719900.png',
-                  }}
-                />
-              </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  disabled={playlistAdded}
+                  onPress={() => {
+                    AddPlaylist(item);
+                  }}>
+                  <Image
+                    style={{
+                      height: 25,
+                      width: 25,
+                      tintColor: playlistAdded ? 'green' : null,
+                    }}
+                    source={{
+                      uri: 'https://cdn-icons-png.flaticon.com/128/7719/7719900.png',
+                    }}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
           <Text

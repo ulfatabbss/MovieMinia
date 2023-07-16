@@ -131,6 +131,11 @@ const Cartoons = ({navigation}) => {
             }}>
             <Text style={Heading}>Trending</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: cartoonData,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -165,6 +170,11 @@ const Cartoons = ({navigation}) => {
             }}>
             <Text style={Heading}>Popular</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: animated2Data,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -199,6 +209,11 @@ const Cartoons = ({navigation}) => {
             }}>
             <Text style={Heading}>New This Year</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: animated1Data,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -209,7 +224,7 @@ const Cartoons = ({navigation}) => {
               <Text style={smalltext}>More</Text>
             </TouchableOpacity>
           </View>
-          <View style={{height: 180, marginTop: 20}}>
+          <View style={{height: 180, marginTop: 20, marginBottom: 60}}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal

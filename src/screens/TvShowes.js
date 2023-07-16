@@ -235,6 +235,11 @@ const TvShowes = ({navigation}) => {
             }}>
             <Text style={Heading}>Pakistani</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: dramaData,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -271,6 +276,11 @@ const TvShowes = ({navigation}) => {
             }}>
             <Text style={Heading}>Turkish</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: turkish,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 alignItems: 'baseline',
@@ -306,6 +316,11 @@ const TvShowes = ({navigation}) => {
             }}>
             <Text style={Heading}>Indian</Text>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ExpandMovies', {
+                  upcommingMoviesData: indian,
+                });
+              }}
               style={{
                 flexDirection: 'row',
                 marginRight: 10,
@@ -313,7 +328,7 @@ const TvShowes = ({navigation}) => {
               <Text style={smalltext}>More</Text>
             </TouchableOpacity>
           </View>
-          <View style={{height: 180, marginTop: 10}}>
+          <View style={{height: 180, marginTop: 10, marginBottom: 60}}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
