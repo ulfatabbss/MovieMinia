@@ -27,9 +27,9 @@ const Playlist = ({navigation}) => {
   const dispatch = useDispatch();
 
   const {playlist} = useSelector(state => state.root.user);
-  // useEffect(() => {
-  //   console.log(playlist, 'p');
-  // }, []);
+  useEffect(() => {
+    console.log(playlist, 'p');
+  }, []);
   const data = [
     {
       id: 0,
@@ -152,9 +152,23 @@ const Playlist = ({navigation}) => {
               borderColor: 'pink',
             }}>
             <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
-              Duration :
+              Director :
             </Text>
-            <Text style={styles.h3}>{item.item.duration}</Text>
+            <Text style={styles.h3}>{item.item.director}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: '100%',
+              overflow: 'hidden',
+              zIndex: 1,
+              borderColor: 'pink',
+            }}>
+            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+              Release Year :
+            </Text>
+            <Text style={styles.h3}>{item.item.releaseYear}</Text>
           </View>
           <View
             style={{

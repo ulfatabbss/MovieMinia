@@ -8,12 +8,12 @@ const initialState: any = {
   punjabiMoviesData: null,
   upcommingMoviesData: null,
   dramaData: null,
-  sliderData: null,
+  sliderData: [],
   cartoonData: null,
   animated1Data: null,
   animated2Data: null,
-  dramaSlider: null,
-  animatedSlider: null,
+  dramaSlider: [],
+  animatedSlider: [],
   playlist: [],
 };
 

@@ -16,6 +16,7 @@ import {Primary, secondary} from '../utillis/colors';
 import Header from '../components/Header';
 import {useSelector} from 'react-redux';
 import {Heading, smalltext} from '../utillis/styles';
+import MySlider from '../components/MySlider';
 const Cartoons = ({navigation}) => {
   const carouselRef = useRef(null);
   const initialIndex = 1; // Index of the item to start from
@@ -98,7 +99,7 @@ const Cartoons = ({navigation}) => {
       <StatusBar translucent backgroundColor="black" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
-        <Carousel
+        {/* <Carousel
           layout={'default'}
           layoutCardOffset={9}
           ref={carouselRef}
@@ -117,7 +118,8 @@ const Cartoons = ({navigation}) => {
             } else {
             }
           }}
-        />
+        /> */}
+        <MySlider Movies={animatedSlider} />
         <View
           style={{
             marginHorizontal: 2,

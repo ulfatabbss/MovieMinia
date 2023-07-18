@@ -20,6 +20,7 @@ import {useSelector} from 'react-redux';
 import {store} from '../redux/store';
 import {data} from 'cheerio/lib/api/attributes';
 import {Heading, MovieView, smalltext} from '../utillis/styles';
+import MySlider from '../components/MySlider';
 
 export const Movies = [
   {
@@ -202,26 +203,7 @@ const TvShowes = ({navigation}) => {
       <StatusBar translucent backgroundColor="black" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
-        <Carousel
-          layout={'default'}
-          layoutCardOffset={9}
-          ref={carouselRef}
-          data={dramaSlider.concat(dramaSlider[0])}
-          renderItem={MovieCards}
-          sliderWidth={screenWidth}
-          sliderHeight={screenWidth}
-          itemWidth={screenWidth - 45}
-          firstItem={initialIndex}
-          autoplay={true}
-          loop={true}
-          autoplayInterval={3000}
-          onSnapToItem={index => {
-            if (index === dramaSlider.length) {
-              carouselRef.current.snapToItem(0, false);
-            } else {
-            }
-          }}
-        />
+        <MySlider Movies={dramaSlider} />
         <View
           style={{
             marginHorizontal: 2,

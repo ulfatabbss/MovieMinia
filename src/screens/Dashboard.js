@@ -33,6 +33,7 @@ import {useSelector} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {Heading, MovieView, smalltext} from '../utillis/styles';
 import GradientText from '../components/GradientText';
+import MySlider from '../components/MySlider';
 
 export const Movies = [
   {
@@ -321,26 +322,8 @@ const Dashboard = ({navigation}) => {
       <StatusBar translucent backgroundColor="black" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
-        <Carousel
-          layout={'default'}
-          layoutCardOffset={9}
-          ref={carouselRef}
-          data={sliderData.concat(sliderData[0])}
-          renderItem={MovieCards}
-          sliderWidth={screenWidth}
-          sliderHeight={screenWidth}
-          itemWidth={screenWidth - 45}
-          firstItem={initialIndex}
-          autoplay={true}
-          loop={true}
-          autoplayInterval={3000}
-          onSnapToItem={index => {
-            if (index === sliderData.length) {
-              carouselRef.current.snapToItem(0, false);
-            } else {
-            }
-          }}
-        />
+
+        <MySlider Movies={sliderData} />
         <View
           style={{
             marginHorizontal: 2,
@@ -538,3 +521,25 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight,
   },
 });
+{
+  /* <Carousel
+          layout={'default'}
+          layoutCardOffset={9}
+          ref={carouselRef}
+          data={sliderData.concat(sliderData[0])}
+          renderItem={MovieCards}
+          sliderWidth={screenWidth}
+          sliderHeight={screenWidth}
+          itemWidth={screenWidth - 45}
+          firstItem={initialIndex}
+          autoplay={true}
+          loop={true}
+          autoplayInterval={3000}
+          onSnapToItem={index => {
+            if (index === sliderData.length) {
+              carouselRef.current.snapToItem(0, false);
+            } else {
+            }
+          }}
+        /> */
+}
