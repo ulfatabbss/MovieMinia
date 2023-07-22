@@ -1,6 +1,6 @@
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 import React from 'react';
-import {Primary, white} from './colors';
+import { Primary, white } from './colors';
 const Width = Dimensions.get('window').width;
 const h1 = {
   color: white,
@@ -37,6 +37,7 @@ const Heading = {
   fontSize: 25,
   marginLeft: 16,
   fontFamily: 'BebasNeue-Regular',
+  marginVertical: 10,
 };
 const smalltext = {
   // fontSize: 10,
@@ -46,11 +47,11 @@ const smalltext = {
 };
 const MovieView = {
   backgroundColor: 'black',
-  height: 160,
-  width: 120,
+  height: Dimensions.get('window').height / 5 - 10,
+  width: Dimensions.get('window').width / 3 - 10,
   borderWidth: 0.5,
   borderColor: 'white',
-  marginHorizontal: 6,
+  marginHorizontal: 5,
   borderRadius: 10,
   overflow: 'hidden',
   justifyContent: 'space-around',

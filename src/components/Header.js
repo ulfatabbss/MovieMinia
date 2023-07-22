@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
-import {SearchBar} from '@rneui/themed';
-import {setIsLogin} from '../redux/reducers/userReducers';
-import {store} from '../redux/store';
+import React, { useState } from 'react';
+import { SearchBar } from '@rneui/themed';
+import { setIsLogin } from '../redux/reducers/userReducers';
+import { store } from '../redux/store';
 
-const Header = ({navigation}) => {
+const Header = ({ navigation }) => {
   const [search, setSearch] = useState('');
 
   const updateSearch = search => {
@@ -28,9 +28,7 @@ const Header = ({navigation}) => {
         <Image
           resizeMode="contain"
           style={styles.logoutIcon}
-          source={{
-            uri: 'https://imgv3.fotor.com/images/gallery/AI-3D-Female-Profile-Picture.jpg',
-          }}
+          source={require('../assets/power.png')}
         />
       </TouchableOpacity>
     </View>
@@ -55,10 +53,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   logoutIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'red',
+    width: 30,
+    height: 30,
+    borderRadius: 15, tintColor: 'red'
   },
 });

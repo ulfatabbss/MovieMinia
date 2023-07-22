@@ -1,182 +1,179 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import { StyleSheet, Text, View, Image, SafeAreaView, StatusBar } from 'react-native';
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from '../Dashboard';
 import TvShowes from '../TvShowes';
 import Cartoons from '../Cartoons';
 import Find from '../PlayList';
-import {Primary, black, gray, white} from '../../utillis/colors';
+import { Primary, black, gray, white } from '../../utillis/colors';
 import PlayList from '../PlayList';
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
   return (
-    <View style={{flex: 1}}>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarActiveTintColor: Primary,
-          tabBarInactiveBackgroundColor: 'rgba(0,0,0,1)',
-          tabBarActiveBackgroundColor: 'rgba(0,0,0,1)',
-          borderRadius: 25,
-          tabBarStyle: {
-            height: 50,
-            borderTopWidth: 0,
-            bottom: 15,
-            width: '80%',
-            left: '10%',
-            borderRadius: 25,
-            justifyContent: 'center',
-            position: 'absolute',
-            backgroundColor: 'transparent',
-            overflow: 'hidden',
-          },
-        }}>
-        <Tab.Screen
-          name="Dashboard"
-          component={Dashboard}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
-                  width: 50,
-                  height: 50,
-                  borderRadius: 25,
-                }}>
-                <Image
-                  style={{
-                    height: focused ? 18 : 15,
-                    width: focused ? 18 : 15,
-                    tintColor: focused ? 'red' : white,
-                  }}
-                  source={require('../../assets/home.png')}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: focused ? 'red' : white,
-                    fontSize: 8,
-                  }}>
-                  Home
-                </Text>
-              </View>
-            ),
-          }}
-        />
+    <>
+      {Platform.OS === 'ios' &&
+        <View style={{
+          width: "100%",
+          height: 100, // For all devices, even X, XS Max
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          backgroundColor: "#000"
+        }}
+        />}
+      <SafeAreaView style={{ flex: 1 }}>
 
-        <Tab.Screen
-          name="TvShowes"
-          component={TvShowes}
-          borderRadius={true}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 25,
-                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
-                  width: 50,
-                  height: 50,
-                  borderRadius: 25,
-                }}>
-                <Image
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarActiveTintColor: Primary,
+            tabBarInactiveBackgroundColor: 'rgba(0, 0, 0, 1)',
+            tabBarActiveBackgroundColor: 'rgba(0, 0, 0, 1)',
+            tabBarStyle: {
+              height: 60,
+              borderTopWidth: 0,
+              width: '100%',
+              justifyContent: 'center',
+              position: 'absolute',
+              paddingBottom: 0,
+              borderTopWidth: 2,
+              backgroundColor: 'rgba(0, 0, 0,1)',
+              borderTopColor: 'red'
+            },
+          }}>
+          <Tab.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <View
                   style={{
-                    height: focused ? 18 : 15,
-                    width: focused ? 18 : 15,
-                    tintColor: focused ? 'red' : white,
-                  }}
-                  source={require('../../assets/tvshow.png')}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: focused ? 'red' : white,
-                    fontSize: 8,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
+                    width: focused ? 80 : 50,
+                    height: focused ? 70 : 50,
+                    borderTopLeftRadius: 45,
+                    borderTopRightRadius: 45,
+                    bottom: focused ? 10 : 0,
+                    overflow: 'hidden',
+                    borderTopWidth: focused ? 5 : null, borderColor: 'red'
                   }}>
-                  Showes
-                </Text>
-              </View>
-            ),
-          }}
-        />
+                  <Image
+                    style={{
+                      height: focused ? 50 : 30,
+                      width: focused ? 50 : 30,
+                      tintColor: focused ? 'red' : white,
+                    }}
+                    source={require('../../assets/homef.png')}
+                    resizeMode="contain"
+                  />
+                </View>
+              ),
+            }}
+          />
 
-        <Tab.Screen
-          name="Cartoons"
-          component={Cartoons}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 25,
-                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
-                  width: 50,
-                  height: 50,
-                  borderRadius: 25,
-                }}>
-                <Image
+          <Tab.Screen
+            name="TvShowes"
+            component={TvShowes}
+            borderRadius={true}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <View
                   style={{
-                    height: focused ? 18 : 15,
-                    width: focused ? 18 : 15,
-                    tintColor: focused ? 'red' : white,
-                  }}
-                  source={require('../../assets/cartoon.png')}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: focused ? 'red' : white,
-                    fontSize: 8,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
+                    width: focused ? 80 : 50,
+                    height: focused ? 70 : 50,
+                    borderTopLeftRadius: 45,
+                    borderTopRightRadius: 45,
+                    bottom: focused ? 10 : 0,
+                    overflow: 'hidden',
+                    borderTopWidth: focused ? 5 : null, borderColor: 'red'
                   }}>
-                  Cartoons
-                </Text>
-              </View>
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="PlayList"
-          component={PlayList}
-          options={{
-            tabBarIcon: ({focused}) => (
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 25,
-                  backgroundColor: focused ? '#fff' : 'rgba(0,0,0,0)',
-                  width: 50,
-                  height: 50,
-                  borderRadius: 25,
-                }}>
-                <Image
+                  <Image
+                    style={{
+                      height: focused ? 50 : 30,
+                      width: focused ? 50 : 30,
+                      tintColor: focused ? 'red' : white, resizeMode: "contain",
+                    }}
+                    source={require('../../assets/tvf.png')}
+                    resizeMode="contain"
+                  />
+                </View>
+              ),
+            }}
+          />
+
+          <Tab.Screen
+            name="Cartoons"
+            component={Cartoons}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <View
                   style={{
-                    height: focused ? 18 : 15,
-                    width: focused ? 18 : 15,
-                    tintColor: focused ? 'red' : white,
-                  }}
-                  source={require('../../assets/playlist.png')}
-                  resizeMode="contain"
-                />
-                <Text
-                  style={{
-                    color: focused ? 'red' : white,
-                    fontSize: 8,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
+                    width: focused ? 80 : 50,
+                    height: focused ? 70 : 50,
+                    borderTopLeftRadius: 45,
+                    borderTopRightRadius: 45,
+                    bottom: focused ? 10 : 0,
+                    overflow: 'hidden',
+                    borderTopWidth: focused ? 5 : null, borderColor: 'red'
                   }}>
-                  PlayList
-                </Text>
-              </View>
-            ),
-          }}
-        />
-      </Tab.Navigator>
-    </View>
+                  <Image
+                    style={{
+                      height: focused ? 50 : 30,
+                      width: focused ? 50 : 30, resizeMode: "contain",
+                      tintColor: focused ? 'red' : white,
+                    }}
+                    source={require('../../assets/animatedf.png')}
+                    resizeMode="contain"
+                  />
+
+                </View>
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="PlayList"
+            component={PlayList}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
+                    width: focused ? 80 : 50,
+                    height: focused ? 70 : 50,
+                    borderTopLeftRadius: 45,
+                    borderTopRightRadius: 45,
+                    bottom: focused ? 10 : 0,
+                    overflow: 'hidden',
+                    borderTopWidth: focused ? 5 : null, borderColor: 'red'
+                  }}>
+                  <Image
+                    style={{
+                      height: focused ? 50 : 30,
+                      width: focused ? 50 : 30,
+                      tintColor: focused ? 'red' : white, resizeMode: "contain"
+                    }}
+                    source={require('../../assets/playlistf.png')}
+                    resizeMode="contain"
+                  />
+                </View>
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      </SafeAreaView>
+    </>
   );
 };
 

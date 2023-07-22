@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import {
   FlatList,
@@ -13,15 +13,15 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
-import {Image} from '@rneui/base';
-import {Primary, white} from '../utillis/colors';
+import { Image } from '@rneui/base';
+import { Primary, white } from '../utillis/colors';
 import AnimatedLottieView from 'lottie-react-native';
-import {WebView} from 'react-native-webview';
-import {ActivityIndicator} from 'react-native';
+import { WebView } from 'react-native-webview';
+import { ActivityIndicator } from 'react-native';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
-const Player = ({navigation, route}) => {
-  const {url, data, type} = route.params;
+const Player = ({ navigation, route }) => {
+  const { url, data, type } = route.params;
   const [focused, setFocused] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [itemDetail, setItemDetail] = useState('');
@@ -44,7 +44,7 @@ const Player = ({navigation, route}) => {
     } else if (focused == false) setFocused(true);
     setModalVisible(false);
   };
-  const MovieListView = ({item}) => (
+  const MovieListView = ({ item }) => (
     <View
       style={{
         height: 60,
@@ -60,9 +60,9 @@ const Player = ({navigation, route}) => {
       {/* {console.log(item?.poster[0]?.image)} */}
       {/* <Text style={{ color: 'gray', margin: 8 }}>{item.epi_no}</Text> */}
       <TouchableOpacity
-        style={{flexDirection: 'row', alignItems: 'center'}}
+        style={{ flexDirection: 'row', alignItems: 'center' }}
         onPress={() =>
-          navigation.replace('Player', {url: item?.url, data: data, type: type})
+          navigation.replace('Player', { url: item?.url, data: data, type: type })
         }>
         <Image
           resizeMode="contain"
@@ -90,12 +90,12 @@ const Player = ({navigation, route}) => {
           </Text>
           <Text
             numberOfLines={1}
-            style={{color: 'gray', width: Dimensions.get('window').width / 2}}>
+            style={{ color: 'gray', width: Dimensions.get('window').width / 2 }}>
             {type == 'Movies' ? item.title : `Episode No ${item?.epi_no}`}
           </Text>
         </View>
       </TouchableOpacity>
-      <View style={{width: 30}}>
+      <View style={{ width: 30 }}>
         {url == item?.url ? (
           <AnimatedLottieView
             autoPlay
@@ -147,7 +147,7 @@ const Player = ({navigation, route}) => {
   const adBlockPattern = /ads\.example\.com/; // Add your ad domain pattern here
 
   const shouldStartLoadWithRequest = request => {
-    const {url} = request;
+    const { url } = request;
 
     if (adBlockPattern.test(url)) {
       return false; // Block the request
@@ -157,13 +157,13 @@ const Player = ({navigation, route}) => {
 
   if (loding) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size={'large'} color={'red'} />
       </View>
     );
   }
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
       <StatusBar translucent backgroundColor="#333333" />
       <View
         style={{
@@ -198,7 +198,7 @@ const Player = ({navigation, route}) => {
             }}></ActivityIndicator>
         )}
       </View>
-      <Text style={{color: white, margin: 10, fontSize: 16}}>
+      <Text style={{ color: white, margin: 10, fontSize: 16 }}>
         Releated Videos
       </Text>
       <FlatList
@@ -206,7 +206,7 @@ const Player = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}
         renderItem={MovieListView}
       />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Modal
           animationType="slide"
           transparent={true}
@@ -232,13 +232,13 @@ const Player = ({navigation, route}) => {
                     width: 50,
                     marginRight: 10,
                   }}
-                  source={{uri: itemDetail.Image}}></Image>
+                  source={{ uri: itemDetail.Image }}></Image>
                 <View>
                   <Text
-                    style={{color: 'white', fontSize: 14, fontWeight: '600'}}>
+                    style={{ color: 'white', fontSize: 14, fontWeight: '600' }}>
                     {itemDetail.name}
                   </Text>
-                  <Text numberOfLines={1} style={{color: 'gray'}}>
+                  <Text numberOfLines={1} style={{ color: 'gray' }}>
                     Artist | song | Arjit Singh
                   </Text>
                 </View>
@@ -259,7 +259,7 @@ const Player = ({navigation, route}) => {
                   }}
                   source={require('../assets/plus.png')}
                 />
-                <Text style={{color: 'white', fontWeight: '500', fontSize: 14}}>
+                <Text style={{ color: 'white', fontWeight: '500', fontSize: 14 }}>
                   Add to PlayList
                 </Text>
               </TouchableOpacity>
@@ -279,7 +279,7 @@ const Player = ({navigation, route}) => {
                   }}
                   source={require('../assets/share.png')}
                 />
-                <Text style={{color: 'white', fontWeight: '500', fontSize: 14}}>
+                <Text style={{ color: 'white', fontWeight: '500', fontSize: 14 }}>
                   Share
                 </Text>
               </TouchableOpacity>
@@ -288,7 +288,7 @@ const Player = ({navigation, route}) => {
         </Modal>
       </View>
       {/* Modal Ends */}
-    </View>
+    </SafeAreaView>
   );
 };
 

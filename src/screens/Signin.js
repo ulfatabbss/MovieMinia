@@ -7,17 +7,21 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ToastAndroid, SafeAreaView
 } from 'react-native';
-import React, {useState} from 'react';
-import {LoginValidationSchema} from '../utillis/validationSchema';
-import {Formik} from 'formik';
-import {Primary} from '../utillis/colors';
-import {store} from '../redux/store';
-import {setIsLogin} from '../redux/reducers/userReducers';
+import React, { useState } from 'react';
+import { LoginValidationSchema } from '../utillis/validationSchema';
+import { Formik } from 'formik';
+import { Primary } from '../utillis/colors';
+import { store } from '../redux/store';
+import { setIsLogin } from '../redux/reducers/userReducers';
+import { Login } from '../services/AppServices';
+import { ActivityIndicator } from 'react-native';
 
-const Signin = ({navigation}) => {
+const Signin = ({ navigation }) => {
   const [eyeIcon, setEyeIcon] = useState(require('../assets/close.png'));
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
+  const [isLoading, setIsLoading] = useState(false)
   const TogglePassword = () => {
     if (eyeIcon == require('../assets/close.png')) {
       setEyeIcon(require('../assets/open.png'));
@@ -32,18 +36,42 @@ const Signin = ({navigation}) => {
     password: '',
   };
   const handleLogin = values => {
+    setIsLoading(true);
     const obj = {
       username: values.email,
       password: values.password,
     };
+    Login(obj)
+      .then(async ({ data }) => {
+        store.dispatch(setIsLogin(true));
+      })
+      .catch(err => {
+        console.log(err, 'errors');
+        if (Platform.OS) {
+          ToastAndroid.showWithGravity(
+            'Login details are incorrect',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
+      }
+      )
+      .finally(() => setIsLoading(false));
   };
+  if (isLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size={'large'} color={'red'} />
+      </SafeAreaView>
+    );
+  }
   return (
     <Formik
       initialValues={initialValues}
       validateOnMount={true}
       validationSchema={LoginValidationSchema}
       onSubmit={values => {
-        console.log('values', values);
+        // console.log('values', values);
         handleLogin(values);
       }}>
       {({
@@ -94,7 +122,7 @@ const Signin = ({navigation}) => {
                   <View
                     style={[
                       styles.inputTxt,
-                      {flexDirection: 'row', alignItems: 'center'},
+                      { flexDirection: 'row', alignItems: 'center' },
                     ]}>
                     <TextInput
                       placeholder="Password"
@@ -103,12 +131,12 @@ const Signin = ({navigation}) => {
                       autoCapitalize={'none'}
                       onChangeText={handleChange('password')}
                       secureTextEntry={PasswordVisibility}
-                      style={{width: '90%', fontFamily: 'BebasNeue-Regular'}}
+                      style={{ width: '90%', fontFamily: 'BebasNeue-Regular' }}
                     />
 
                     <TouchableOpacity onPress={TogglePassword}>
                       <Image
-                        style={{height: 22, width: 22, tintColor: Primary}}
+                        style={{ height: 22, width: 22, tintColor: Primary }}
                         source={eyeIcon}
                       />
                     </TouchableOpacity>
@@ -119,9 +147,7 @@ const Signin = ({navigation}) => {
 
                   <TouchableOpacity
                     style={styles.signinBtn}
-                    onPress={() => {
-                      store.dispatch(setIsLogin(true));
-                    }}>
+                    onPress={() => handleSubmit()}>
                     <Text style={styles.signupTxt}>Sign In</Text>
                   </TouchableOpacity>
 
@@ -135,7 +161,7 @@ const Signin = ({navigation}) => {
                     <TouchableOpacity
                       activeOpacity={0.5}
                       onPress={() => navigation.navigate('Signup')}>
-                      <Text style={[styles.signupTxt, {color: Primary}]}>
+                      <Text style={[styles.signupTxt, { color: Primary }]}>
                         Sign Up
                       </Text>
                     </TouchableOpacity>
@@ -153,8 +179,8 @@ const Signin = ({navigation}) => {
 export default Signin;
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
-  bgImage: {flex: 1},
+  container: { flex: 1 },
+  bgImage: { flex: 1 },
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',

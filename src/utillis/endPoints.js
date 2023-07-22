@@ -1,5 +1,6 @@
 const endPoints = {
     login: 'login',
+    register: 'register',
     getMovies: 'movies',
     getUpcomming: 'UpComming_movies',
     getDrama: 'darama',

@@ -13,82 +13,36 @@ import {
   Alert,
   ToastAndroid,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {setPlaylist} from '../redux/reducers/userReducers';
-import {secondary} from '../utillis/colors';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPlaylist } from '../redux/reducers/userReducers';
+import { secondary } from '../utillis/colors';
 
-const Playlist = ({navigation}) => {
+const Playlist = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deletedItems, setDramaSlider] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const dispatch = useDispatch();
-
-  const {playlist} = useSelector(state => state.root.user);
+  const [sortedPlaylist, setSortedPlaylist] = useState([]);
+  const { playlist } = useSelector(state => state.root.user);
   useEffect(() => {
     console.log(playlist, 'p');
   }, []);
-  const data = [
-    {
-      id: 0,
-      uri: 'https://w0.peakpx.com/wallpaper/863/138/HD-wallpaper-mortal-engines-entertainment-film-hollywood-movie-people-poster-woman.jpg',
-      name: 'movie1',
-      duration: '1h 23m',
-    },
-    {
-      id: 1,
-      uri: 'https://w0.peakpx.com/wallpaper/828/952/HD-wallpaper-aquaman-poster-jason-momoa-fantasy-movie-hollywood-underwater.jpg',
-      name: 'movie2',
-      duration: '1h 23m',
-    },
-    {
-      id: 2,
-      uri: 'https://w0.peakpx.com/wallpaper/911/788/HD-wallpaper-avatar-2-poster-avatar-2-fantasy-hollywood-blue-movie.jpg',
-      name: 'movie3',
-      duration: '1h 23m',
-    },
-    {
-      id: 3,
-      uri: 'https://w0.peakpx.com/wallpaper/196/795/HD-wallpaper-justice-league-sc-action-dc-hbo-hollywood-justice-league-movie-poster-warner-warner-bros.jpg',
-      name: 'movie4',
-      duration: '1h 23m',
-    },
-    {
-      id: 4,
-      uri: 'https://w0.peakpx.com/wallpaper/785/866/HD-wallpaper-x-men-entertainment-hollywood-movie-poster-thriller.jpg',
-      name: 'movie1',
-      duration: '1h 23m',
-    },
-    {
-      id: 5,
-      uri: 'https://w0.peakpx.com/wallpaper/902/32/HD-wallpaper-heimdall-thor-comics-holi-hollywood-idris-elba-marvel-marvel-cinematic-universe-marvel-comics-marvel-movies-movie-movie-poster-orange-poster-thor-ragnarok.jpg',
-      name: 'movie1',
-      duration: '1h 23m',
-    },
-    {
-      id: 6,
-      uri: 'https://w0.peakpx.com/wallpaper/225/482/HD-wallpaper-wonder-woman-1984-poster-2020-movies-hollywood-wonder-woman-wonder-woman-2-super-hero.jpg',
-      name: 'movie1',
-      duration: '1h 23m',
-    },
-  ];
-  const filteredData = playlist.filter(item =>
+  const filteredData = sortedPlaylist.filter(item =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   const PlayMovie = item => {
     console.log('Movie is Played', item);
   };
-  // const DeleteMovie = item => {
-  //   setDeletedItems(prevDeletedItems => [...prevDeletedItems, item.id]);
 
-  //   // Remove the deleted item from the PlaylistData array
-  //   setPlaylistData(prevPlaylistData =>
-  //     prevPlaylistData.filter(dataItem => dataItem.id !== item.id),
-  //   );
-  // };
 
+  useEffect(() => {
+    const sorted = playlist.slice().sort((a, b) => b.timestamp - a.timestamp);
+    setSortedPlaylist(sorted);
+  }, [playlist]);
   const toggleModal = item => {
     setIsModalVisible(!isModalVisible);
     setSelectedItem((item = item));
@@ -109,7 +63,7 @@ const Playlist = ({navigation}) => {
 
   // const PlaylistData = playlist;
   const MyPlaylist = item => {
-    console.log(item.item.poster[0].image, 'item');
+    // console.log(item.item.poster[0].image, 'item');
     // if (deletedItems.includes(item.item.id)) {
     //   return null; // Skip rendering the deleted item
     // }
@@ -123,7 +77,7 @@ const Playlist = ({navigation}) => {
             borderBottomLeftRadius: 10,
             borderTopLeftRadius: 10,
           }}
-          source={{uri: item?.item?.poster[0]?.image}}
+          source={{ uri: item?.item?.poster[0]?.image }}
           resizeMode={'contain'}
         />
 
@@ -137,7 +91,7 @@ const Playlist = ({navigation}) => {
               alignItems: 'center',
               borderColor: 'pink',
             }}>
-            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
               Genre :
             </Text>
             <Text style={styles.h3}>{item.item.genre}</Text>
@@ -151,7 +105,7 @@ const Playlist = ({navigation}) => {
               zIndex: 1,
               borderColor: 'pink',
             }}>
-            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
               Director :
             </Text>
             <Text style={styles.h3}>{item.item.director}</Text>
@@ -165,7 +119,7 @@ const Playlist = ({navigation}) => {
               zIndex: 1,
               borderColor: 'pink',
             }}>
-            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
               Release Year :
             </Text>
             <Text style={styles.h3}>{item.item.releaseYear}</Text>
@@ -178,7 +132,7 @@ const Playlist = ({navigation}) => {
               overflow: 'hidden',
               borderColor: 'pink',
             }}>
-            <Text style={{color: 'rgba(255,0,0,0.5)', fontSize: 10}}>
+            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
               Category :
             </Text>
             <Text style={styles.h3}>{item.item.category}</Text>
@@ -197,9 +151,9 @@ const Playlist = ({navigation}) => {
             justifyContent: 'space-evenly',
           }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Player', {url: item.item.url})}>
+            onPress={() => navigation.navigate('Player', { url: item.item.url })}>
             <Image
-              style={[styles.icons, {alignSelf: 'baseline'}]}
+              style={[styles.icons, { alignSelf: 'baseline' }]}
               resizeMode={'contain'}
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/128/1709/1709973.png',
@@ -216,27 +170,6 @@ const Playlist = ({navigation}) => {
             />
           </TouchableOpacity>
         </View>
-        {/* <View style={styles.assets_Container}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Player', {url: item.item.url})}>
-            <Image
-              style={styles.icons}
-              resizeMode={'contain'}
-              source={{
-                uri: 'https://cdn-icons-png.flaticon.com/128/1709/1709973.png',
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => toggleModal((item = item))}>
-            <Image
-              style={styles.icons}
-              resizeMode={'contain'}
-              source={{
-                uri: 'https://cdn-icons-png.flaticon.com/128/6460/6460112.png',
-              }}
-            />
-          </TouchableOpacity>
-        </View> */}
       </View>
     );
   };
@@ -246,7 +179,7 @@ const Playlist = ({navigation}) => {
   //   console.log(playlist, 'myPlaylist');
   // }, []);
   return (
-    <View style={{flex: 1, backgroundColor: secondary}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: secondary }}>
       <View
         style={{
           marginTop: StatusBar.currentHeight,
@@ -268,13 +201,13 @@ const Playlist = ({navigation}) => {
             placeholderTextColor={'gray'}
           />
           <Image
-            style={[styles.icons, {tintColor: 'gray'}]}
+            style={[styles.icons, { tintColor: 'gray' }]}
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/9479/9479251.png',
             }}
           />
         </View>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <FlatList
             data={filteredData}
             renderItem={MyPlaylist}
@@ -307,7 +240,7 @@ const Playlist = ({navigation}) => {
               <Pressable
                 style={[
                   styles.button,
-                  {backgroundColor: 'green', borderTopRightRadius: 10},
+                  { backgroundColor: 'green', borderTopRightRadius: 10 },
                 ]}
                 onPress={() => setIsModalVisible(!isModalVisible)}>
                 <Text style={styles.textStyle}>No</Text>
@@ -315,7 +248,7 @@ const Playlist = ({navigation}) => {
               <Pressable
                 style={[
                   styles.button,
-                  {backgroundColor: 'red', borderTopLeftRadius: 10},
+                  { backgroundColor: 'red', borderTopLeftRadius: 10 },
                 ]}
                 onPress={handleDeleteConfirm}>
                 <Text style={styles.textStyle}>Yes</Text>
@@ -324,14 +257,14 @@ const Playlist = ({navigation}) => {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default Playlist;
 
 const styles = StyleSheet.create({
-  main_View: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 20},
+  main_View: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', padding: 20 },
   cards: {
     height: 100,
     width: '95%',
@@ -343,9 +276,9 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  h2: {color: '#fff', fontSize: 12, marginVertical: 5},
-  h1: {color: '#fff', fontSize: 18},
-  icons: {height: 20, width: 20},
+  h2: { color: '#fff', fontSize: 12, marginVertical: 5 },
+  h1: { color: '#fff', fontSize: 18 },
+  icons: { height: 20, width: 20 },
   input_Container: {
     height: 50,
     marginVertical: 10,

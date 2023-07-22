@@ -12,17 +12,18 @@ import {
   StatusBar,
   Alert,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
-import React, {useState} from 'react';
-import {MovieView} from '../utillis/styles';
-import {secondary} from '../utillis/colors';
+import React, { useState } from 'react';
+import { MovieView } from '../utillis/styles';
+import { secondary } from '../utillis/colors';
 
-const ExpandMovies = ({route, navigation}) => {
+const ExpandMovies = ({ route, navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [deletedItems, setDeletedItems] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const {popularMoviesData, upcommingMoviesData} = route.params;
+  const { popularMoviesData, upcommingMoviesData } = route.params;
 
   const data = [
     {
@@ -86,19 +87,19 @@ const ExpandMovies = ({route, navigation}) => {
     setDeletedItems(prevDeletedItems => [...prevDeletedItems, selectedItem.id]);
     setIsModalVisible(false);
   };
-  const Playlist = ({item}) => {
+  const Playlist = ({ item }) => {
     if (deletedItems.includes(item.id)) {
       return null;
     }
     return (
       <View style={styles.cards}>
         <Image
-          style={{height: '100%', width: '30%'}}
-          source={{uri: item.uri}}
+          style={{ height: '100%', width: '30%' }}
+          source={{ uri: item.uri }}
         />
         <View style={styles.details_View}>
           <Text style={[styles.h2]}>{item.name}</Text>
-          <Text style={[styles.h2, {marginTop: 10}]}>{item.duration}</Text>
+          <Text style={[styles.h2, { marginTop: 10 }]}>{item.duration}</Text>
         </View>
         <View style={styles.assets_Container}>
           <TouchableOpacity onPress={() => PlayMovie((item = item))}>
@@ -123,7 +124,7 @@ const ExpandMovies = ({route, navigation}) => {
       </View>
     );
   };
-  const MoviesView = ({item, data}) => (
+  const MoviesView = ({ item, data }) => (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate('MovieDiscription', {
@@ -132,7 +133,7 @@ const ExpandMovies = ({route, navigation}) => {
           type: 'Movies',
         })
       }
-      style={[MovieView, {height: 150, width: '30%', marginTop: 10}]}>
+      style={[MovieView, { height: 150, width: '30%', marginTop: 10 }]}>
       <ImageBackground
         style={{
           height: '100%',
@@ -140,7 +141,7 @@ const ExpandMovies = ({route, navigation}) => {
           justifyContent: 'flex-end',
         }}
         resizeMode={'stretch'}
-        source={{uri: item.poster[0].image}}>
+        source={{ uri: item.poster[0].image }}>
         <View
           style={{
             backgroundColor: 'rgba(0,0,0,0.9)',
@@ -166,7 +167,7 @@ const ExpandMovies = ({route, navigation}) => {
   const window_Width = Dimensions.get('window').width;
   const window_Height = Dimensions.get('window').height;
   return (
-    <View style={{flex: 1, backgroundColor: secondary}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: secondary }}>
       <View
         style={{
           marginTop: StatusBar.currentHeight,
@@ -188,7 +189,7 @@ const ExpandMovies = ({route, navigation}) => {
             placeholderTextColor={'gray'}
           />
           <Image
-            style={[styles.icons, {tintColor: 'gray'}]}
+            style={[styles.icons, { tintColor: 'gray' }]}
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/9479/9479251.png',
             }}
@@ -199,8 +200,8 @@ const ExpandMovies = ({route, navigation}) => {
           data={upcommingMoviesData.filter(item =>
             item.title.toLowerCase().includes(searchQuery.toLowerCase()),
           )}
-          renderItem={({item}) =>
-            MoviesView({item: item, data: popularMoviesData})
+          renderItem={({ item }) =>
+            MoviesView({ item: item, data: popularMoviesData })
           }
           showsVerticalScrollIndicator={false}
         />
@@ -238,14 +239,14 @@ const ExpandMovies = ({route, navigation}) => {
           </View>
         </View>
       </Modal> */}
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default ExpandMovies;
 
 const styles = StyleSheet.create({
-  main_View: {flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'},
+  main_View: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
   cards: {
     height: 100,
     width: '100%',
@@ -258,9 +259,9 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
     justifyContent: 'space-between',
   },
-  h2: {color: '#fff', fontSize: 14},
-  h1: {color: '#fff', fontSize: 18},
-  icons: {height: 20, width: 20},
+  h2: { color: '#fff', fontSize: 14 },
+  h1: { color: '#fff', fontSize: 18 },
+  icons: { height: 20, width: 20 },
   input_Container: {
     height: 50,
     marginVertical: 10,

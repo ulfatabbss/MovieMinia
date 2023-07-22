@@ -7,13 +7,18 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
+  SafeAreaView,
 } from 'react-native';
-import React, {useState} from 'react';
-import {Primary} from '../utillis/colors';
-import {Formik} from 'formik';
-import {LoginValidationSchema} from '../utillis/validationSchema';
-
-const Signup = ({navigation}) => {
+import React, { useState } from 'react';
+import { Primary } from '../utillis/colors';
+import { Formik } from 'formik';
+import { SignUpValidationSchema } from '../utillis/validationSchema';
+import { ActivityIndicator } from 'react-native';
+import { store } from '../redux/store';
+import { setIsLogin } from '../redux/reducers/userReducers';
+import { Register } from '../services/AppServices';
+const Signup = ({ navigation }) => {
   const [eyeIcon, setEyeIcon] = useState(require('../assets/close.png'));
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
   const TogglePassword = () => {
@@ -25,24 +30,53 @@ const Signup = ({navigation}) => {
       setPasswordVisibility(true);
     }
   };
+  const [loading, setLoading] = useState(false);
   const initialValues = {
+    name: '',
     email: '',
     password: '',
   };
-  const handleLogin = values => {
+  const handlSignUp = values => {
+    setLoading(true);
     const obj = {
-      username: values.email,
+      name: values.name,
+      email: values.email,
       password: values.password,
+
     };
+
+    Register(obj)
+      .then(async ({ data }) => {
+        store.dispatch(setIsLogin(true));
+        ToastAndroid.showWithGravity(
+          'Your account details have been saved.',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      })
+      .catch(err => {
+        ToastAndroid.showWithGravity(
+          'This form has error',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
+      })
+      .finally(() => setLoading(false));
   };
+  if (loading) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size={'large'} color={'red'} />
+      </SafeAreaView>
+    );
+  }
   return (
     <Formik
       initialValues={initialValues}
       validateOnMount={true}
-      validationSchema={LoginValidationSchema}
+      validationSchema={SignUpValidationSchema}
       onSubmit={values => {
-        console.log('values', values);
-        handleLogin(values);
+        handlSignUp(values);
       }}>
       {({
         values,
@@ -81,7 +115,8 @@ const Signup = ({navigation}) => {
                     <TextInput
                       placeholder="First Name"
                       placeholderTextColor="grey"
-                      onChangeText={handleChange('firstName')}
+                      value={values.name}
+                      onChangeText={handleChange('name')}
                       style={styles.inputnameTxt}
                     />
                     <TextInput
@@ -90,6 +125,9 @@ const Signup = ({navigation}) => {
                       style={styles.inputnameTxt}
                     />
                   </View>
+                  {errors.name && touched.name ? (
+                    <Text style={styles.errors}>{errors.name}</Text>
+                  ) : null}
                   <TextInput
                     placeholder="Enter your email"
                     placeholderTextColor="grey"
@@ -104,7 +142,7 @@ const Signup = ({navigation}) => {
                   <View
                     style={[
                       styles.inputTxt,
-                      {flexDirection: 'row', alignItems: 'center'},
+                      { flexDirection: 'row', alignItems: 'center' },
                     ]}>
                     <TextInput
                       placeholder="Password"
@@ -113,17 +151,36 @@ const Signup = ({navigation}) => {
                       autoCapitalize={'none'}
                       onChangeText={handleChange('password')}
                       secureTextEntry={PasswordVisibility}
-                      style={{width: 250, fontFamily: 'BebasNeue-Regular'}}
+                      style={{ width: "90%", }}
                     />
                     <TouchableOpacity onPress={TogglePassword}>
                       <Image
-                        style={{height: 22, width: 22, tintColor: Primary}}
+                        style={{ height: 22, width: 22, tintColor: Primary }}
                         source={eyeIcon}></Image>
                     </TouchableOpacity>
                   </View>
-                  {errors.email && touched.email ? (
+                  {errors.password && touched.password && (
                     <Text style={styles.errors}>{errors.password}</Text>
-                  ) : null}
+                  )}
+                  <View
+                    style={[
+                      styles.inputTxt,
+                      { flexDirection: 'row', alignItems: 'center' },
+                    ]}>
+                    <TextInput
+                      placeholderTextColor="grey"
+                      autoCapitalize={'none'}
+                      placeholder="*********"
+                      value={values.confirmPassword}
+                      inputTitle={'confirmPassword'}
+                      onChangeText={handleChange('confirmPassword')}
+                      secureTextEntry={PasswordVisibility}
+                      style={{ width: 250 }}
+                    />
+                  </View>
+                  {errors.confirmPassword && touched.confirmPassword && (
+                    <Text style={styles.errors}>{errors.confirmPassword}</Text>
+                  )}
                   <TouchableOpacity
                     style={styles.signinBtn}
                     onPress={() => handleSubmit()}>
@@ -136,12 +193,12 @@ const Signup = ({navigation}) => {
                       marginTop: 15,
                     }}>
                     <Text style={styles.signupTxt}>
-                      Already have an account?{' '}
+                      Already have an account?
                     </Text>
                     <TouchableOpacity
                       activeOpacity={0.5}
                       onPress={() => navigation.navigate('Signin')}>
-                      <Text style={[styles.signupTxt, {color: '#E7442E'}]}>
+                      <Text style={[styles.signupTxt, { color: 'red' }]}>
                         Sign In
                       </Text>
                     </TouchableOpacity>
@@ -159,8 +216,8 @@ const Signup = ({navigation}) => {
 export default Signup;
 
 const styles = StyleSheet.create({
-  container: {backgroundColor: '#fff', flex: 1},
-  bgImage: {flex: 1},
+  container: { backgroundColor: '#fff', flex: 1 },
+  bgImage: { flex: 1 },
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -195,7 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333333',
     color: '#fff',
     marginTop: 10,
-    fontFamily: 'BebasNeue-Regular',
+
   },
   inputnameTxt: {
     width: '49%',
@@ -205,7 +262,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#333333',
     color: '#fff',
     marginTop: 10,
-    fontFamily: 'BebasNeue-Regular',
   },
   signinBtn: {
     height: 50,

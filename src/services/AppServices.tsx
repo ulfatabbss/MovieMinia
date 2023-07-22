@@ -1,5 +1,5 @@
-import { HTTP_APP } from '../utillis/config'
-import { endPoints } from '../utillis/endPoints';
+import {HTTP_APP} from '../utillis/config';
+import {endPoints} from '../utillis/endPoints';
 const GetMovies = () => {
   return HTTP_APP.get(endPoints.getMovies);
 };
@@ -14,4 +14,11 @@ const GetSlider = () => {
   return HTTP_APP.get(endPoints.getSlider);
 };
 
-export {GetMovies,GetUpcomming,GetDrama,GetSlider};
+const Login = () => {
+  return HTTP_APP.post(endPoints.login);
+};
+const Register = () => {
+  return HTTP_APP.post(endPoints.register);
+};
+
+export {GetMovies, GetUpcomming, GetDrama, GetSlider, Login, Register};
