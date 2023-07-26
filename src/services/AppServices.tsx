@@ -14,11 +14,12 @@ const GetSlider = () => {
   return HTTP_APP.get(endPoints.getSlider);
 };
 
-const Login = () => {
-  return HTTP_APP.post(endPoints.login);
+const Login = (obj: any) => {
+  console.log(obj);
+  return HTTP_APP.post(endPoints.login, obj);
 };
-const Register = () => {
-  return HTTP_APP.post(endPoints.register);
+const Register = (obj: any) => {
+  return HTTP_APP.post(endPoints.register, obj);
 };
 
 export {GetMovies, GetUpcomming, GetDrama, GetSlider, Login, Register};

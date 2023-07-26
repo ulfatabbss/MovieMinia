@@ -9,7 +9,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity, SafeAreaView,
-  View, Platform
+  View, Platform, Modal, Pressable
 } from 'react-native';
 import React, { useRef, useEffect, useState } from 'react';
 import Carousel from 'react-native-snap-carousel';
@@ -30,9 +30,7 @@ import {
   setUpcommingMoviesData,
 } from '../redux/reducers/userReducers';
 import { useSelector } from 'react-redux';
-import LinearGradient from 'react-native-linear-gradient';
 import { Heading, MovieView, smalltext } from '../utillis/styles';
-import GradientText from '../components/GradientText';
 import MySlider from '../components/MySlider';
 
 const Dashboard = ({ navigation }) => {
@@ -162,7 +160,7 @@ const Dashboard = ({ navigation }) => {
       }}
       />}
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="black" />
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
 
@@ -306,7 +304,7 @@ const Dashboard = ({ navigation }) => {
           </View>
           <View
             style={{
-              marginBottom: 80,
+              marginBottom: 80
             }}>
             <FlatList
               showsHorizontalScrollIndicator={false}

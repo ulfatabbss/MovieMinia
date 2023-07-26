@@ -62,7 +62,7 @@ const Cartoons = ({ navigation }) => {
   );
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#5E8D48" barStyle="light-content" />
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
         <MySlider Movies={animatedSlider} />
@@ -101,7 +101,7 @@ const Cartoons = ({ navigation }) => {
               showsHorizontalScrollIndicator={false}
               horizontal
               data={cartoonData}
-              renderItem={MoviesView}
+              renderItem={({ item }) => MoviesView({ item: item, data: cartoonData })}
             />
           </View>
         </View>
@@ -138,7 +138,7 @@ const Cartoons = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             horizontal
             data={animated2Data}
-            renderItem={MoviesView}
+            renderItem={({ item }) => MoviesView({ item: item, data: animated2Data })}
           />
         </View>
         <View
@@ -158,6 +158,7 @@ const Cartoons = ({ navigation }) => {
               onPress={() => {
                 navigation.navigate('ExpandMovies', {
                   upcommingMoviesData: animated1Data,
+
                 });
               }}
               style={{
@@ -170,12 +171,12 @@ const Cartoons = ({ navigation }) => {
               <Text style={smalltext}>More</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ height: 180 }}>
+          <View style={{ height: 180, marginBottom: 60 }}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
               data={animated1Data}
-              renderItem={MoviesView}
+              renderItem={({ item }) => MoviesView({ item: item, data: animated1Data })}
             />
           </View>
         </View>

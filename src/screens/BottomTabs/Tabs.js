@@ -4,8 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from '../Dashboard';
 import TvShowes from '../TvShowes';
 import Cartoons from '../Cartoons';
-import Find from '../PlayList';
-import { Primary, black, gray, white } from '../../utillis/colors';
+import { Primary, white } from '../../utillis/colors';
 import PlayList from '../PlayList';
 const Tab = createBottomTabNavigator();
 
@@ -15,7 +14,7 @@ const Tabs = () => {
       {Platform.OS === 'ios' &&
         <View style={{
           width: "100%",
-          height: 100, // For all devices, even X, XS Max
+          height: 100,
           position: 'absolute',
           top: 0,
           left: 0,
@@ -23,7 +22,7 @@ const Tabs = () => {
         }}
         />}
       <SafeAreaView style={{ flex: 1 }}>
-
+        <StatusBar backgroundColor={'gray'} />
         <Tab.Navigator
           screenOptions={{
             headerShown: false,

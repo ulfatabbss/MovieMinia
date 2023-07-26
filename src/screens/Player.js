@@ -91,7 +91,7 @@ const Player = ({ navigation, route }) => {
           <Text
             numberOfLines={1}
             style={{ color: 'gray', width: Dimensions.get('window').width / 2 }}>
-            {type == 'Movies' ? item.title : `Episode No ${item?.epi_no}`}
+            {type == 'Movies' ? type : `Episode No ${item?.epi_no}`}
           </Text>
         </View>
       </TouchableOpacity>
@@ -208,7 +208,7 @@ const Player = ({ navigation, route }) => {
       />
       <View style={{ flex: 1 }}>
         <Modal
-          animationType="slide"
+          animationType='fade'
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
@@ -239,7 +239,7 @@ const Player = ({ navigation, route }) => {
                     {itemDetail.name}
                   </Text>
                   <Text numberOfLines={1} style={{ color: 'gray' }}>
-                    Artist | song | Arjit Singh
+
                   </Text>
                 </View>
               </View>

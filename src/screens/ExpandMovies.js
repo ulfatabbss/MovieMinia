@@ -133,7 +133,20 @@ const ExpandMovies = ({ route, navigation }) => {
           type: 'Movies',
         })
       }
-      style={[MovieView, { height: 150, width: '30%', marginTop: 10 }]}>
+      style={[{
+        backgroundColor: 'black',
+        height: Dimensions.get('window').height / 5 - 10,
+        width: Dimensions.get('window').width / 3 - 15,
+        borderWidth: 0.5,
+        borderColor: 'white',
+        marginHorizontal: 5,
+        borderRadius: 10,
+        overflow: 'hidden',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        elevation: 10,
+        shadowColor: 'white', marginTop: 10
+      }]}>
       <ImageBackground
         style={{
           height: '100%',
@@ -162,15 +175,12 @@ const ExpandMovies = ({ route, navigation }) => {
           </Text>
         </View>
       </ImageBackground>
-    </TouchableOpacity>
+    </TouchableOpacity >
   );
-  const window_Width = Dimensions.get('window').width;
-  const window_Height = Dimensions.get('window').height;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: secondary }}>
       <View
         style={{
-          marginTop: StatusBar.currentHeight,
           flex: 1,
           paddingBottom: 10,
         }}>
@@ -195,16 +205,18 @@ const ExpandMovies = ({ route, navigation }) => {
             }}
           />
         </View>
-        <FlatList
-          numColumns={3}
-          data={upcommingMoviesData.filter(item =>
-            item.title.toLowerCase().includes(searchQuery.toLowerCase()),
-          )}
-          renderItem={({ item }) =>
-            MoviesView({ item: item, data: popularMoviesData })
-          }
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <FlatList
+            numColumns={3}
+            data={upcommingMoviesData.filter(item =>
+              item.title.toLowerCase().includes(searchQuery.toLowerCase()),
+            )}
+            renderItem={({ item }) =>
+              MoviesView({ item: item, data: popularMoviesData })
+            }
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </View>
       {/* <Modal
         animationType="fade"
@@ -266,9 +278,9 @@ const styles = StyleSheet.create({
     height: 50,
     marginVertical: 10,
     paddingHorizontal: 5,
-    width: '98%',
-    borderWidth: 0.2,
-    borderColor: 'red',
+    width: '95%',
+    borderWidth: 1,
+    borderColor: 'white',
     justifyContent: 'space-around',
     flexDirection: 'row',
     borderRadius: 10,

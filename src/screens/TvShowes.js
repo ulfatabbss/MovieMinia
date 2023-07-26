@@ -14,30 +14,30 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Primary, secondary } from '../utillis/colors';
 import Header from '../components/Header';
 import { GetDrama } from '../services/AppServices';
-import { setDramaData } from '../redux/reducers/userReducers';
+import { setDramaData, setIndianDrama, setTurkishDrama } from '../redux/reducers/userReducers';
 import { useSelector } from 'react-redux';
 import { store } from '../redux/store';
 import { Heading, MovieView, smalltext } from '../utillis/styles';
 import MySlider from '../components/MySlider';
+import { ActivityIndicator } from 'react-native';
 const TvShowes = ({ navigation }) => {
-  const { dramaData, dramaSlider } = useSelector(
+  const [loding, setLoding] = useState(true);
+  const { dramaData, dramaSlider, indianDrama, turkishDrama } = useSelector(
     state => state.root.user,
   );
-  const [indian, setIndian] = useState(null);
-  const [turkish, setTurkish] = useState(null);
 
-  useEffect(() => {
-    GetDrama()
+  useEffect(async () => {
+    setLoding(true)
+    await GetDrama()
       .then(async ({ data }) => {
-        store.dispatch(
-          setDramaData(data.filter(object => object.category === 'Urdu')),
-        );
-        setIndian(data.filter(object => object.category === 'Indian'));
-        setTurkish(data.filter(object => object.category === 'Turkish'));
+        store.dispatch(setDramaData(data.filter(object => object.category === 'Urdu')));
+        store.dispatch(setIndianDrama(data.filter(object => object.category === 'Indian'))),
+          store.dispatch(setTurkishDrama(data.filter(object => object.category === 'Turkish')))
       })
       .catch(err => {
         console.log(err, 'errors');
       });
+    setLoding(false)
   }, []);
   const MoviesView = ({ item }) => (
     <TouchableOpacity
@@ -79,9 +79,17 @@ const TvShowes = ({ navigation }) => {
       </ImageBackground>
     </TouchableOpacity>
   );
+
+  if (loding) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size={'large'} color={'red'} />
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="black" />
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header />
         <MySlider Movies={dramaSlider} />
@@ -138,7 +146,7 @@ const TvShowes = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('ExpandMovies', {
-                  upcommingMoviesData: turkish,
+                  upcommingMoviesData: turkishDrama,
                 });
               }}
               style={{
@@ -150,11 +158,11 @@ const TvShowes = ({ navigation }) => {
               <Text style={smalltext}>More</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ height: 180, marginTop: 10 }}>
+          <View style={{ marginTop: 10 }}>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
-              data={turkish}
+              data={turkishDrama}
               renderItem={MoviesView}
             />
           </View>
@@ -175,7 +183,7 @@ const TvShowes = ({ navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('ExpandMovies', {
-                  upcommingMoviesData: indian,
+                  upcommingMoviesData: indianDrama,
                 });
               }}
               style={{
@@ -189,7 +197,7 @@ const TvShowes = ({ navigation }) => {
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
-              data={indian}
+              data={indianDrama}
               renderItem={MoviesView}
             />
           </View>

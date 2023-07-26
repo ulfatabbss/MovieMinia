@@ -207,19 +207,18 @@ const MovieDiscription = ({ navigation, route }) => {
 
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
               alignItems: 'center',
               marginVertical: 10,
             }}>
-            <Text style={[h1, { fontSize: 20 }]}>Cast</Text>
+            <Text style={[h1, { alignSelf: 'flex-start', fontSize: 20 }]}>Cast</Text>
+
+            <FlatList
+              numColumns={'3'}
+              data={item.cast}
+              showsVerticalScrollIndicator={false}
+              renderItem={CastView}
+            />
           </View>
-          <FlatList
-            numColumns={'3'}
-            data={item.cast}
-            showsVerticalScrollIndicator={false}
-            renderItem={CastView}
-          />
         </View>
       </ScrollView>
     </SafeAreaView>

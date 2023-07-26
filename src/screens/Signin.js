@@ -35,28 +35,34 @@ const Signin = ({ navigation }) => {
     email: '',
     password: '',
   };
-  const handleLogin = values => {
+  const handleLogin = async (values) => {
     setIsLoading(true);
     const obj = {
-      username: values.email,
+      email: values.email,
       password: values.password,
     };
-    Login(obj)
-      .then(async ({ data }) => {
+    try {
+      const response = await Login(obj);
+      // console.log(response.data, "heloooooo");
+      if (response.data.status == true) {
         store.dispatch(setIsLogin(true));
-      })
-      .catch(err => {
-        console.log(err, 'errors');
-        if (Platform.OS) {
-          ToastAndroid.showWithGravity(
-            'Login details are incorrect',
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER,
-          );
-        }
+      } else {
+        ToastAndroid.showWithGravity(
+          'Login credentials are incorrect',
+          ToastAndroid.LONG,
+          ToastAndroid.CENTER,
+        );
       }
-      )
-      .finally(() => setIsLoading(false));
+    } catch (error) {
+      console.log(error, 'errors');
+      ToastAndroid.showWithGravity(
+        'Check your internet connection...',
+        ToastAndroid.LONG,
+        ToastAndroid.CENTER,
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
   if (isLoading) {
     return (
@@ -86,6 +92,7 @@ const Signin = ({ navigation }) => {
         isValid,
       }) => (
         <View style={styles.container}>
+
           <ImageBackground
             source={{
               uri: 'https://www.logitheque.com/en/wp-content/uploads/sites/6/2019/07/netflix-image.jpg',
@@ -131,7 +138,7 @@ const Signin = ({ navigation }) => {
                       autoCapitalize={'none'}
                       onChangeText={handleChange('password')}
                       secureTextEntry={PasswordVisibility}
-                      style={{ width: '90%', fontFamily: 'BebasNeue-Regular' }}
+                      style={{ width: '90%', color: 'white' }}
                     />
 
                     <TouchableOpacity onPress={TogglePassword}>
@@ -214,7 +221,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#333333',
     color: '#fff',
     marginTop: 10,
-    fontFamily: 'BebasNeue-Regular',
   },
   signinBtn: {
     height: 50,

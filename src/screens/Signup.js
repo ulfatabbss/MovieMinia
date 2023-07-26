@@ -8,9 +8,9 @@ import {
   TextInput,
   TouchableOpacity,
   ToastAndroid,
-  SafeAreaView,
+  SafeAreaView, Keyboard
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Primary } from '../utillis/colors';
 import { Formik } from 'formik';
 import { SignUpValidationSchema } from '../utillis/validationSchema';
@@ -30,6 +30,23 @@ const Signup = ({ navigation }) => {
       setPasswordVisibility(true);
     }
   };
+  const [logoVisible, setLogoVisible] = useState(true);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setLogoVisible(false)
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setLogoVisible(true)
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, [])
   const [loading, setLoading] = useState(false);
   const initialValues = {
     name: '',
@@ -42,26 +59,27 @@ const Signup = ({ navigation }) => {
       name: values.name,
       email: values.email,
       password: values.password,
-
     };
-
     Register(obj)
       .then(async ({ data }) => {
-        store.dispatch(setIsLogin(true));
-        ToastAndroid.showWithGravity(
-          'Your account details have been saved.',
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER,
-        );
-      })
-      .catch(err => {
-        ToastAndroid.showWithGravity(
-          'This form has error',
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER,
-        );
-      })
-      .finally(() => setLoading(false));
+        if (data.status == true) {
+          store.dispatch(setIsLogin(true));
+          ToastAndroid.showWithGravity(
+            'Your account details have been saved.',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
+        else {
+          ToastAndroid.showWithGravity(
+            'This form has error',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
+
+      }).finally(() => setLoading(false));
+
   };
   if (loading) {
     return (
@@ -97,18 +115,18 @@ const Signup = ({ navigation }) => {
             resizeMode="cover"
             style={styles.bgImage}>
             <View style={styles.overlay}>
-              <Image
+              {logoVisible && <Image
                 resizeMode="contain"
                 style={{
-                  marginTop: '20%',
+                  marginTop: '10%',
                   height: 150,
                   width: 200,
                   tintColor: 'red',
                   alignSelf: 'center',
                 }}
                 source={require('../assets/logo1.png')}
-              />
-              <View style={styles.formWrapper}>
+              />}
+              <View style={[styles.formWrapper, { paddingTop: logoVisible ? null : Platform.OS == 'ios' ? "10%" : "20%" }]}>
                 <View style={styles.form}>
                   <Text style={styles.normalTxt}>Sign Up</Text>
                   <View style={styles.nameFields}>
@@ -151,7 +169,7 @@ const Signup = ({ navigation }) => {
                       autoCapitalize={'none'}
                       onChangeText={handleChange('password')}
                       secureTextEntry={PasswordVisibility}
-                      style={{ width: "90%", }}
+                      style={{ width: "90%", color: 'white' }}
                     />
                     <TouchableOpacity onPress={TogglePassword}>
                       <Image
@@ -175,7 +193,7 @@ const Signup = ({ navigation }) => {
                       inputTitle={'confirmPassword'}
                       onChangeText={handleChange('confirmPassword')}
                       secureTextEntry={PasswordVisibility}
-                      style={{ width: 250 }}
+                      style={{ width: "100%", color: 'white' }}
                     />
                   </View>
                   {errors.confirmPassword && touched.confirmPassword && (

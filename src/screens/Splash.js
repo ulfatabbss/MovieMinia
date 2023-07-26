@@ -1,12 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
-import {Image} from '@rneui/base';
-import {StatusBar} from 'react-native';
-import {Primary, secondary} from '../utillis/colors';
+import { StyleSheet, Text, View, Image, SafeAreaView } from 'react-native';
+import { StatusBar } from 'react-native';
+import { secondary } from '../utillis/colors';
 
-const Splash = ({navigation}) => {
+const Splash = () => {
   return (
-    <View
+    <SafeAreaView
       style={{
         flex: 1,
         justifyContent: 'center',
@@ -16,10 +14,12 @@ const Splash = ({navigation}) => {
       <StatusBar hidden />
       <Image
         resizeMode="contain"
-        style={{height: 400, width: 400, tintColor: secondary}}
+        style={{ height: 400, width: 400, tintColor: "red" }}
         source={require('../assets/logo1.png')}
       />
-    </View>
+      <Text style={{ color: 'white', fontSize: 12, position: 'absolute', bottom: 50 }}>Powered By</Text>
+      <Image resizeMode='contain' style={{ height: 30, width: 100, bottom: 10, position: 'absolute' }} source={require('../assets/webevis.png')} />
+    </SafeAreaView>
   );
 };
 

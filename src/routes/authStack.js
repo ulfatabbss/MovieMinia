@@ -1,9 +1,8 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 import Signup from '../screens/Signup';
 import Signin from '../screens/Signin';
-import Dashboard from '../screens/Dashboard';
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {

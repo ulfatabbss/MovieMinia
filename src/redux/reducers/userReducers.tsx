@@ -15,6 +15,8 @@ const initialState: any = {
   dramaSlider: [],
   animatedSlider: [],
   playlist: [],
+  indianDrama: null,
+  turkishDrama: null,
 };
 
 export const userReducer = createSlice({
@@ -64,6 +66,12 @@ export const userReducer = createSlice({
     setPlaylist: (state, action) => {
       state.playlist = action.payload;
     },
+    setTurkishDrama: (state, action) => {
+      state.turkishDrama = action.payload;
+    },
+    setIndianDrama: (state, action) => {
+      state.indianDrama = action.payload;
+    },
   },
 });
 
@@ -82,6 +90,8 @@ export const {
   setDramaSlider,
   setAnimatedSlider,
   setPlaylist,
+  setIndianDrama,
+  setTurkishDrama,
 } = userReducer.actions;
 
 export default userReducer.reducer;

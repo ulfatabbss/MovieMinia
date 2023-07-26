@@ -56,7 +56,7 @@ const MovieView = {
   overflow: 'hidden',
   justifyContent: 'space-around',
   alignItems: 'center',
-  elevation: 10,
+  elevation: 3,
   shadowColor: 'white',
 };
 const overlay = {

@@ -23,20 +23,16 @@ import { secondary } from '../utillis/colors';
 const Playlist = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [deletedItems, setDramaSlider] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const dispatch = useDispatch();
   const [sortedPlaylist, setSortedPlaylist] = useState([]);
   const { playlist } = useSelector(state => state.root.user);
-  useEffect(() => {
-    console.log(playlist, 'p');
-  }, []);
+  // useEffect(() => {
+  //   console.log(playlist, 'p');
+  // }, []);
   const filteredData = sortedPlaylist.filter(item =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
-  const PlayMovie = item => {
-    console.log('Movie is Played', item);
-  };
 
 
   useEffect(() => {
@@ -52,22 +48,14 @@ const Playlist = ({ navigation }) => {
     clonedArray.splice(selectedItem, 1);
 
     dispatch(setPlaylist(clonedArray));
-    // DeleteMovie(selectedItem);
     setIsModalVisible(false);
     ToastAndroid.showWithGravity(
-      'remove from list',
+      'Remove from list',
       ToastAndroid.LONG,
       ToastAndroid.CENTER,
     );
   };
-
-  // const PlaylistData = playlist;
   const MyPlaylist = item => {
-    // console.log(item.item.poster[0].image, 'item');
-    // if (deletedItems.includes(item.item.id)) {
-    //   return null; // Skip rendering the deleted item
-    // }
-
     return (
       <View style={styles.cards}>
         <Image
@@ -91,7 +79,7 @@ const Playlist = ({ navigation }) => {
               alignItems: 'center',
               borderColor: 'pink',
             }}>
-            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
+            <Text style={{ color: 'rgba(255,0,0,1)', fontSize: 10 }}>
               Genre :
             </Text>
             <Text style={styles.h3}>{item.item.genre}</Text>
@@ -105,7 +93,7 @@ const Playlist = ({ navigation }) => {
               zIndex: 1,
               borderColor: 'pink',
             }}>
-            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
+            <Text style={{ color: 'rgba(255,0,0,1)', fontSize: 10 }}>
               Director :
             </Text>
             <Text style={styles.h3}>{item.item.director}</Text>
@@ -119,7 +107,7 @@ const Playlist = ({ navigation }) => {
               zIndex: 1,
               borderColor: 'pink',
             }}>
-            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
+            <Text style={{ color: 'rgba(255,0,0,1)', fontSize: 10 }}>
               Release Year :
             </Text>
             <Text style={styles.h3}>{item.item.releaseYear}</Text>
@@ -132,7 +120,7 @@ const Playlist = ({ navigation }) => {
               overflow: 'hidden',
               borderColor: 'pink',
             }}>
-            <Text style={{ color: 'rgba(255,0,0,0.5)', fontSize: 10 }}>
+            <Text style={{ color: 'rgba(255,0,0,1)', fontSize: 10 }}>
               Category :
             </Text>
             <Text style={styles.h3}>{item.item.category}</Text>
@@ -173,18 +161,45 @@ const Playlist = ({ navigation }) => {
       </View>
     );
   };
-  const window_Width = Dimensions.get('window').width;
-  const window_Height = Dimensions.get('window').height;
-  // useEffect(() => {
-  //   console.log(playlist, 'myPlaylist');
-  // }, []);
+  if (playlist.length === 0) {
+    return (
+      <View style={{ flex: 1, backgroundColor: secondary, }}>
+        <View style={styles.input_Container}>
+          <TextInput
+            style={{
+              height: '100%',
+              width: '80%',
+              color: '#fff',
+              borderColor: '#fff',
+            }}
+            autoCapitalize={'none'}
+            onChangeText={text => setSearchQuery(text)}
+            value={searchQuery}
+            placeholder={'search'}
+            placeholderTextColor={'gray'}
+          />
+          <Image
+            style={[styles.icons, { tintColor: 'gray' }]}
+            source={{
+              uri: 'https://cdn-icons-png.flaticon.com/128/9479/9479251.png',
+            }}
+          />
+        </View>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Image resizeMode='contain' style={{ height: "15%", width: "20%", tintColor: 'red' }} source={require('../assets/folder.png')} />
+          <Text style={{ color: "gray", fontSize: 18 }}>Empty playlist..!</Text>
+        </View>
+
+      </View>
+    )
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: secondary }}>
+      <StatusBar backgroundColor="#000" barStyle="light-content" />
       <View
         style={{
-          marginTop: StatusBar.currentHeight,
           flex: 1,
-          paddingBottom: 10,
+          paddingBottom: 80,
         }}>
         <View style={styles.input_Container}>
           <TextInput
@@ -275,6 +290,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: '#fff',
     backgroundColor: 'rgba(0,0,0,0.5)',
+    borderWidth: .5
   },
   h2: { color: '#fff', fontSize: 12, marginVertical: 5 },
   h1: { color: '#fff', fontSize: 18 },
@@ -283,9 +299,9 @@ const styles = StyleSheet.create({
     height: 50,
     marginVertical: 10,
     paddingHorizontal: 5,
-    width: '98%',
-    borderWidth: 0.2,
-    borderColor: 'red',
+    width: '95%',
+    borderWidth: 1, borderColor: '#fff',
+    // borderColor: 'red',
     justifyContent: 'space-around',
     flexDirection: 'row',
     borderRadius: 10,
