@@ -199,7 +199,7 @@ const Player = ({ navigation, route }) => {
         )}
       </View>
       <Text style={{ color: white, margin: 10, fontSize: 16 }}>
-        Releated Videos
+        Related Videos
       </Text>
       <FlatList
         data={type == 'Drama' ? data.episods : data}

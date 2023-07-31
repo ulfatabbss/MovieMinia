@@ -24,5 +24,3 @@ const Splash = () => {
 };
 
 export default Splash;
-
-const styles = StyleSheet.create({});
