@@ -18,7 +18,7 @@ const Splash = () => {
         source={require('../assets/logo1.png')}
       />
       <Text style={{ color: 'white', fontSize: 12, position: 'absolute', bottom: 50 }}>Powered By</Text>
-      <Image resizeMode='contain' style={{ height: 30, width: 100, bottom: 10, position: 'absolute' }} source={require('../assets/webevis.png')} />
+      <Image resizeMode='contain' style={{ height: 30, width: 100, bottom: 10, position: 'absolute' }} source={require('../assets/whitelogo.png')} />
     </SafeAreaView>
   );
 };

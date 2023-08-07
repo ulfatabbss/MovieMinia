@@ -17,6 +17,9 @@ const initialState: any = {
   playlist: [],
   indianDrama: null,
   turkishDrama: null,
+  hollywoodseasons: null,
+  hollywood: null,
+  hindiSeasons: null,
 };
 
 export const userReducer = createSlice({
@@ -72,6 +75,15 @@ export const userReducer = createSlice({
     setIndianDrama: (state, action) => {
       state.indianDrama = action.payload;
     },
+    setHollywoodseasons: (state, action) => {
+      state.hollywoodseasons = action.payload;
+    },
+    setHollywood: (state, action) => {
+      state.hollywood = action.payload;
+    },
+    setHindiSeasons: (state, action) => {
+      state.hindiSeasons = action.payload;
+    },
   },
 });
 
@@ -92,6 +104,9 @@ export const {
   setPlaylist,
   setIndianDrama,
   setTurkishDrama,
+  setHollywoodseasons,
+  setHollywood,
+  setHindiSeasons,
 } = userReducer.actions;
 
 export default userReducer.reducer;

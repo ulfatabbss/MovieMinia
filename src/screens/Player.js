@@ -18,13 +18,18 @@ import { Primary, white } from '../utillis/colors';
 import AnimatedLottieView from 'lottie-react-native';
 import { WebView } from 'react-native-webview';
 import { ActivityIndicator } from 'react-native';
+import LottieView from 'lottie-react-native';
+import Header2 from '../components/Header2';
+import Loader from '../components/Loader';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 const Player = ({ navigation, route }) => {
-  const { url, data, type } = route.params;
+  const { name, url, data, type } = route.params;
   const [focused, setFocused] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [itemDetail, setItemDetail] = useState('');
+  const [currentUrl, setUrl] = useState(url)
+  const [currentName, setName] = useState(name)
   const [visible, setVisible] = useState(false);
   const [loding, setLoding] = useState(true);
   const shareData = async item => {
@@ -61,8 +66,10 @@ const Player = ({ navigation, route }) => {
       {/* <Text style={{ color: 'gray', margin: 8 }}>{item.epi_no}</Text> */}
       <TouchableOpacity
         style={{ flexDirection: 'row', alignItems: 'center' }}
-        onPress={() =>
-          navigation.replace('Player', { url: item?.url, data: data, type: type })
+        onPress={async () => {
+          setUrl(item.url);
+          setName(type == 'Movies' ? item.title : data?.title)
+        }
         }>
         <Image
           resizeMode="contain"
@@ -84,7 +91,7 @@ const Player = ({ navigation, route }) => {
             numberOfLines={1}
             style={{
               width: Dimensions.get('window').width / 2,
-              color: url == item.uri ? Primary : 'white',
+              color: currentUrl == item.uri ? Primary : 'white',
             }}>
             {type == 'Movies' ? item.title : data?.title}
           </Text>
@@ -96,7 +103,7 @@ const Player = ({ navigation, route }) => {
         </View>
       </TouchableOpacity>
       <View style={{ width: 30 }}>
-        {url == item?.url ? (
+        {currentUrl == item?.url ? (
           <AnimatedLottieView
             autoPlay
             loop
@@ -123,8 +130,6 @@ const Player = ({ navigation, route }) => {
       </TouchableOpacity>
     </View>
   );
-
-  const [show, setShow] = useState(false);
 
   useEffect(
     () => {
@@ -157,29 +162,28 @@ const Player = ({ navigation, route }) => {
 
   if (loding) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size={'large'} color={'red'} />
-      </View>
+      <Loader />
     );
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
-      <StatusBar translucent backgroundColor="#333333" />
+      <StatusBar backgroundColor="#333333" />
+      <Header2 navigation={navigation} text={currentName} />
       <View
         style={{
-          marginTop: StatusBar.currentHeight,
           height: 300,
           alignItems: 'center',
+          width: Dimensions.get("window").width, borderRadius: 10,
           justifyContent: 'center',
+          //  borderColor: 'red',borderWidth:2
         }}>
         <WebView
           onLoadStart={() => setVisible(true)}
           onLoadEnd={() => setVisible(false)}
           source={{
-            uri: url,
+            uri: currentUrl,
           }}
           onShouldStartLoadWithRequest={shouldStartLoadWithRequest}
-          // injectedJavaScript={extractVideoUrl}
           allowsFullscreenVideo
           style={styles.mediaPlayer}
           scrollEnabled={false}
@@ -202,7 +206,7 @@ const Player = ({ navigation, route }) => {
         Related Videos
       </Text>
       <FlatList
-        data={type == 'Drama' ? data.episods : data}
+        data={type == 'show' ? data.episods : data}
         showsVerticalScrollIndicator={false}
         renderItem={MovieListView}
       />
@@ -305,8 +309,8 @@ const styles = StyleSheet.create({
   },
   mediaPlayer: {
     height: 300,
-    width: Dimensions.get('window').width,
-    backgroundColor: 'black',
+    width: Dimensions.get('window').width - 10,
+    backgroundColor: 'black', alignSelf: 'center',
   },
   modalContainer: {
     flex: 1,

@@ -24,23 +24,24 @@ import {
   setCartoonData,
   setDramaSlider,
   setHindiMoviesData,
+  setHollywood,
   setMoviesData,
   setPunjabiMoviesData,
   setSliderData,
   setUpcommingMoviesData,
 } from '../redux/reducers/userReducers';
 import { useSelector } from 'react-redux';
-import { Heading, MovieView, smalltext } from '../utillis/styles';
 import MySlider from '../components/MySlider';
-
+import CardsFlatlist from '../components/CardsFlatlist';
+import LottieView from 'lottie-react-native';
+import Loader from '../components/Loader';
 const Dashboard = ({ navigation }) => {
-  const { width: screenWidth } = Dimensions.get('window');
   const {
     popularMoviesData,
     hindiMoviesData,
     punjabiMoviesData,
     upcommingMoviesData,
-    sliderData,
+    sliderData, hollywood
   } = useSelector(state => state.root.user);
   const [loding, setLoding] = useState(true);
 
@@ -60,6 +61,11 @@ const Dashboard = ({ navigation }) => {
           store.dispatch(
             setPunjabiMoviesData(
               data.filter(object => object.category === 'Punjabi'),
+            ),
+          );
+          store.dispatch(
+            setHollywood(
+              data.filter(object => object.category === 'Hollywood'),
             ),
           );
           const animatedObjects = data.filter(
@@ -100,52 +106,9 @@ const Dashboard = ({ navigation }) => {
     integrate();
     setLoding(false);
   }, []);
-  const MoviesView = ({ item, data }) => (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('MovieDiscription', {
-          item: item,
-          data: data,
-          type: 'Movies',
-        })
-      }
-      style={MovieView}>
-      <ImageBackground
-        // resizeMode="cover"
-        style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'flex-end',
-        }}
-        source={{ uri: item.poster[0].image }}>
-        <View
-          style={{
-            backgroundColor: 'rgba(0,0,0,0.9)',
-            width: '100%',
-            height: '20%',
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-            padding: 4,
-          }}>
-          <Text
-            numberOfLines={1}
-            style={{
-              color: 'white',
-              fontSize: 14,
-              fontFamily: 'BebasNeue-Regular',
-            }}>
-            {item.title}
-          </Text>
-        </View>
-      </ImageBackground>
-    </TouchableOpacity>
-  );
-
   if (loding) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size={'large'} color={'red'} />
-      </View>
+      <Loader />
     );
   }
   return (<>
@@ -161,161 +124,14 @@ const Dashboard = ({ navigation }) => {
       />}
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#000" barStyle="light-content" />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 70 }}>
         <Header />
-
         <MySlider Movies={sliderData} />
-        <View>
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-
-            }}>
-            <Text style={Heading}>Preview</Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ExpandMovies', {
-                  upcommingMoviesData: upcommingMoviesData,
-                  popularMoviesData: popularMoviesData,
-                });
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'baseline',
-                justifyContent: 'flex-end',
-                marginTop: 10,
-                marginRight: 10,
-              }}>
-              <Text style={smalltext}>More</Text>
-            </TouchableOpacity>
-          </View>
-
-
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={upcommingMoviesData}
-            renderItem={({ item }) =>
-              MoviesView({ item: item, data: popularMoviesData })
-            }
-          />
-        </View>
-        <View>
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={Heading}>Popular</Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ExpandMovies', {
-                  upcommingMoviesData: popularMoviesData,
-                  popularMoviesData: popularMoviesData,
-                });
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'baseline',
-                justifyContent: 'flex-end',
-
-                marginRight: 10,
-              }}>
-              <Text style={smalltext}>More</Text>
-
-            </TouchableOpacity>
-          </View>
-
-
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={popularMoviesData}
-            renderItem={({ item }) =>
-              MoviesView({ item: item, data: popularMoviesData })
-            }
-          />
-        </View>
-        <View
-        >
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={Heading}>Indian</Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ExpandMovies', {
-                  upcommingMoviesData: hindiMoviesData,
-                  // popularMoviesData: hindiMoviesData,
-                });
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'baseline',
-                justifyContent: 'flex-end',
-                marginTop: 10,
-                marginRight: 10,
-              }}>
-              <Text style={smalltext}>More</Text>
-            </TouchableOpacity>
-          </View>
-
-          <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            data={hindiMoviesData}
-            renderItem={({ item }) =>
-              MoviesView({ item: item, data: hindiMoviesData })
-            }
-          />
-
-        </View>
-        <View
-        >
-          <View
-            style={{
-              alignItems: 'center',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={Heading}>Punjabi</Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ExpandMovies', {
-                  upcommingMoviesData: punjabiMoviesData,
-                  // popularMoviesData: hindiMoviesData,
-                });
-              }}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'baseline',
-                justifyContent: 'flex-end',
-                marginTop: 10,
-                marginRight: 10,
-              }}>
-              <Text style={smalltext}>More</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              marginBottom: 80
-            }}>
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={punjabiMoviesData}
-              renderItem={({ item }) =>
-                MoviesView({ item: item, data: punjabiMoviesData })
-              }
-            />
-          </View>
-        </View>
+        <CardsFlatlist navigation={navigation} heading={'Movie Trailers'} data={upcommingMoviesData} type={"Movies"} />
+        <CardsFlatlist navigation={navigation} heading={'Hollywood'} data={hollywood} type={"Movies"} />
+        <CardsFlatlist navigation={navigation} heading={'Hindi Dubbed'} data={popularMoviesData} type={"Movies"} />
+        <CardsFlatlist navigation={navigation} heading={'Bollywood'} data={hindiMoviesData} type={"Movies"} />
+        <CardsFlatlist navigation={navigation} heading={'Punjabi'} data={punjabiMoviesData} type={"Movies"} />
       </ScrollView>
     </SafeAreaView>
   </>

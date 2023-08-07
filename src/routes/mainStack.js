@@ -6,31 +6,34 @@ import Tabs from '../screens/BottomTabs/Tabs';
 import Player from '../screens/Player';
 import MovieDiscription from '../screens/MovieDiscription';
 import ExpandMovies from '../screens/ExpandMovies';
+import Player1 from '../screens/Player1';
 const Stack = createNativeStackNavigator();
 const MainStack = () => {
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen
           name="Tabs"
           component={Tabs}
-          options={{ headerShown: false }}
+
         />
         <Stack.Screen
           name="Player"
           component={Player}
-          options={{ headerShown: false }}
+
         />
         <Stack.Screen
           name="MovieDiscription"
           component={MovieDiscription}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="ExpandMovies"
           component={ExpandMovies}
-          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Player1"
+          component={Player1}
         />
       </Stack.Navigator>
     </>

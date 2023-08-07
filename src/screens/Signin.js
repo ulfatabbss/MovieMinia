@@ -7,18 +7,18 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  ToastAndroid, SafeAreaView
 } from 'react-native';
 import React, { useState } from 'react';
 import { LoginValidationSchema } from '../utillis/validationSchema';
 import { Formik } from 'formik';
 import { Primary } from '../utillis/colors';
 import { store } from '../redux/store';
-import { setIsLogin } from '../redux/reducers/userReducers';
+import { setIsLogin, setUser } from '../redux/reducers/userReducers';
 import { Login } from '../services/AppServices';
-import { ActivityIndicator } from 'react-native';
-
+import Loader from '../components/Loader';
+import { useToast } from "react-native-toast-notifications";
 const Signin = ({ navigation }) => {
+  const Toast = useToast();
   const [eyeIcon, setEyeIcon] = useState(require('../assets/close.png'));
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
   const [isLoading, setIsLoading] = useState(false)
@@ -31,6 +31,48 @@ const Signin = ({ navigation }) => {
       setPasswordVisibility(true);
     }
   };
+
+
+  const guestLogin = async () => {
+    setIsLoading(true)
+    const guestCredentials = {
+      email: 'guest@example.com',
+      password: 'Guest#123',
+    };
+    try {
+      const response = await Login(guestCredentials);
+      if (response.data.status == true) {
+        Toast.show("⭐ Welcom to Movie Minia.....!", {
+          type: "success",
+          placement: "top",
+          duration: 3000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
+        store.dispatch(setUser(response.data.user))
+        console.log(response.data);
+        store.dispatch(setIsLogin(true));
+      } else {
+        Toast.show("🚧 Login credentials are incorrect...!", {
+          type: "error",
+          placement: "top",
+          duration: 3000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
+      }
+    } catch (error) {
+      Toast.show(error, {
+        type: "error",
+        placement: "top",
+        duration: 3000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
   const initialValues = {
     email: '',
     password: '',
@@ -43,32 +85,41 @@ const Signin = ({ navigation }) => {
     };
     try {
       const response = await Login(obj);
-      // console.log(response.data, "heloooooo");
       if (response.data.status == true) {
+        store.dispatch(setUser(response.data.user))
+        console.log(response.data);
+        Toast.show("⭐ Welcom to Movie Minia.....!", {
+          type: "success",
+          placement: "top",
+          duration: 3000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
         store.dispatch(setIsLogin(true));
       } else {
-        ToastAndroid.showWithGravity(
-          'Login credentials are incorrect',
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER,
-        );
+        Toast.show(" 🚧 Login credentials are incorrect .....!", {
+          type: "error",
+          placement: "bottom",
+          duration: 3000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
       }
     } catch (error) {
-      console.log(error, 'errors');
-      ToastAndroid.showWithGravity(
-        'Check your internet connection...',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER,
-      );
+      Toast.show(error, {
+        type: "error",
+        placement: "top",
+        duration: 3000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
     } finally {
       setIsLoading(false);
     }
   };
   if (isLoading) {
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size={'large'} color={'red'} />
-      </SafeAreaView>
+      <Loader />
     );
   }
   return (
@@ -103,7 +154,7 @@ const Signin = ({ navigation }) => {
               <Image
                 resizeMode="contain"
                 style={{
-                  marginTop: '20%',
+                  marginTop: '10%',
                   height: 150,
                   width: 200,
                   tintColor: 'red',
@@ -148,9 +199,9 @@ const Signin = ({ navigation }) => {
                       />
                     </TouchableOpacity>
                   </View>
-                  {errors.email && touched.email ? (
+                  {errors.password && touched.email && (
                     <Text style={styles.errors}>{errors.password}</Text>
-                  ) : null}
+                  )}
 
                   <TouchableOpacity
                     style={styles.signinBtn}
@@ -158,13 +209,15 @@ const Signin = ({ navigation }) => {
                     <Text style={styles.signupTxt}>Sign In</Text>
                   </TouchableOpacity>
 
+
                   <View
                     style={{
+                      width: '100%',
                       flexDirection: 'row',
                       justifyContent: 'center',
                       marginTop: 15,
                     }}>
-                    <Text style={styles.signupTxt}>New to MovieMania? </Text>
+                    <Text style={styles.signupTxt}>New to MovieMinia? </Text>
                     <TouchableOpacity
                       activeOpacity={0.5}
                       onPress={() => navigation.navigate('Signup')}>
@@ -173,13 +226,23 @@ const Signin = ({ navigation }) => {
                       </Text>
                     </TouchableOpacity>
                   </View>
+                  <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                    <View style={styles.line} />
+                    <Text>Or</Text>
+                    <View style={styles.line} />
+                  </View>
+                  <TouchableOpacity
+                    style={styles.guestbtn}
+                    onPress={() => guestLogin()}>
+                    <Text style={[styles.signupTxt]}>Continue as guest</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
           </ImageBackground>
-        </View>
+        </View >
       )}
-    </Formik>
+    </Formik >
   );
 };
 
@@ -203,7 +266,7 @@ const styles = StyleSheet.create({
     // flexDirection: 'column',
     borderRadius: 20,
     paddingHorizontal: 20,
-    paddingBottom: 50,
+    paddingBottom: 20,
     paddingTop: 30,
   },
   normalTxt: {
@@ -234,7 +297,7 @@ const styles = StyleSheet.create({
   signupTxt: {
     fontSize: 15,
     textAlign: 'center',
-    color: '#ccc',
+    color: '#fff',
     fontWeight: 500,
     fontFamily: 'BebasNeue-Regular',
   },
@@ -242,5 +305,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginStart: 10,
     color: Primary,
+  }, guestbtn:
+  {
+    alignSelf: 'center', height: 30, width: '100%'
+  },
+  line: {
+    height: .5,
+    width: '40%',
+    backgroundColor: '#fff',
+    marginVertical: 20, // Adjust this value to change the space above and below the line
   },
 });

@@ -19,15 +19,54 @@ import {
   h1,
   h2,
 } from '../utillis/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import { setPlaylist } from '../redux/reducers/userReducers';
-
+import { useSelector } from 'react-redux';
+import LottieView from 'lottie-react-native';
+import { Addtoplaylist, GetPlaylist } from '../services/AppServices';
+import { ActivityIndicator } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../components/Loader';
+import { setIsLogin } from '../redux/reducers/userReducers';
+import { store } from '../redux/store';
+import { useToast } from "react-native-toast-notifications";
 const MovieDiscription = ({ navigation, route }) => {
-  const { playlist } = useSelector(state => state.root.user);
-  // console.log('ddd........', playlist);
-
+  const Toast = useToast();
+  const { user } = useSelector(state => state.root.user);
   const [playlistAdded, setPlaylistAdded] = useState(false);
   const { item, data, type } = route.params;
+  const [isLoading, setIsLoading] = useState(false)
+  const [ischeck, setIsCheck] = useState(false)
+  const HandlePlaylist = async () => {
+    setIsCheck(true);
+    const obj = {
+      movieIds: [item._id],
+      userId: user._id
+    }
+    const obj1 = {
+      userId: user._id
+    };
+    try {
+      await Addtoplaylist(obj)
+      Toast.show(" ⭐ Successfully add to playlist......!", {
+        type: "success",
+        placement: "top",
+        duration: 3000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+      setPlaylistAdded(true);
+    } catch (error) {
+      Toast.show("🚧 Check your internet connection......!", {
+        type: "error",
+        placement: "top",
+        duration: 3000,
+        offset: 30,
+        animationType: "zoom-in",
+      });
+    } finally {
+      setIsLoading(false);
+      setIsCheck(false)
+    }
+  };
   const CastView = ({ item }) => (
     <View
       style={{
@@ -41,32 +80,39 @@ const MovieDiscription = ({ navigation, route }) => {
       <Image
         resizeMode="cover"
         style={{ height: '60%', width: '60%', borderRadius: 100, marginTop: 5, borderWidth: 2, borderColor: 'white' }}
-        source={{ uri: item.image }}
+        source={{ uri: item?.image }}
       />
       <Text numbersofline={1} style={[h1, { color: 'white', marginTop: 5 }]}>
-        {item.name}
+        {item?.name}
       </Text>
     </View>
   );
-  const dispatch = useDispatch();
-  const AddPlaylist = () => {
-    let clonedArray = JSON.parse(JSON.stringify(playlist));
-    clonedArray.push(item);
-    dispatch(setPlaylist(clonedArray));
+  const CheckPlaylist = async () => {
+    setIsLoading(true);
+    const obj = {
+      userId: user._id
+    };
+    await GetPlaylist(obj)
+      .then(({ data }) => {
+        const movies = data[0]?.movies || [];
+        const isMovieInPlaylist = movies.some((movie) => movie._id === item._id);
+        setPlaylistAdded(isMovieInPlaylist);
+      })
+      .catch(err => {
+        console.log(err, 'errors');
+      });
+    setIsLoading(false);
   };
-  const handleCheck = () => {
-    const result = playlist?.some(i => i?.title === item?.title);
-    if (result) {
-      setPlaylistAdded(true);
-      console.log('added');
-    } else {
-      setPlaylistAdded(false);
-    }
-  };
-  useEffect(() => {
-    handleCheck();
-  }, [playlist]);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      CheckPlaylist();
+    }, [])
+  );
+  if (isLoading) {
+    return (
+      <Loader />
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       {Platform.OS === 'ios' &&
@@ -80,18 +126,18 @@ const MovieDiscription = ({ navigation, route }) => {
         }}
         />}
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        <StatusBar translucent backgroundColor="transparent" />
+        <StatusBar />
         <View style={{ paddingBottom: 40 }}>
           <View style={styles.mainCard}>
             <ImageBackground
-              resizeMode="stretch"
+
               style={{
                 width: Dimensions.get('window').width,
                 height: 330,
                 overflow: 'hidden',
               }}
               source={{
-                uri: item.poster[0].image,
+                uri: item?.poster[1] ? item.poster[1].image : item?.poster[0]?.image,
               }}>
               <LinearGradient
                 style={{
@@ -105,8 +151,10 @@ const MovieDiscription = ({ navigation, route }) => {
                   'rgba(0,0,0,0.5)',
                   'rgba(0,0,0,1)',
                 ]}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <Image resizeMode='contain' source={require('../assets/backf.png')} style={{ height: 30, width: 40, marginTop: 50, marginLeft: 20 }} />
+                <TouchableOpacity onPress={() => navigation.goBack()} style={{
+                  height: 30, width: 30, marginTop: 15, marginLeft: 15, backgroundColor: 'rgba(255,255,255,.6)', borderRadius: 15, padding: 5
+                }}>
+                  <Image resizeMode='contain' source={{ uri: 'https://img.icons8.com/?size=2x&id=79023&format=png' }} style={{ height: "100%", width: "100%", tintColor: 'black' }} />
                 </TouchableOpacity>
               </LinearGradient>
             </ImageBackground>
@@ -114,16 +162,18 @@ const MovieDiscription = ({ navigation, route }) => {
               style={styles.overviewCard}
               onPress={() => {
                 navigation.navigate('Player', {
-                  url: type == 'Drama' ? item.episods[0].url : item.url,
+                  url: type == 'show' ? item.episods[0].url : item.url,
                   data: data,
                   type: type,
+                  name: item.title
                 });
               }}>
               <View
-                style={{ height: 40, width: 60, backgroundColor: 'green', borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}
+                style={{ height: 100, width: 100, justifyContent: 'center', alignItems: 'center' }}
 
               >
-                <Image style={{ height: 25, width: 25, tintColor: 'white' }} source={{ uri: "https://img.icons8.com/?size=512&id=9978&format=png" }} />
+                <LottieView
+                  source={require('../assets/animation_lksfc814.json')} autoPlay loop={false} />
 
               </View>
             </TouchableOpacity>
@@ -140,55 +190,57 @@ const MovieDiscription = ({ navigation, route }) => {
               }}>
               <View
                 style={{
-                  flexDirection: 'row',
+                  flexDirection: 'row', alignItems: 'center'
                 }}>
-                <Text
-                  style={[
-                    h2,
-                    { color: 'green', marginRight: 10, fontWeight: '800' },
-                  ]}>
-                  3 84% match
-                </Text>
+                <Image style={{ height: 15, width: 15, marginHorizontal: 5 }} source={{ uri: 'https://img.icons8.com/?size=2x&id=PwpEVWVt8I3F&format=png' }} />
                 <Text style={[h2, { marginRight: 10 }]}>{item.releaseYear}</Text>
+                <Image style={{ height: 15, width: 15, tintColor: 'green', marginHorizontal: 5 }} source={{ uri: 'https://img.icons8.com/?size=2x&id=10058&format=png' }} />
                 <Text style={[h2, { marginRight: 10 }]}>{item.duration}</Text>
               </View>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  borderWidth: playlistAdded ? 0.2 : 0,
-                  padding: 2,
-                  borderColor: 'gray',
-                }}>
-                {playlistAdded ? (
-                  <Text
-                    numberOfLines={2}
+              {ischeck &&
+                <View style={{ height: 30, width: 30 }}>
+                  <ActivityIndicator />
+                </View>}
+              {
+                user.email == 'guest@example.com' &&
+                <TouchableOpacity
+                  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                  onPress={() => {
+                    store.dispatch(setIsLogin(false))
+                  }}>
+                  <Text style={{ marginRight: 5, color: 'white' }}>Login</Text>
+                  <Image
                     style={{
-                      color: 'green',
-                      fontSize: 12,
-                      fontWeight: 'bold',
-                    }}>
-                    Added in Playlist
-                  </Text>
-                ) : (
-                  <TouchableOpacity
-                    disabled={playlistAdded}
-                    onPress={() => {
-                      AddPlaylist(item);
-                    }}>
-                    <Image
-                      style={{
-                        height: 25,
-                        width: 25,
-                        tintColor: playlistAdded ? 'green' : null,
-                      }}
-                      source={{
-                        uri: 'https://cdn-icons-png.flaticon.com/128/7719/7719900.png',
-                      }}
-                    />
-                  </TouchableOpacity>
-                )}
-              </View>
+                      height: 20,
+                      width: 20,
+                      tintColor: 'green',
+                    }}
+                    source={{
+                      uri: 'https://cdn-icons-png.flaticon.com/128/5087/5087592.png',
+                    }}
+                  />
+                </TouchableOpacity>
+              }
+              {ischeck == false && type != 'show' && user.email != 'guest@example.com' ?
+                <TouchableOpacity
+                  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                  disabled={playlistAdded}
+                  onPress={() => {
+                    HandlePlaylist()
+                  }}>
+                  <Text style={{ marginRight: 5, color: 'white' }}>{playlistAdded ? 'Saved' : "Save to playlist"}</Text>
+                  <Image
+                    style={{
+                      height: 20,
+                      width: 20,
+                      tintColor: playlistAdded ? 'red' : 'white',
+                    }}
+                    source={{
+                      uri: 'https://cdn-icons-png.flaticon.com/128/9131/9131566.png',
+                    }}
+                  />
+                </TouchableOpacity> : null}
             </View>
             <Text
               style={[
@@ -224,7 +276,6 @@ const MovieDiscription = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
-
 export default MovieDiscription;
 
 const styles = StyleSheet.create({
@@ -235,8 +286,8 @@ const styles = StyleSheet.create({
   mainCard: {
     width: '100%',
     flexDirection: 'row',
-    borderBottomRightRadius: 25,
-    borderBottomLeftRadius: 25,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25, overflow: 'hidden'
   },
   TitleTxt: {
     paddingHorizontal: 7,

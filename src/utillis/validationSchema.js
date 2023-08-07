@@ -2,8 +2,8 @@ import * as Yup from 'yup';
 
 export const LoginValidationSchema = Yup.object().shape({
     email: Yup.string()
-        .email('Please provide valid email')
-        .required('Email is required'),
+        .required('Email is required')
+        .email('Please provide valid email'),
     password: Yup.string()
         .required('Password is required'),
 

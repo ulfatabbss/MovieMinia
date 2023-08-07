@@ -5,14 +5,10 @@ const endPoints = {
     getUpcomming: 'UpComming_movies',
     getDrama: 'darama',
     getSlider: 'slider',
-    attendanceHistory: 'GetAttendanceHistory',
-    getOneEmployee: 'getOneEmployee/',
-    birthdayList: 'birthdayList',
-    workAnniversary: 'workAnniversary',
-    counter: 'counter',
-    specificUserLeaves: "specificUserLeaves/",
-    time: "time",
-    leaveRequest: "leaveRequest",
-    GetAttendanceHistory: "GetAttendanceHistory/"
+    deleteMovie: "dellplaylistmovie",
+    addToplaylist: 'playlists',
+    getPlaylist: 'getplaylists',
+
+
 };
 export { endPoints };

@@ -7,7 +7,6 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  ToastAndroid,
   SafeAreaView, Keyboard
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +17,10 @@ import { ActivityIndicator } from 'react-native';
 import { store } from '../redux/store';
 import { setIsLogin } from '../redux/reducers/userReducers';
 import { Register } from '../services/AppServices';
+import Loader from '../components/Loader';
+import { useToast } from "react-native-toast-notifications";
 const Signup = ({ navigation }) => {
+  const Toast = useToast();
   const [eyeIcon, setEyeIcon] = useState(require('../assets/close.png'));
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
   const TogglePassword = () => {
@@ -64,18 +66,22 @@ const Signup = ({ navigation }) => {
       .then(async ({ data }) => {
         if (data.status == true) {
           store.dispatch(setIsLogin(true));
-          ToastAndroid.showWithGravity(
-            'Your account details have been saved.',
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER,
-          );
+          Toast.show("⭐ Your account details have been saved......!", {
+            type: "success",
+            placement: "top",
+            duration: 3000,
+            offset: 30,
+            animationType: "zoom-in",
+          });
         }
         else {
-          ToastAndroid.showWithGravity(
-            'This form has error',
-            ToastAndroid.LONG,
-            ToastAndroid.CENTER,
-          );
+          Toast.show("Account details are invalid......!", {
+            type: "error",
+            placement: "top",
+            duration: 3000,
+            offset: 30,
+            animationType: "zoom-in",
+          });
         }
 
       }).finally(() => setLoading(false));
@@ -83,9 +89,7 @@ const Signup = ({ navigation }) => {
   };
   if (loading) {
     return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size={'large'} color={'red'} />
-      </SafeAreaView>
+      <Loader />
     );
   }
   return (
@@ -307,6 +311,5 @@ const styles = StyleSheet.create({
     fontSize: 8,
     marginStart: 10,
     color: Primary,
-    fontFamily: 'BebasNeue-Regular',
   },
 });

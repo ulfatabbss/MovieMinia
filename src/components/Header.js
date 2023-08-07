@@ -79,21 +79,21 @@ export default Header;
 const styles = StyleSheet.create({
   logo: {
     tintColor: 'red',
-    height: 60,
+    height: 50,
     width: '50%',
   },
   header: {
-    height: 60,
+    height: 50,
     flexDirection: 'row',
     alignItems: 'center',
     with: '100%',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     marginVertical: 5,
   },
   logoutIcon: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
     borderRadius: 15, tintColor: '#fff'
   },
   centeredView: {

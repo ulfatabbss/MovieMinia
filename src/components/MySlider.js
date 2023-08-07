@@ -6,20 +6,18 @@ const MovieCards = ({ item }) => (
   <View
     style={{
       height: 200,
-      width: Dimensions.get('window').width - 40,
+      width: Dimensions.get('screen').width - 40,
       backgroundColor: 'white',
-      borderRadius: 10,
+      borderRadius: 5,
       justifyContent: 'center',
       alignItems: 'center',
       overflow: 'hidden',
-      elevation: 5,
       shadowColor: 'white',
-      marginBottom: 10,
       alignSelf: 'center',
     }}>
     <Image
       source={{ uri: item?.image }}
-      style={{ height: '100%', width: '100%', borderRadius: 10 }}
+      style={{ height: '100%', width: '100%', borderRadius: 5 }}
     />
   </View>
 );
@@ -45,7 +43,8 @@ const MySlider = ({ Movies }) => {
         firstItem={initialIndex}
         autoplay={true}
         loop={true}
-        autoplayInterval={3000}
+        pagingEnabled={true}
+        autoplayInterval={5000}
         onSnapToItem={index => {
           if (index === Movies.length) {
             carouselRef.current.snapToItem(0, false);

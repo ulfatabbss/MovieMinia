@@ -15,11 +15,30 @@ const GetSlider = () => {
 };
 
 const Login = (obj: any) => {
-  console.log(obj);
   return HTTP_APP.post(endPoints.login, obj);
 };
+const Addtoplaylist = (obj: any) => {
+  return HTTP_APP.post(endPoints.addToplaylist, obj);
+};
+const GetPlaylist = (obj: any) => {
+  return HTTP_APP.post(endPoints.getPlaylist, obj);
+};
+const DellfromPlaylist = (obj1: any) => {
+  return HTTP_APP.delete(endPoints.deleteMovie, obj1);
+};
+
 const Register = (obj: any) => {
   return HTTP_APP.post(endPoints.register, obj);
 };
 
-export {GetMovies, GetUpcomming, GetDrama, GetSlider, Login, Register};
+export {
+  GetMovies,
+  GetUpcomming,
+  GetDrama,
+  GetSlider,
+  Login,
+  Register,
+  Addtoplaylist,
+  GetPlaylist,
+  DellfromPlaylist,
+};

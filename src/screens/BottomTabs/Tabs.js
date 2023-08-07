@@ -53,7 +53,7 @@ const Tabs = () => {
                     justifyContent: 'center',
                     backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
                     width: focused ? 80 : 50,
-                    height: focused ? 70 : 50,
+                    height: Platform.OS === 'ios' ? focused ? 70 : 50 : focused ? 60 : 50,
                     borderTopLeftRadius: 45,
                     borderTopRightRadius: 45,
                     bottom: focused ? 10 : 0,
@@ -62,7 +62,7 @@ const Tabs = () => {
                   }}>
                   <Image
                     style={{
-                      height: focused ? 50 : 30,
+                      height: focused ? 40 : 30,
                       width: focused ? 50 : 30,
                       tintColor: focused ? 'red' : white,
                     }}
@@ -86,7 +86,7 @@ const Tabs = () => {
                     justifyContent: 'center',
                     backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
                     width: focused ? 80 : 50,
-                    height: focused ? 70 : 50,
+                    height: Platform.OS === 'ios' ? focused ? 70 : 50 : focused ? 60 : 50,
                     borderTopLeftRadius: 45,
                     borderTopRightRadius: 45,
                     bottom: focused ? 10 : 0,
@@ -95,7 +95,7 @@ const Tabs = () => {
                   }}>
                   <Image
                     style={{
-                      height: focused ? 50 : 30,
+                      height: focused ? 40 : 30,
                       width: focused ? 50 : 30,
                       tintColor: focused ? 'red' : white, resizeMode: "contain",
                     }}
@@ -118,7 +118,7 @@ const Tabs = () => {
                     justifyContent: 'center',
                     backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
                     width: focused ? 80 : 50,
-                    height: focused ? 70 : 50,
+                    height: Platform.OS === 'ios' ? focused ? 70 : 50 : focused ? 60 : 50,
                     borderTopLeftRadius: 45,
                     borderTopRightRadius: 45,
                     bottom: focused ? 10 : 0,
@@ -127,7 +127,7 @@ const Tabs = () => {
                   }}>
                   <Image
                     style={{
-                      height: focused ? 50 : 30,
+                      height: focused ? 40 : 30,
                       width: focused ? 50 : 30, resizeMode: "contain",
                       tintColor: focused ? 'red' : white,
                     }}
@@ -150,7 +150,7 @@ const Tabs = () => {
                     justifyContent: 'center',
                     backgroundColor: focused ? 'rgba(0, 0, 0, 1)' : 'rgba(0,0,0,0)',
                     width: focused ? 80 : 50,
-                    height: focused ? 70 : 50,
+                    height: Platform.OS === 'ios' ? focused ? 70 : 50 : focused ? 60 : 50,
                     borderTopLeftRadius: 45,
                     borderTopRightRadius: 45,
                     bottom: focused ? 10 : 0,
@@ -159,7 +159,7 @@ const Tabs = () => {
                   }}>
                   <Image
                     style={{
-                      height: focused ? 50 : 30,
+                      height: focused ? 40 : 30,
                       width: focused ? 50 : 30,
                       tintColor: focused ? 'red' : white, resizeMode: "contain"
                     }}

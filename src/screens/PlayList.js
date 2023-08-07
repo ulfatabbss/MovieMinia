@@ -19,41 +19,92 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPlaylist } from '../redux/reducers/userReducers';
 import { secondary } from '../utillis/colors';
+import LottieView from 'lottie-react-native';
+import { DellfromPlaylist, GetPlaylist } from '../services/AppServices';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../components/Loader';
+import { useToast } from "react-native-toast-notifications";
 
 const Playlist = ({ navigation }) => {
+  const Toast = useToast();
+
+  const [myplaylist, setMyplaylist] = useState('');
   const [searchQuery, setSearchQuery] = React.useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const dispatch = useDispatch();
   const [sortedPlaylist, setSortedPlaylist] = useState([]);
-  const { playlist } = useSelector(state => state.root.user);
-  // useEffect(() => {
-  //   console.log(playlist, 'p');
-  // }, []);
+  const { user } = useSelector(state => state.root.user);
+  const [isLoading, setIsLoading] = useState(false)
+
+
   const filteredData = sortedPlaylist.filter(item =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  useFocusEffect(
+    React.useCallback(() => {
+      HandlePlaylist();
+    }, [])
+  );
 
-
-  useEffect(() => {
-    const sorted = playlist.slice().sort((a, b) => b.timestamp - a.timestamp);
-    setSortedPlaylist(sorted);
-  }, [playlist]);
+  const HandlePlaylist = async () => {
+    setIsLoading(true);
+    const obj = {
+      userId: user._id
+    };
+    await GetPlaylist(obj)
+      .then(({ data }) => {
+        setMyplaylist(data); // Set the myplaylist state with the data
+      })
+      .catch(err => {
+        console.log(err, 'errors');
+      });
+    setIsLoading(false);
+  };
   const toggleModal = item => {
     setIsModalVisible(!isModalVisible);
     setSelectedItem((item = item));
   };
-  const handleDeleteConfirm = () => {
-    let clonedArray = JSON.parse(JSON.stringify(playlist));
-    clonedArray.splice(selectedItem, 1);
+  const handleDeleteConfirm = async () => {
+    setIsLoading(true)
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    dispatch(setPlaylist(clonedArray));
+    var raw = JSON.stringify({
+      "userId": user._id
+    });
+
+    var requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+
+    await fetch(`https://giant-eel-panama-hat.cyclic.app/moveminia/playlists/${myplaylist[0]._id}/movies/${selectedItem.item._id}`, requestOptions)
+      .then(responce => {
+        HandlePlaylist();
+        Toast.show("⭐ Successfully remove from playlist......!", {
+          type: "success",
+          placement: "top",
+          duration: 3000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
+        setIsModalVisible(false);
+        setIsLoading(false)
+      })
+      .catch(error => {
+        Toast.show(error, {
+          type: "error",
+          placement: "top",
+          duration: 3000,
+          offset: 30,
+          animationType: "zoom-in",
+        });
+      });
+    await HandlePlaylist();
     setIsModalVisible(false);
-    ToastAndroid.showWithGravity(
-      'Remove from list',
-      ToastAndroid.LONG,
-      ToastAndroid.CENTER,
-    );
+    setIsLoading(false)
   };
   const MyPlaylist = item => {
     return (
@@ -66,7 +117,6 @@ const Playlist = ({ navigation }) => {
             borderTopLeftRadius: 10,
           }}
           source={{ uri: item?.item?.poster[0]?.image }}
-          resizeMode={'contain'}
         />
 
         <View style={styles.details_View}>
@@ -139,7 +189,7 @@ const Playlist = ({ navigation }) => {
             justifyContent: 'space-evenly',
           }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Player', { url: item.item.url })}>
+            onPress={() => navigation.navigate('Player1', { url: item.item.url })}>
             <Image
               style={[styles.icons, { alignSelf: 'baseline' }]}
               resizeMode={'contain'}
@@ -161,7 +211,7 @@ const Playlist = ({ navigation }) => {
       </View>
     );
   };
-  if (playlist.length === 0) {
+  if (myplaylist[0]?.movies?.length == 0 || user.email == 'guest@example.com') {
     return (
       <View style={{ flex: 1, backgroundColor: secondary, }}>
         <View style={styles.input_Container}>
@@ -186,12 +236,17 @@ const Playlist = ({ navigation }) => {
           />
         </View>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Image resizeMode='contain' style={{ height: "15%", width: "20%", tintColor: 'red' }} source={require('../assets/folder.png')} />
-          <Text style={{ color: "gray", fontSize: 18 }}>Empty playlist..!</Text>
+          <Image style={{ height: 100, width: 100, tintColor: 'red' }} source={{ uri: 'https://cdn-icons-png.flaticon.com/128/10018/10018527.png' }} />
         </View>
 
       </View>
     )
+  }
+
+  if (isLoading) {
+    return (
+      <Loader />
+    );
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: secondary }}>
@@ -199,7 +254,7 @@ const Playlist = ({ navigation }) => {
       <View
         style={{
           flex: 1,
-          paddingBottom: 80,
+          marginBottom: 80
         }}>
         <View style={styles.input_Container}>
           <TextInput
@@ -224,7 +279,7 @@ const Playlist = ({ navigation }) => {
         </View>
         <View style={{ flex: 1 }}>
           <FlatList
-            data={filteredData}
+            data={myplaylist[0]?.movies}
             renderItem={MyPlaylist}
             showsVerticalScrollIndicator={false}
           />

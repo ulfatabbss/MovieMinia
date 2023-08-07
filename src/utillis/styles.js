@@ -52,6 +52,7 @@ const MovieView = {
   borderWidth: 0.5,
   borderColor: 'white',
   marginHorizontal: 5,
+  marginVertical: 5,
   borderRadius: 10,
   overflow: 'hidden',
   justifyContent: 'space-around',

@@ -1,16 +1,16 @@
 import axios, {AxiosInstance} from 'axios';
 import {store} from '../redux/store';
-import {BASE_URL, BASE_URL1} from './constants';
+const BASE_URL = 'https://giant-eel-panama-hat.cyclic.app/moveminia/';
+axios.defaults.headers.get['Content-Type'] = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.headers.delete['Content-Type'] = 'application/json';
 export const HTTP_CLIENT: AxiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 export const HTTP_APP: AxiosInstance = axios.create({
   baseURL: BASE_URL,
 });
-export const HTTP_outh: AxiosInstance = axios.create({
-  baseURL: BASE_URL1,
-});
+
 export const initialConfig = () => {
   HTTP_CLIENT.interceptors.request.use(
     config => {

@@ -8,6 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './src/redux/store';
 import Splash from './src/screens/Splash';
 import { LogBox } from 'react-native';
+import { ToastProvider } from 'react-native-toast-notifications'
 LogBox.ignoreLogs(['Warning: ...']);
 
 LogBox.ignoreAllLogs();
@@ -18,14 +19,24 @@ const App = () => {
       setIsLoading(false);
     }, 3000);
   }, []);
-
+  if (isLoading) {
+    return (
+      <Splash />
+    );
+  }
   return (
+
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <SafeAreaProvider>
-          <NavigationContainer>
-            {isLoading ? <Splash /> : <Routes />}
-          </NavigationContainer>
+          <ToastProvider successColor="green"
+            dangerColor="red"
+            warningColor="orange"
+            normalColor="gray">
+            <NavigationContainer>
+              <Routes />
+            </NavigationContainer>
+          </ToastProvider>
         </SafeAreaProvider>
       </PersistGate>
     </Provider>
