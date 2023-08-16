@@ -1,22 +1,16 @@
 import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
-  TouchableOpacity, SafeAreaView,
-  View, Platform, Modal, Pressable
+  SafeAreaView,
+  View, Platform,
 } from 'react-native';
 import React, { useRef, useEffect, useState } from 'react';
-import Carousel from 'react-native-snap-carousel';
-import { Primary, secondary } from '../utillis/colors';
+import { secondary } from '../utillis/colors';
 import Header from '../components/Header';
 import { GetMovies, GetSlider, GetUpcomming } from '../services/AppServices';
 import { store } from '../redux/store';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import {
   setAnimated2Data,
   setAnimatedData,
@@ -33,7 +27,6 @@ import {
 import { useSelector } from 'react-redux';
 import MySlider from '../components/MySlider';
 import CardsFlatlist from '../components/CardsFlatlist';
-import LottieView from 'lottie-react-native';
 import Loader from '../components/Loader';
 const Dashboard = ({ navigation }) => {
   const {
@@ -44,7 +37,7 @@ const Dashboard = ({ navigation }) => {
     sliderData, hollywood
   } = useSelector(state => state.root.user);
   const [loding, setLoding] = useState(true);
-
+  const bannerRef = useRef(null);
   useEffect(() => {
     setLoding(true);
     const integrate = async () => {
@@ -111,30 +104,38 @@ const Dashboard = ({ navigation }) => {
       <Loader />
     );
   }
-  return (<>
-    {Platform.OS === 'ios' &&
-      <View style={{
-        width: "100%",
-        height: 100, // For all devices, even X, XS Max
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        backgroundColor: "#000"
-      }}
-      />}
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#000" barStyle="light-content" />
-      <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 70 }}>
-        <Header />
-        <MySlider Movies={sliderData} />
-        <CardsFlatlist navigation={navigation} heading={'Movie Trailers'} data={upcommingMoviesData} type={"Movies"} />
-        <CardsFlatlist navigation={navigation} heading={'Hollywood'} data={hollywood} type={"Movies"} />
-        <CardsFlatlist navigation={navigation} heading={'Hindi Dubbed'} data={popularMoviesData} type={"Movies"} />
-        <CardsFlatlist navigation={navigation} heading={'Bollywood'} data={hindiMoviesData} type={"Movies"} />
-        <CardsFlatlist navigation={navigation} heading={'Punjabi'} data={punjabiMoviesData} type={"Movies"} />
-      </ScrollView>
-    </SafeAreaView>
-  </>
+  return (
+    <>
+      {Platform.OS === 'ios' &&
+        <View style={{
+          width: "100%",
+          height: 100, // For all devices, even X, XS Max
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          backgroundColor: "#000"
+        }}
+        />}
+      <SafeAreaView style={styles.container}>
+        <StatusBar backgroundColor="#000" barStyle="light-content" />
+        <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 70 }}>
+          <Header />
+          <MySlider Movies={sliderData} />
+          <CardsFlatlist navigation={navigation} heading={'Movie Trailers'} data={upcommingMoviesData} type={"Movies"} />
+
+          <CardsFlatlist navigation={navigation} heading={'Hollywood'} data={hollywood} type={"Movies"} />
+          <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+            <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
+          </View>
+          <CardsFlatlist navigation={navigation} heading={'Hindi Dubbed'} data={popularMoviesData} type={"Movies"} />
+          <CardsFlatlist navigation={navigation} heading={'Bollywood'} data={hindiMoviesData} type={"Movies"} />
+          <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+            <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/9698237176"} />
+          </View>
+          <CardsFlatlist navigation={navigation} heading={'Punjabi'} data={punjabiMoviesData} type={"Movies"} />
+        </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 

@@ -1,26 +1,27 @@
-import {
-  FlatList,
-  Image,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Dimensions,
-  Pressable,
-  Modal,
-  StatusBar,
-  Alert,
-  TouchableOpacity,
-  SafeAreaView,
-} from 'react-native';
-import React, { useState } from 'react';
+import { FlatList, Image, ImageBackground, StyleSheet, Text, View, TextInput, SafeAreaView, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { secondary } from '../utillis/colors';
 import MainCard from '../components/MainCard';
 
 const ExpandMovies = ({ route, navigation }) => {
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+
   const { data, type } = route.params;
+  const dataArray = Array.isArray(data) ? data : [];
+  const sortedData = [...dataArray].sort((a, b) => b.releaseYear.localeCompare(a.releaseYear));
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setScreenWidth(Dimensions.get('window').width);
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateDimensions);
+    };
+  }, []);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: secondary }}>
       <View
@@ -52,12 +53,11 @@ const ExpandMovies = ({ route, navigation }) => {
         <View style={{ width: '100%', alignItems: 'center' }}>
           <FlatList
             numColumns={3}
-            data={data.filter(item =>
+            data={sortedData.filter(item =>
               item.title.toLowerCase().includes(searchQuery.toLowerCase()),
             )}
             renderItem={({ item }) =>
               MainCard({ item: item, data: type == 'show' ? item : data, navigation: navigation, type: type })
-
             }
             showsVerticalScrollIndicator={false}
           />
@@ -68,7 +68,6 @@ const ExpandMovies = ({ route, navigation }) => {
 };
 
 export default ExpandMovies;
-
 const styles = StyleSheet.create({
   main_View: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
   cards: {

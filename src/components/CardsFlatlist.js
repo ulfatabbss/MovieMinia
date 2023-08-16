@@ -4,6 +4,10 @@ import MainCard from './MainCard';
 import { smalltext, Heading } from '../utillis/styles';
 
 const CardsFlatlist = ({ navigation, heading, data, type }) => {
+    const dataArray = Array.isArray(data) ? data : [];
+
+    // Sort the array by releaseYear in descending order
+    const sortedData = [...dataArray].sort((a, b) => b.releaseYear.localeCompare(a.releaseYear)).slice(0, 10);
     return (
         <View>
             <View
@@ -36,7 +40,7 @@ const CardsFlatlist = ({ navigation, heading, data, type }) => {
             <FlatList
                 showsHorizontalScrollIndicator={false}
                 horizontal
-                data={data?.slice(0, 10)}
+                data={sortedData}
                 renderItem={({ item }) =>
                     MainCard({ item: item, data: type == 'show' ? item : data, navigation: navigation, type: type })
                 }

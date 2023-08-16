@@ -21,6 +21,7 @@ import { ActivityIndicator } from 'react-native';
 import LottieView from 'lottie-react-native';
 import Header2 from '../components/Header2';
 import Loader from '../components/Loader';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 const Player = ({ navigation, route }) => {
@@ -201,10 +202,15 @@ const Player = ({ navigation, route }) => {
               width: width / 2,
             }}></ActivityIndicator>
         )}
+
       </View>
+
       <Text style={{ color: white, margin: 10, fontSize: 16 }}>
         Related Videos
       </Text>
+      <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+        <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
+      </View>
       <FlatList
         data={type == 'show' ? data.episods : data}
         showsVerticalScrollIndicator={false}

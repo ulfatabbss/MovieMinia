@@ -1,4 +1,9 @@
 {
   "name": "MovieMinia",
-  "displayName": "MovieMinia"
+  "displayName": "MovieMinia",
+    "react-native-google-mobile-ads": {
+      "android_app_id": "ca-app-pub-1700763198948198~2666410067",
+      "ios_app_id": "ca-app-pub-xxxxxxxx~xxxxxxxx"
+    }
 }
+

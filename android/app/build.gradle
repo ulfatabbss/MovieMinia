@@ -98,8 +98,8 @@ android {
         applicationId "com.webevis.movieminia"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.2"
+        versionCode 5
+        versionName "2.0"
     }
 
     splits {
