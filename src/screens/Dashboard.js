@@ -41,7 +41,7 @@ const Dashboard = ({ navigation }) => {
     sliderData, hollywood, myTheme
   } = useSelector(state => state.root.user);
   const [loding, setLoding] = useState(true);
-  const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
+  const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
   useEffect(() => {
     setLoding(true);
     const integrate = async () => {
