@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native'
-import React from 'react'
-import { MovieView } from '../utillis/styles'
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MainCard = ({ item, data, navigation, type }) => {
     return (
@@ -8,43 +8,56 @@ const MainCard = ({ item, data, navigation, type }) => {
             onPress={() =>
                 navigation.navigate('MovieDiscription', {
                     item: item,
-                    data: type == 'show' ? item : data,
+                    data: type === 'show' ? item : data,
                     type: type,
                 })
             }
-            style={MovieView}>
+            style={styles.container}
+        >
             <ImageBackground
-                // resizeMode="cover"
-                style={{
-                    height: '100%',
-                    width: '100%',
-                    justifyContent: 'flex-end',
-                }}
-                source={{ uri: item.poster[0].image }}>
-                <View
-                    style={{
-                        backgroundColor: 'rgba(0,0,0,0.9)',
-                        width: '100%',
-                        height: '20%',
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center',
-                        padding: 4,
-                    }}>
-                    <Text
-                        numberOfLines={1}
-                        style={{
-                            color: 'white',
-                            fontSize: 14,
-                            fontFamily: 'BebasNeue-Regular',
-                        }}>
-                        {item.title}
-                    </Text>
-                </View>
+                source={{ uri: item.poster[0]?.image }}
+                style={styles.imageBackground}
+                resizeMode="cover"
+            >
+                <LinearGradient
+                    colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
+                    style={styles.gradientOverlay}
+                />
+                <Text numberOfLines={1} style={styles.title}>
+                    {item.title}
+                </Text>
             </ImageBackground>
         </TouchableOpacity>
-    )
-}
+    );
+};
 
-export default MainCard
+export default MainCard;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        height: 165,
+        width: 135,
+        borderRadius: 10,
+        margin: 5,
+        overflow: 'hidden',
+        flexShrink: 0,
+    },
+    imageBackground: {
+        width: '100%',
+        height: '100%',
+    },
+    gradientOverlay: {
+        ...StyleSheet.absoluteFillObject
+    },
+    title: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        fontFamily: 'Raleway-Bold',
+        textAlign: 'center',
+        position: 'absolute',
+        bottom: 10,
+        left: 0,
+        right: 0,
+        paddingHorizontal: 5,
+    },
+});

@@ -1,4 +1,4 @@
-const Primary: string = 'red';
+const Primary: string = '#720808';
 const secondary: string = '#19191B';
 const white: string = '#fff';
 const black: string = '#000';

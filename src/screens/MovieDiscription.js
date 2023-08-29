@@ -1,345 +1,389 @@
 import {
-  Image,
+  ImageBackground,
   StyleSheet,
-  Text,
+  StatusBar,
   View,
   TouchableOpacity,
-  ScrollView,
-  ImageBackground,
+  Image,
   FlatList,
-  StatusBar,
-  Dimensions,
-  ToastAndroid,
-  SafeAreaView,
+  ScrollView,
+  Modal,
+  Text,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Primary, black, gray, secondary, white } from '../utillis/colors';
-import LinearGradient from 'react-native-linear-gradient';
+import React, { useState } from 'react';
+import { caution, clock, play, playFrame, timer } from '../assets';
+import HeadingText from '../components/CustomText';
+import { RF } from '../utillis/theme/Responsive';
 import {
-  h1,
-  h2,
-} from '../utillis/styles';
+  Gray400,
+  Primary,
+  Primary_Light,
+  Secondary,
+  White,
+} from '../utillis/theme';
+import { Extra, FlexDirection, Heading } from '../utillis/styles';
 import { useSelector } from 'react-redux';
-import LottieView from 'lottie-react-native';
-import { Addtoplaylist, GetPlaylist } from '../services/AppServices';
-import { ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
-import Loader from '../components/Loader';
-import { setIsLogin } from '../redux/reducers/userReducers';
-import { store } from '../redux/store';
-import { useToast } from "react-native-toast-notifications";
-const MovieDiscription = ({ navigation, route }) => {
-  const Toast = useToast();
-  const { user } = useSelector(state => state.root.user);
-  const [playlistAdded, setPlaylistAdded] = useState(false);
+import { useTheme } from 'react-native-paper';
+import lightTheme from '../utillis/theme/lightTheme';
+import darkTheme from '../utillis/theme/darkTheme';
+const Screenshots = [
+  {
+    id: 0,
+    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yZevl2vHQgmosfwUdVNzviIfaWS.jpg',
+  },
+  {
+    id: 1,
+    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wHa6KOJAoNTFLFtp7wguUJKSnju.jpg',
+  },
+  {
+    id: 2,
+    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/m2duGsKjBOl3BB8uFOTnRUzdEhg.jpg',
+  },
+  {
+    id: 3,
+    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8CYSvYTw9tbFynivdcBcoqRWPGM.jpg',
+  },
+];
+
+const MovieDetailPage = ({ navigation, route }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const { item, data, type } = route.params;
-  const [isLoading, setIsLoading] = useState(false)
-  const [ischeck, setIsCheck] = useState(false)
-  const HandlePlaylist = async () => {
-    setIsCheck(true);
-    const obj = {
-      movieIds: [item._id],
-      userId: user._id
-    }
-    const obj1 = {
-      userId: user._id
-    };
-    try {
-      await Addtoplaylist(obj)
-      Toast.show(" ⭐ Successfully add to playlist......!", {
-        type: "success",
-        placement: "top",
-        duration: 3000,
-        offset: 30,
-        animationType: "zoom-in",
-      });
-      setPlaylistAdded(true);
-    } catch (error) {
-      Toast.show("🚧 Check your internet connection......!", {
-        type: "error",
-        placement: "top",
-        duration: 3000,
-        offset: 30,
-        animationType: "zoom-in",
-      });
-    } finally {
-      setIsLoading(false);
-      setIsCheck(false)
-    }
-  };
-  const CastView = ({ item }) => (
-    <View
-      style={{
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        height: 150,
-        width: Dimensions.get('window').width / 3 - 10,
-
-        borderRadius: 10,
-        alignItems: 'center'
-      }}>
-      <Image
-        resizeMode="cover"
-        style={{ height: '60%', width: '60%', borderRadius: 100, marginTop: 5, borderWidth: 2, borderColor: 'white' }}
-        source={{ uri: item?.image }}
-      />
-      <Text numbersofline={1} style={[h1, { color: 'white', marginTop: 5 }]}>
-        {item?.name}
-      </Text>
-    </View>
-  );
-  const CheckPlaylist = async () => {
-    setIsLoading(true);
-    const obj = {
-      userId: user._id
-    };
-    await GetPlaylist(obj)
-      .then(({ data }) => {
-        const movies = data[0]?.movies || [];
-        const isMovieInPlaylist = movies.some((movie) => movie._id === item._id);
-        setPlaylistAdded(isMovieInPlaylist);
-      })
-      .catch(err => {
-        console.log(err, 'errors');
-      });
-    setIsLoading(false);
-  };
-  useFocusEffect(
-    React.useCallback(() => {
-      CheckPlaylist();
-    }, [])
-  );
-  if (isLoading) {
+  const {
+    myTheme
+  } = useSelector(state => state.root.user);
+  const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
+  const Movies_Info_Pattern = () => {
     return (
-      <Loader />
-    );
-  }
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {Platform.OS === 'ios' &&
-        <View style={{
-          width: "100%",
-          height: 100, // For all devices, even X, XS Max
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          backgroundColor: "#000"
-        }}
-        />}
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-        <StatusBar />
-        <View style={{ paddingBottom: 40 }}>
-          <View style={styles.mainCard}>
-            <ImageBackground
-
-              style={{
-                width: Dimensions.get('window').width,
-                height: 330,
-                overflow: 'hidden',
-              }}
-              source={{
-                uri: item?.poster[1] ? item.poster[1].image : item?.poster[0]?.image,
-              }}>
-              <LinearGradient
-                style={{
-                  height: 330,
-                  width: '100%',
-                }}
-                colors={[
-                  'rgba(0,0,0,0)',
-                  'rgba(0,0,0,0))',
-                  'rgba(0,0,0,0))',
-                  'rgba(0,0,0,0.5)',
-                  'rgba(0,0,0,1)',
-                ]}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={{
-                  height: 30, width: 30, marginTop: 15, marginLeft: 15, backgroundColor: 'rgba(255,255,255,.6)', borderRadius: 15, padding: 5
-                }}>
-                  <Image resizeMode='contain' source={{ uri: 'https://img.icons8.com/?size=2x&id=79023&format=png' }} style={{ height: "100%", width: "100%", tintColor: 'black' }} />
-                </TouchableOpacity>
-              </LinearGradient>
-            </ImageBackground>
-            <TouchableOpacity
-              style={styles.overviewCard}
-              onPress={() => {
-                navigation.navigate('Player', {
-                  url: type == 'show' ? item.episods[0].url : item.url,
-                  data: data,
-                  type: type,
-                  name: item.title
-                });
-              }}>
-              <View
-                style={{ height: 100, width: 100, justifyContent: 'center', alignItems: 'center' }}
-
-              >
-                <LottieView
-                  source={require('../assets/animation_lksfc814.json')} autoPlay loop={false} />
-
-              </View>
-            </TouchableOpacity>
+      <>
+        <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center' }}>
+          <Text style={{ ...Heading, color: theme.colors.text, fontSize: 20 }}>{item.title}</Text>
+          {/* <HeadingText title={item.title} size={20} semi_bold color={theme.colors.text} /> */}
+          <TouchableOpacity style={styles.playframe}>
+            <Image style={{ height: RF(21), width: RF(21) }} source={playFrame} />
+          </TouchableOpacity>
+        </View>
+        <View style={[FlexDirection, Extra.marginTop]}>
+          <View style={{ flexDirection: 'row' }}>
+            <HeadingText title={'Category :'} regular size={16} R_Margin={10} color={theme.colors.text} />
+            <HeadingText title={'Hollywood'} regular size={16} color={theme.colors.text} />
           </View>
-          <Text style={[h1, { fontSize: 22 }]}>{item.title}</Text>
-          <View style={styles.overViewDetail}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              style={{ height: RF(18), width: RF(18), marginRight: RF(10) }}
+              source={timer}
+            />
+            <HeadingText title={item.duration} medium size={16} />
+          </View>
+        </View>
+      </>
+    );
+  };
+  const Play_Button = ({ setModalVisible }) => {
+    return (
+      <View style={styles.playButton}>
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <Image
+            style={{ height: RF(40), width: RF(40) }}
+            resizeMode={'contain'}
+            source={play}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+  const renderShots = ({ item }) => {
+    return (
+      <View style={styles.screenshot_images}>
+        <ImageBackground
+          style={{ height: '100%', width: '100%' }}
+          imageStyle={{ borderRadius: RF(20) }}
+          resizeMode={'contain'}
+          source={{ uri: item.image }} />
+      </View>
+    );
+  };
+  const renderCast = ({ item }) => {
+    return (
+      <View style={styles.cast_Images}>
+        <Image
+          style={{
+            height: RF(65),
+            width: RF(65),
+            borderRadius: 35,
+            alignSelf: 'center',
+          }}
+          resizeMode={'contain'}
+          source={{ uri: item?.image }}
+        />
+        <HeadingText title={item?.name} semi_bold size={16} lines={1} color={theme.colors.text} />
+      </View>
+    );
+  };
+  const Reviews_Section = () => {
+    return (
+      <View
+        style={{
+          height: RF(120),
+          width: '100%',
+          marginTop: 20,
+        }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            style={{ height: RF(40), width: RF(40), borderRadius: 20 }}
+            source={{
+              uri: 'https://www.themoviedb.org/t/p/w138_and_h175_face/AbXKtWQwuDiwhoQLh34VRglwuBE.jpg',
+            }}
+            resizeMode={'contain'}
+          />
+          <View style={{ marginLeft: 10 }}>
+            <HeadingText title={'Ronald Richard'} medium size={14} color={theme.colors.text} />
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingRight: 30,
-                width: '100%',
               }}>
-              <View
-                style={{
-                  flexDirection: 'row', alignItems: 'center'
-                }}>
-                <Image style={{ height: 15, width: 15, marginHorizontal: 5 }} source={{ uri: 'https://img.icons8.com/?size=2x&id=PwpEVWVt8I3F&format=png' }} />
-                <Text style={[h2, { marginRight: 10 }]}>{item.releaseYear}</Text>
-                <Image style={{ height: 15, width: 15, tintColor: 'green', marginHorizontal: 5 }} source={{ uri: 'https://img.icons8.com/?size=2x&id=10058&format=png' }} />
-                <Text style={[h2, { marginRight: 10 }]}>{item.duration}</Text>
-              </View>
-
-              {ischeck &&
-                <View style={{ height: 30, width: 30 }}>
-                  <ActivityIndicator />
-                </View>}
-              {
-                user.email == 'guest@example.com' &&
-                <TouchableOpacity
-                  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-                  onPress={() => {
-                    store.dispatch(setIsLogin(false))
-                  }}>
-                  <Text style={{ marginRight: 5, color: 'white' }}>Login</Text>
-                  <Image
-                    style={{
-                      height: 20,
-                      width: 20,
-                      tintColor: 'green',
-                    }}
-                    source={{
-                      uri: 'https://cdn-icons-png.flaticon.com/128/5087/5087592.png',
-                    }}
-                  />
-                </TouchableOpacity>
-              }
-              {ischeck == false && type != 'show' && user.email != 'guest@example.com' ?
-                <TouchableOpacity
-                  style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-                  disabled={playlistAdded}
-                  onPress={() => {
-                    HandlePlaylist()
-                  }}>
-                  <Text style={{ marginRight: 5, color: 'white' }}>{playlistAdded ? 'Saved' : "Save to playlist"}</Text>
-                  <Image
-                    style={{
-                      height: 20,
-                      width: 20,
-                      tintColor: playlistAdded ? 'red' : 'white',
-                    }}
-                    source={{
-                      uri: 'https://cdn-icons-png.flaticon.com/128/9131/9131566.png',
-                    }}
-                  />
-                </TouchableOpacity> : null}
+              <Image
+                style={{ height: RF(15), width: RF(15), marginRight: 5 }}
+                source={clock}
+                resizeMode={'contain'}
+              />
+              <HeadingText
+                title={'13 Sep, 2020'}
+                medium
+                size={11}
+                regular
+                color={theme.colors.text}
+                top={-5}
+              />
             </View>
-            <Text
-              style={[
-                h2,
-                {
-                  marginRight: 10,
-                  marginTop: 10,
-                  borderBottomWidth: 1,
-                  paddingBottom: 15,
-                  borderColor: 'gray',
-                },
-              ]}>
-              {item.overView}
-            </Text>
-          </View>
-
-          <View
-            style={{
-              alignItems: 'center',
-              marginVertical: 10,
-            }}>
-            <Text style={[h1, { alignSelf: 'flex-start', fontSize: 20 }]}>Cast</Text>
-
-            <FlatList
-              numColumns={'3'}
-              data={item.cast}
-              showsVerticalScrollIndicator={false}
-              renderItem={CastView}
-            />
           </View>
         </View>
+        <HeadingText color={theme.colors.text}
+          title={
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
+          }
+          light
+          size={14}
+          top={10}
+        />
+      </View>
+    );
+  };
+  return (
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={'light-content'}
+      />
+      {modalVisible ? <View style={styles.modal_FadeView} /> : null}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalCard}>
+            <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
+            <HeadingText title={'OPPOSES...'} bold size={20} top={5} />
+            <HeadingText
+              title={
+                'It seems you are using our Guest Mode! Please Login or Signup to perform this action.'
+              }
+              regular
+              size={16}
+              top={10}
+              alignCenter
+            />
+            <View style={styles.button_View}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <HeadingText
+                  title={'Login'}
+                  semi_bold
+                  size={16}
+                  color={White}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, styles.signUp_Button]}>
+                <HeadingText
+                  title={'Sign Up'}
+                  semi_bold
+                  size={16}
+                  color={Secondary}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <ImageBackground
+        style={{ height: RF(300), width: '100%' }}
+        source={{
+          uri: item?.poster[1] ? item.poster[1].image : item?.poster[0]?.image,
+        }}
+        resizeMode={'stretch'}>
+        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopLeft, borderLeftColor: theme.colors.background }} />
+        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopRight, borderLeftColor: theme.colors.background }} />
+      </ImageBackground>
+      <Play_Button setModalVisible={setModalVisible} />
+      <ScrollView
+        style={{ ...styles.detail_Container, backgroundColor: theme.colors.background }}
+        showsVerticalScrollIndicator={false}>
+        <Movies_Info_Pattern />
+        <HeadingText
+          title={item.overView}
+          light
+          size={14}
+          top={20} color={theme.colors.text}
+        />
+        <HeadingText title={'Screenshots'} size={16} top={20} color={theme.colors.text} />
+        <FlatList
+          data={item?.poster}
+          renderItem={renderShots}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+        <View style={{ paddingBottom: 40 }}>
+          <HeadingText title={'Cast'} size={16} semi_bold top={20} color={theme.colors.text} />
+          <FlatList
+            data={item.cast}
+            renderItem={renderCast}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+          <View style={FlexDirection}>
+            <HeadingText title={'Reviews'} size={16} semi_bold top={20} color={theme.colors.text} />
+            <HeadingText title={'View All'} size={16} medium top={20} color={theme.colors.text} />
+          </View>
+          <Reviews_Section />
+          <TouchableOpacity>
+            <HeadingText
+              title={'+ Add Feedback'}
+              color={Secondary}
+              size={16}
+              semi_bold
+              self
+            />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
-export default MovieDiscription;
+
+export default MovieDetailPage;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-  mainCard: {
+  chevron: {
     width: '100%',
-    flexDirection: 'row',
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25, overflow: 'hidden'
-  },
-  TitleTxt: {
-    paddingHorizontal: 7,
-    paddingVertical: 4,
-    backgroundColor: secondary,
-    borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 7,
-    marginRight: 7,
+    height: 200,
   },
-  movieDetail: {
-    width: '100%',
+
+  chevronTriangle: {
+    backgroundColor: 'transparent',
+    borderTopWidth: 50,
+    borderLeftWidth: 200,
+    borderTopColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderLeftColor: '#fff',
+  },
+  chevronTopLeft: {
     position: 'absolute',
-    bottom: 50,
-    start: 20,
+    left: -10,
+    bottom: 0,
   },
-  movieDetailTxt: {
-    color: white,
-    fontSize: 14,
-    fontWeight: '600',
+  chevronTopRight: {
+    position: 'absolute',
+    right: -10,
+    bottom: 0,
+    transform: [{ scaleX: -1 }],
   },
-  overviewCard: {
-    width: 60,
-    width: '100%',
-    justifyContent: 'center',
+  playButton: {
+    height: RF(65),
     alignItems: 'center',
-    position: 'absolute',
+    width: RF(65),
+    justifyContent: 'center',
+    backgroundColor: White,
+    top: RF(260),
+    elevation: 1,
     zIndex: 1,
+    position: 'absolute',
+    borderRadius: 35,
     alignSelf: 'center',
   },
-  overViewDetail: {
+
+  detail_Container: {
+    padding: RF(20),
+    height: '100%',
     width: '100%',
-    paddingBottom: 10,
+    backgroundColor: White,
+  },
+
+  playframe: {
+    height: RF(35),
+    width: RF(35),
+    borderRadius: 20,
+    backgroundColor: Primary_Light,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenshot_images: {
+    height: RF(95),
+    width: RF(93),
     marginTop: 10,
-    paddingHorizontal: 10,
+    marginRight: 10,
   },
-  h1: {
-    fontSize: 16,
-    color: 'white',
-    fontWeight: '800',
-    marginHorizontal: 12,
+  cast_Images: {
+    height: RF(95),
+    marginRight: 10,
+    justifyContent: 'center',
+    width: RF(95),
   },
-  h2: {
-    fontSize: 16,
-    color: 'gray',
-    marginTop: 5,
-  },
-  h3: {
-    fontSize: 14,
-    color: 'lightgray',
-    marginTop: 10,
-    // textAlign: 'justify',
+  modal_FadeView: {
+    height: '100%',
     width: '100%',
+    position: 'absolute',
+    zIndex: 500,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  button: {
+    height: RF(40),
+    width: '45%',
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Primary,
+  },
+  button_View: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: RF(20),
+  },
+  signUp_Button: {
+    borderWidth: 1,
+    backgroundColor: White,
+    borderColor: Secondary,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalCard: {
+    height: RF(300),
+    width: '100%',
+    borderRadius: RF(30),
+    backgroundColor: White,
+    padding: 20,
+    alignItems: 'center',
   },
 });

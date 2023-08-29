@@ -20,6 +20,9 @@ const initialState: any = {
   hollywoodseasons: null,
   hollywood: null,
   hindiSeasons: null,
+  allMovies: null,
+  recentSearches: [],
+  myTheme: 'lightTheme',
 };
 
 export const userReducer = createSlice({
@@ -84,6 +87,15 @@ export const userReducer = createSlice({
     setHindiSeasons: (state, action) => {
       state.hindiSeasons = action.payload;
     },
+    setAllMoviesData: (state, action) => {
+      state.allMovies = action.payload;
+    },
+    setRecentSearches: (state, action) => {
+      state.recentSearches = action.payload;
+    },
+    setTheme: (state, action) => {
+      state.myTheme = action.payload;
+    },
   },
 });
 
@@ -107,6 +119,9 @@ export const {
   setHollywoodseasons,
   setHollywood,
   setHindiSeasons,
+  setAllMoviesData,
+  setRecentSearches,
+  setTheme,
 } = userReducer.actions;
 
 export default userReducer.reducer;

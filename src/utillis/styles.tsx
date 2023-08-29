@@ -1,9 +1,11 @@
 import {Dimensions} from 'react-native';
 import React from 'react';
 import {Primary, white} from './colors';
-
+import {RF} from './theme/Responsive';
+import {useTheme} from 'react-native-paper';
+import darkTheme from './theme/darkTheme';
 const Width: number = Dimensions.get('window').width;
-
+// const theme = useTheme(darkTheme);
 const h1: {
   color: string;
   fontSize: number;
@@ -12,7 +14,7 @@ const h1: {
 } = {
   color: white,
   fontSize: 16,
-  fontFamily: 'BebasNeue-Regular',
+  fontFamily: 'Raleway',
   marginHorizontal: 10,
 };
 
@@ -65,27 +67,29 @@ const movieTitle: {
 };
 
 const Heading: {
-  color: string;
+  // color: string;
   fontSize: number;
-  marginLeft: number;
+  // marginLeft: number;
   fontFamily: string;
-  marginVertical: number;
+  fontStyle: string;
+  // fontWeight: string;
 } = {
-  color: 'white',
-  fontSize: 25,
-  marginLeft: 16,
-  fontFamily: 'BebasNeue-Regular',
-  marginVertical: 10,
+  // color: 'gray',
+  fontSize: 18,
+  // marginLeft: 16,
+  fontStyle: 'normal',
+  fontFamily: 'Raleway-SemiBold',
+  // fontWeight: '600',
 };
 
 const smalltext: {
   color: string;
-  marginRight: number;
+  // marginRight: number;
   fontFamily: string;
 } = {
-  color: Primary,
-  marginRight: 3,
-  fontFamily: 'BebasNeue-Regular',
+  color: '#313131',
+  // marginRight: 3,
+  fontFamily: 'Raleway-Medium',
 };
 
 const MovieView: {
@@ -126,6 +130,26 @@ const overlay: {
   backgroundColor: 'rgba(21,20,31, 0.8)',
 };
 
+export const FlexDirection = {
+  flexDirection: 'row',
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+};
+export const Extra = {marginTop: {marginTop: RF(20)}};
+
+export const TopBar = {
+  height: 140,
+  width: '100%',
+  backgroundColor: '#f5e9cd',
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingHorizontal: 20,
+};
+export const SmallIcons = {
+  height: 24,
+  width: 24,
+};
 export {
   h1,
   h2,
