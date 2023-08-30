@@ -24,6 +24,7 @@
     "base-64": "^1.0.0",
     "cheerio": "^1.0.0-rc.12",
     "deprecated-react-native-prop-types": "^4.1.0",
+    "deps": "^1.0.0",
     "formik": "^2.4.1",
     "lottie-react-native": "^5.1.6",
     "react": "18.2.0",

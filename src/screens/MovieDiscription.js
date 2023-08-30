@@ -10,10 +10,10 @@ import {
   Modal,
   Text,
 } from 'react-native';
-import React, { useState } from 'react';
-import { caution, clock, play, playFrame, timer } from '../assets';
+import React, {useState} from 'react';
+import {caution, clock, play, playFrame, timer} from '../assets';
 import HeadingText from '../components/CustomText';
-import { RF } from '../utillis/theme/Responsive';
+import {RF} from '../utillis/theme/Responsive';
 import {
   Gray400,
   Primary,
@@ -21,9 +21,9 @@ import {
   Secondary,
   White,
 } from '../utillis/theme';
-import { Extra, FlexDirection, Heading } from '../utillis/styles';
-import { useSelector } from 'react-redux';
-import { useTheme } from 'react-native-paper';
+import {Extra, FlexDirection, Heading} from '../utillis/styles';
+import {useSelector} from 'react-redux';
+import {useTheme} from 'react-native-paper';
 import lightTheme from '../utillis/theme/lightTheme';
 import darkTheme from '../utillis/theme/darkTheme';
 const Screenshots = [
@@ -45,31 +45,49 @@ const Screenshots = [
   },
 ];
 
-const MovieDetailPage = ({ navigation, route }) => {
+const MovieDetailPage = ({navigation, route}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const { item, data, type } = route.params;
-  const {
-    myTheme
-  } = useSelector(state => state.root.user);
+  const {item, data, type} = route.params;
+  const {myTheme} = useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
   const Movies_Info_Pattern = () => {
     return (
       <>
-        <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center' }}>
-          <Text style={{ ...Heading, color: theme.colors.text, fontSize: 20 }}>{item.title}</Text>
+        <View
+          style={{
+            ...FlexDirection,
+            gap: 5,
+            justifyContent: 'space-between',
+            marginHorizontal: 5,
+            alignSelf: 'center',
+          }}>
+          <Text style={{...Heading, color: theme.colors.text, fontSize: 20}}>
+            {item.title}
+          </Text>
           {/* <HeadingText title={item.title} size={20} semi_bold color={theme.colors.text} /> */}
           <TouchableOpacity style={styles.playframe}>
-            <Image style={{ height: RF(21), width: RF(21) }} source={playFrame} />
+            <Image style={{height: RF(21), width: RF(21)}} source={playFrame} />
           </TouchableOpacity>
         </View>
         <View style={[FlexDirection, Extra.marginTop]}>
-          <View style={{ flexDirection: 'row' }}>
-            <HeadingText title={'Category :'} regular size={16} R_Margin={10} color={theme.colors.text} />
-            <HeadingText title={'Hollywood'} regular size={16} color={theme.colors.text} />
+          <View style={{flexDirection: 'row'}}>
+            <HeadingText
+              title={'Category :'}
+              regular
+              size={16}
+              R_Margin={10}
+              color={theme.colors.text}
+            />
+            <HeadingText
+              title={'Hollywood'}
+              regular
+              size={16}
+              color={theme.colors.text}
+            />
           </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Image
-              style={{ height: RF(18), width: RF(18), marginRight: RF(10) }}
+              style={{height: RF(18), width: RF(18), marginRight: RF(10)}}
               source={timer}
             />
             <HeadingText title={item.duration} medium size={16} />
@@ -78,12 +96,12 @@ const MovieDetailPage = ({ navigation, route }) => {
       </>
     );
   };
-  const Play_Button = ({ setModalVisible }) => {
+  const Play_Button = ({setModalVisible}) => {
     return (
       <View style={styles.playButton}>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image
-            style={{ height: RF(40), width: RF(40) }}
+            style={{height: RF(40), width: RF(40)}}
             resizeMode={'contain'}
             source={play}
           />
@@ -91,18 +109,19 @@ const MovieDetailPage = ({ navigation, route }) => {
       </View>
     );
   };
-  const renderShots = ({ item }) => {
+  const renderShots = ({item}) => {
     return (
       <View style={styles.screenshot_images}>
         <ImageBackground
-          style={{ height: '100%', width: '100%' }}
-          imageStyle={{ borderRadius: RF(20) }}
+          style={{height: '100%', width: '100%'}}
+          imageStyle={{borderRadius: RF(20)}}
           resizeMode={'contain'}
-          source={{ uri: item.image }} />
+          source={{uri: item.image}}
+        />
       </View>
     );
   };
-  const renderCast = ({ item }) => {
+  const renderCast = ({item}) => {
     return (
       <View style={styles.cast_Images}>
         <Image
@@ -113,9 +132,15 @@ const MovieDetailPage = ({ navigation, route }) => {
             alignSelf: 'center',
           }}
           resizeMode={'contain'}
-          source={{ uri: item?.image }}
+          source={{uri: item?.image}}
         />
-        <HeadingText title={item?.name} semi_bold size={16} lines={1} color={theme.colors.text} />
+        <HeadingText
+          title={item?.name}
+          semi_bold
+          size={16}
+          lines={1}
+          color={theme.colors.text}
+        />
       </View>
     );
   };
@@ -127,23 +152,28 @@ const MovieDetailPage = ({ navigation, route }) => {
           width: '100%',
           marginTop: 20,
         }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
-            style={{ height: RF(40), width: RF(40), borderRadius: 20 }}
+            style={{height: RF(40), width: RF(40), borderRadius: 20}}
             source={{
               uri: 'https://www.themoviedb.org/t/p/w138_and_h175_face/AbXKtWQwuDiwhoQLh34VRglwuBE.jpg',
             }}
             resizeMode={'contain'}
           />
-          <View style={{ marginLeft: 10 }}>
-            <HeadingText title={'Ronald Richard'} medium size={14} color={theme.colors.text} />
+          <View style={{marginLeft: 10}}>
+            <HeadingText
+              title={'Ronald Richard'}
+              medium
+              size={14}
+              color={theme.colors.text}
+            />
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
               <Image
-                style={{ height: RF(15), width: RF(15), marginRight: 5 }}
+                style={{height: RF(15), width: RF(15), marginRight: 5}}
                 source={clock}
                 resizeMode={'contain'}
               />
@@ -158,7 +188,8 @@ const MovieDetailPage = ({ navigation, route }) => {
             </View>
           </View>
         </View>
-        <HeadingText color={theme.colors.text}
+        <HeadingText
+          color={theme.colors.text}
           title={
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
           }
@@ -170,7 +201,7 @@ const MovieDetailPage = ({ navigation, route }) => {
     );
   };
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{flex: 1, backgroundColor: theme.colors.background}}>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -187,7 +218,7 @@ const MovieDetailPage = ({ navigation, route }) => {
         }}>
         <View style={styles.modalContainer}>
           <View style={styles.modalCard}>
-            <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
+            <Image style={{height: RF(90), width: RF(90)}} source={caution} />
             <HeadingText title={'OPPOSES...'} bold size={20} top={5} />
             <HeadingText
               title={
@@ -222,34 +253,61 @@ const MovieDetailPage = ({ navigation, route }) => {
         </View>
       </Modal>
       <ImageBackground
-        style={{ height: RF(300), width: '100%' }}
+        style={{height: RF(300), width: '100%'}}
         source={{
           uri: item?.poster[1] ? item.poster[1].image : item?.poster[0]?.image,
         }}
         resizeMode={'stretch'}>
-        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopLeft, borderLeftColor: theme.colors.background }} />
-        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopRight, borderLeftColor: theme.colors.background }} />
+        <View
+          style={{
+            ...styles.chevronTriangle,
+            ...styles.chevronTopLeft,
+            borderLeftColor: theme.colors.background,
+          }}
+        />
+        <View
+          style={{
+            ...styles.chevronTriangle,
+            ...styles.chevronTopRight,
+            borderLeftColor: theme.colors.background,
+          }}
+        />
       </ImageBackground>
       <Play_Button setModalVisible={setModalVisible} />
       <ScrollView
-        style={{ ...styles.detail_Container, backgroundColor: theme.colors.background }}
+        style={{
+          ...styles.detail_Container,
+          backgroundColor: theme.colors.background,
+        }}
         showsVerticalScrollIndicator={false}>
         <Movies_Info_Pattern />
         <HeadingText
           title={item.overView}
           light
           size={14}
-          top={20} color={theme.colors.text}
+          top={20}
+          color={theme.colors.text}
         />
-        <HeadingText title={'Screenshots'} size={16} top={20} color={theme.colors.text} />
+        <HeadingText
+          title={'Screenshots'}
+          size={16}
+          top={20}
+          color={theme.colors.text}
+        />
         <FlatList
           data={item?.poster}
           renderItem={renderShots}
           horizontal
           showsHorizontalScrollIndicator={false}
         />
-        <View style={{ paddingBottom: 40 }}>
-          <HeadingText title={'Cast'} size={16} semi_bold top={20} color={theme.colors.text} />
+        <View style={{paddingBottom: 40}}>
+          <HeadingText
+            title={'Cast'}
+            size={16}
+            semi_bold
+            top={20}
+            color={theme.colors.text}
+          />
           <FlatList
             data={item.cast}
             renderItem={renderCast}
@@ -257,8 +315,20 @@ const MovieDetailPage = ({ navigation, route }) => {
             showsHorizontalScrollIndicator={false}
           />
           <View style={FlexDirection}>
-            <HeadingText title={'Reviews'} size={16} semi_bold top={20} color={theme.colors.text} />
-            <HeadingText title={'View All'} size={16} medium top={20} color={theme.colors.text} />
+            <HeadingText
+              title={'Reviews'}
+              size={16}
+              semi_bold
+              top={20}
+              color={theme.colors.text}
+            />
+            <HeadingText
+              title={'View All'}
+              size={16}
+              medium
+              top={20}
+              color={theme.colors.text}
+            />
           </View>
           <Reviews_Section />
           <TouchableOpacity>
@@ -302,7 +372,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: -10,
     bottom: 0,
-    transform: [{ scaleX: -1 }],
+    transform: [{scaleX: -1}],
   },
   playButton: {
     height: RF(65),

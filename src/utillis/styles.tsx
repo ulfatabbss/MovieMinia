@@ -75,6 +75,7 @@ const Heading: {
   // fontWeight: string;
 } = {
   // color: 'gray',
+
   fontSize: 18,
   // marginLeft: 16,
   fontStyle: 'normal',

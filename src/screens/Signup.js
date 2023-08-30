@@ -7,28 +7,42 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  SafeAreaView, Keyboard
+  SafeAreaView,
+  Keyboard,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Primary } from '../utillis/colors';
-import { Formik } from 'formik';
-import { SignUpValidationSchema } from '../utillis/validationSchema';
-import { ActivityIndicator } from 'react-native';
-import { store } from '../redux/store';
-import { setIsLogin } from '../redux/reducers/userReducers';
-import { Register } from '../services/AppServices';
+import React, {useEffect, useState} from 'react';
+import {Primary} from '../utillis/colors';
+import {Formik} from 'formik';
+import {applogo, hide, lock, Message, show} from '../assets';
+
+import {SignUpValidationSchema} from '../utillis/validationSchema';
+import {ActivityIndicator} from 'react-native';
+import {store} from '../redux/store';
+import {setIsLogin} from '../redux/reducers/userReducers';
+import {Register} from '../services/AppServices';
 import Loader from '../components/Loader';
-import { useToast } from "react-native-toast-notifications";
-const Signup = ({ navigation }) => {
+import {useToast} from 'react-native-toast-notifications';
+import {useSelector} from 'react-redux';
+import {useTheme} from 'react-native-paper';
+import darkTheme from '../utillis/theme/darkTheme';
+import lightTheme from '../utillis/theme/lightTheme';
+import Logo from '../components/Logo';
+import {Heading, smalltext} from '../utillis/styles';
+import Button from '../components/Button';
+import {RF} from '../utillis/theme/Responsive';
+import {Secondary} from '../utillis/theme';
+const Signup = ({navigation}) => {
+  const {myTheme} = useSelector(state => state.root.user);
+  const theme = useTheme(!myTheme == 'lightTheme' ? lightTheme : darkTheme);
   const Toast = useToast();
-  const [eyeIcon, setEyeIcon] = useState(require('../assets/close.png'));
+  const [eyeIcon, setEyeIcon] = useState(show);
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
   const TogglePassword = () => {
-    if (eyeIcon == require('../assets/close.png')) {
-      setEyeIcon(require('../assets/open.png'));
+    if (eyeIcon == show) {
+      setEyeIcon(hide);
       setPasswordVisibility(false);
-    } else if (eyeIcon == require('../assets/open.png')) {
-      setEyeIcon(require('../assets/close.png'));
+    } else if (eyeIcon == hide) {
+      setEyeIcon(show);
       setPasswordVisibility(true);
     }
   };
@@ -36,61 +50,58 @@ const Signup = ({ navigation }) => {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
-      () => setLogoVisible(false)
+      () => setLogoVisible(false),
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
       'keyboardDidHide',
-      () => setLogoVisible(true)
+      () => setLogoVisible(true),
     );
 
     return () => {
       keyboardDidShowListener.remove();
       keyboardDidHideListener.remove();
     };
-  }, [])
+  }, []);
   const [loading, setLoading] = useState(false);
   const initialValues = {
-    name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   };
   const handlSignUp = values => {
+    console.log('ssssss');
     setLoading(true);
     const obj = {
-      name: values.name,
       email: values.email,
       password: values.password,
+      confirmPassword: values.confirmPassword,
     };
     Register(obj)
-      .then(async ({ data }) => {
+      .then(async ({data}) => {
         if (data.status == true) {
           store.dispatch(setIsLogin(true));
-          Toast.show("⭐ Your account details have been saved......!", {
-            type: "success",
-            placement: "top",
+          Toast.show('⭐ Your account details have been saved......!', {
+            type: 'success',
+            placement: 'top',
             duration: 3000,
             offset: 30,
-            animationType: "zoom-in",
+            animationType: 'zoom-in',
           });
-        }
-        else {
-          Toast.show("Account details are invalid......!", {
-            type: "error",
-            placement: "top",
+        } else {
+          Toast.show('Account details are invalid......!', {
+            type: 'error',
+            placement: 'top',
             duration: 3000,
             offset: 30,
-            animationType: "zoom-in",
+            animationType: 'zoom-in',
           });
         }
-
-      }).finally(() => setLoading(false));
-
+      })
+      .finally(() => setLoading(false));
   };
   if (loading) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
   return (
     <Formik
@@ -111,124 +122,226 @@ const Signup = ({ navigation }) => {
         setFieldValue,
         isValid,
       }) => (
-        <View style={styles.container}>
-          <ImageBackground
-            source={{
-              uri: 'https://www.logitheque.com/en/wp-content/uploads/sites/6/2019/07/netflix-image.jpg',
-            }}
-            resizeMode="cover"
-            style={styles.bgImage}>
-            <View style={styles.overlay}>
-              {logoVisible && <Image
-                resizeMode="contain"
+        <View
+          style={[
+            styles.container,
+            {backgroundColor: theme.colors.background},
+          ]}>
+          <Logo />
+          <View style={styles.formWrapper}>
+            <Text
+              style={{
+                ...Heading,
+                color: theme.colors.text,
+                fontSize: RF(16),
+                fontFamily: 'Raleway-Bold',
+              }}>
+              Sign Up
+            </Text>
+            <View
+              style={[
+                styles.inputTxt,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: theme.colors.tabs,
+                },
+              ]}>
+              <Image
                 style={{
-                  marginTop: '10%',
-                  height: 150,
-                  width: 200,
-                  tintColor: 'red',
-                  alignSelf: 'center',
+                  height: RF(20),
+                  width: RF(20),
+                  tintColor: theme.colors.text,
                 }}
-                source={require('../assets/logo1.png')}
-              />}
-              <View style={[styles.formWrapper, { paddingTop: logoVisible ? null : Platform.OS == 'ios' ? "10%" : "20%" }]}>
-                <View style={styles.form}>
-                  <Text style={styles.normalTxt}>Sign Up</Text>
-                  <View style={styles.nameFields}>
-                    <TextInput
-                      placeholder="First Name"
-                      placeholderTextColor="grey"
-                      value={values.name}
-                      onChangeText={handleChange('name')}
-                      style={styles.inputnameTxt}
-                    />
-                    <TextInput
-                      placeholder="Last Name"
-                      placeholderTextColor="grey"
-                      style={styles.inputnameTxt}
-                    />
-                  </View>
-                  {errors.name && touched.name ? (
-                    <Text style={styles.errors}>{errors.name}</Text>
-                  ) : null}
-                  <TextInput
-                    placeholder="Enter your email"
-                    placeholderTextColor="grey"
-                    value={values.email}
-                    autoCapitalize={'none'}
-                    onChangeText={handleChange('email')}
-                    style={styles.inputTxt}
-                  />
-                  {errors.email && touched.email ? (
-                    <Text style={styles.errors}>{errors.email}</Text>
-                  ) : null}
-                  <View
-                    style={[
-                      styles.inputTxt,
-                      { flexDirection: 'row', alignItems: 'center' },
-                    ]}>
-                    <TextInput
-                      placeholder="Password"
-                      placeholderTextColor="grey"
-                      value={values.password}
-                      autoCapitalize={'none'}
-                      onChangeText={handleChange('password')}
-                      secureTextEntry={PasswordVisibility}
-                      style={{ width: "90%", color: 'white' }}
-                    />
-                    <TouchableOpacity onPress={TogglePassword}>
-                      <Image
-                        style={{ height: 22, width: 22, tintColor: Primary }}
-                        source={eyeIcon}></Image>
-                    </TouchableOpacity>
-                  </View>
-                  {errors.password && touched.password && (
-                    <Text style={styles.errors}>{errors.password}</Text>
-                  )}
-                  <View
-                    style={[
-                      styles.inputTxt,
-                      { flexDirection: 'row', alignItems: 'center' },
-                    ]}>
-                    <TextInput
-                      placeholderTextColor="grey"
-                      autoCapitalize={'none'}
-                      placeholder="*********"
-                      value={values.confirmPassword}
-                      inputTitle={'confirmPassword'}
-                      onChangeText={handleChange('confirmPassword')}
-                      secureTextEntry={PasswordVisibility}
-                      style={{ width: "100%", color: 'white' }}
-                    />
-                  </View>
-                  {errors.confirmPassword && touched.confirmPassword && (
-                    <Text style={styles.errors}>{errors.confirmPassword}</Text>
-                  )}
-                  <TouchableOpacity
-                    style={styles.signinBtn}
-                    onPress={() => handleSubmit()}>
-                    <Text style={styles.signupTxt}>Sign Up</Text>
-                  </TouchableOpacity>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      marginTop: 15,
-                    }}>
-                    <Text style={styles.signupTxt}>
-                      Already have an account?
-                    </Text>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      onPress={() => navigation.navigate('Signin')}>
-                      <Text style={[styles.signupTxt, { color: 'red' }]}>
-                        Sign In
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
+                source={Message}
+              />
+              <TextInput
+                placeholder="johndua@gmail.com"
+                placeholderTextColor="grey"
+                value={values.email}
+                autoCapitalize={'none'}
+                onChangeText={handleChange('email')}
+                style={{
+                  width: '85%',
+                  paddingLeft: RF(10),
+                  height: '100%',
+                  backgroundColor: theme.colors.tabs,
+                  color: theme.colors.text,
+                  fontSize: RF(14),
+                }}
+              />
             </View>
-          </ImageBackground>
+            {errors.email && touched.email ? (
+              <Text style={styles.errors}>{errors.email}</Text>
+            ) : null}
+            <View
+              style={[
+                styles.inputTxt,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: theme.colors.tabs,
+                },
+              ]}>
+              <Image
+                style={{
+                  height: RF(20),
+                  width: RF(20),
+                  tintColor: theme.colors.text,
+                }}
+                source={lock}
+              />
+              <TextInput
+                placeholder="Enter New Password"
+                placeholderTextColor="grey"
+                value={values.password}
+                autoCapitalize={'none'}
+                onChangeText={handleChange('password')}
+                secureTextEntry={PasswordVisibility}
+                style={{
+                  width: '85%',
+                  height: '100%',
+                  paddingLeft: RF(10),
+                  color: theme.colors.text,
+                  backgroundColor: theme.colors.tabs,
+                  fontSize: RF(14),
+                }}
+              />
+
+              <TouchableOpacity onPress={TogglePassword}>
+                <Image
+                  style={{height: 22, width: 22, tintColor: theme.colors.text}}
+                  source={eyeIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            {errors.password && touched.email && (
+              <Text style={styles.errors}>{errors.password}</Text>
+            )}
+            <View
+              style={[
+                styles.inputTxt,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: theme.colors.tabs,
+                },
+              ]}>
+              <Image
+                style={{
+                  height: RF(20),
+                  width: RF(20),
+                  tintColor: theme.colors.text,
+                }}
+                source={lock}
+              />
+              <TextInput
+                placeholder="Confirm Password"
+                placeholderTextColor="grey"
+                value={values.confirmPassword}
+                autoCapitalize={'none'}
+                onChangeText={handleChange('confirmPassword')}
+                secureTextEntry={PasswordVisibility}
+                style={{
+                  width: '85%',
+                  height: '100%',
+                  paddingLeft: RF(10),
+                  color: theme.colors.text,
+                  backgroundColor: theme.colors.tabs,
+                  fontSize: RF(14),
+                }}
+              />
+
+              <TouchableOpacity onPress={TogglePassword}>
+                <Image
+                  style={{height: 22, width: 22, tintColor: theme.colors.text}}
+                  source={eyeIcon}
+                />
+              </TouchableOpacity>
+            </View>
+            {errors.confirmPassword && touched.confirmPassword && (
+              <Text style={styles.errors}>{errors.confirmPassword}</Text>
+            )}
+            <Button title={'Sign Up'} screen={() => handleSubmit()} />
+            <View
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+              }}>
+              <View
+                style={[styles.line, {backgroundColor: theme.colors.text}]}
+              />
+              <Text style={{color: theme.colors.text}}>Or</Text>
+              <View
+                style={[styles.line, {backgroundColor: theme.colors.text}]}
+              />
+            </View>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                style={[styles.guestbtn, {backgroundColor: theme.colors.tabs}]}
+                onPress={() => guestLogin()}>
+                <Image
+                  style={styles.guestIcons}
+                  resizeMode={'contain'}
+                  source={require('../assets/Auth/google.png')}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.guestbtn, {backgroundColor: theme.colors.tabs}]}
+                onPress={() => guestLogin()}>
+                <Image
+                  style={styles.guestIcons}
+                  resizeMode={'contain'}
+                  source={require('../assets/Auth/facebook.png')}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.guestbtn, {backgroundColor: theme.colors.tabs}]}
+                onPress={() => guestLogin()}>
+                <Image
+                  style={styles.guestIcons}
+                  source={require('../assets/Auth/apple.png')}
+                  resizeMode={'contain'}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: 15,
+              }}>
+              <Text
+                style={{
+                  ...smalltext,
+                  color: theme.colors.text,
+                  fontSize: RF(12),
+                  fontFamily: 'Raleway-Bold',
+                }}>
+                Already have an Account?
+              </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Signin')}>
+                <Text
+                  style={{
+                    ...smalltext,
+                    color: Secondary,
+                    fontSize: RF(12),
+                    marginLeft: RF(5),
+                    fontFamily: 'Raleway-Bold',
+                  }}>
+                  Sign Up
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       )}
     </Formik>
@@ -238,78 +351,62 @@ const Signup = ({ navigation }) => {
 export default Signup;
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: '#fff', flex: 1 },
-  bgImage: { flex: 1 },
-  overlay: {
+  container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: RF(20),
+    justifyContent: 'center',
   },
   formWrapper: {
     width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  form: {
-    width: '90%',
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    flexDirection: 'column',
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
-    paddingBottom: 50,
-    paddingTop: 30,
+    height: RF(400),
+    justifyContent: 'space-between',
   },
   normalTxt: {
     fontSize: 30,
     color: '#fff',
     margin: 10,
-    textAlign: 'left',
     fontFamily: 'BebasNeue-Regular',
   },
   inputTxt: {
     width: '100%',
-    height: 50,
+    height: RF(45),
     paddingHorizontal: 10,
-    borderRadius: 15,
+    borderRadius: 50,
     backgroundColor: '#333333',
     color: '#fff',
-    marginTop: 10,
-
-  },
-  inputnameTxt: {
-    width: '49%',
-    height: 50,
-    padding: 10,
-    borderRadius: 15,
-    backgroundColor: '#333333',
-    color: '#fff',
-    marginTop: 10,
   },
   signinBtn: {
-    height: 50,
-    color: '#fff',
-    borderRadius: 10,
+    height: RF(50),
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
     backgroundColor: Primary,
     width: '100%',
   },
   signupTxt: {
     fontSize: 15,
     textAlign: 'center',
-    color: '#ccc',
-    fontFamily: 'BebasNeue-Regular',
-  },
-  nameFields: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    color: '#fff',
+    fontWeight: 500,
     fontFamily: 'BebasNeue-Regular',
   },
   errors: {
-    marginTop: 2,
-    fontSize: 8,
+    fontSize: 12,
     marginStart: 10,
     color: Primary,
   },
+  guestbtn: {
+    height: RF(35),
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+  line: {
+    height: 1,
+    width: '40%',
+    backgroundColor: '#fff',
+    marginVertical: 20, // Adjust this value to change the space above and below the line
+  },
+  guestIcons: {height: RF(24), width: RF(24)},
 });
