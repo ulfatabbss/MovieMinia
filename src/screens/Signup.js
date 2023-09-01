@@ -33,7 +33,7 @@ import {RF} from '../utillis/theme/Responsive';
 import {Secondary} from '../utillis/theme';
 const Signup = ({navigation}) => {
   const {myTheme} = useSelector(state => state.root.user);
-  const theme = useTheme(!myTheme == 'lightTheme' ? lightTheme : darkTheme);
+  const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
   const Toast = useToast();
   const [eyeIcon, setEyeIcon] = useState(show);
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
@@ -210,7 +210,11 @@ const Signup = ({navigation}) => {
 
               <TouchableOpacity onPress={TogglePassword}>
                 <Image
-                  style={{height: 22, width: 22, tintColor: theme.colors.text}}
+                  style={{
+                    height: 22,
+                    width: 22,
+                    tintColor: theme.colors.eyeIcon,
+                  }}
                   source={eyeIcon}
                 />
               </TouchableOpacity>
@@ -254,7 +258,11 @@ const Signup = ({navigation}) => {
 
               <TouchableOpacity onPress={TogglePassword}>
                 <Image
-                  style={{height: 22, width: 22, tintColor: theme.colors.text}}
+                  style={{
+                    height: 22,
+                    width: 22,
+                    tintColor: theme.colors.eyeIcon,
+                  }}
                   source={eyeIcon}
                 />
               </TouchableOpacity>

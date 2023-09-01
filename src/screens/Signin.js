@@ -227,7 +227,11 @@ const Signin = ({navigation}) => {
 
               <TouchableOpacity onPress={TogglePassword}>
                 <Image
-                  style={{height: 22, width: 22, tintColor: theme.colors.text}}
+                  style={{
+                    height: 22,
+                    width: 22,
+                    tintColor: theme.colors.eyeIcon,
+                  }}
                   source={eyeIcon}
                 />
               </TouchableOpacity>
@@ -262,17 +266,19 @@ const Signin = ({navigation}) => {
                 }}>
                 Remember me
               </Text>
-              <Text
-                style={{
-                  ...smalltext,
-                  fontFamily: 'Raleway-SemiBold',
-                  fontSize: RF(12),
-                  position: 'absolute',
-                  color: Secondary,
-                  right: 0,
-                }}>
-                Forgot Password
-              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ForgotPassword')}
+                style={{position: 'absolute', right: 0}}>
+                <Text
+                  style={{
+                    ...smalltext,
+                    fontFamily: 'Raleway-SemiBold',
+                    fontSize: RF(12),
+                    color: Secondary,
+                  }}>
+                  Forgot Password
+                </Text>
+              </TouchableOpacity>
             </View>
 
             <Button title={'Sign In'} screen={() => handleSubmit()} />

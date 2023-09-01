@@ -6,6 +6,13 @@ import {useTheme} from 'react-native-paper';
 import darkTheme from './theme/darkTheme';
 const Width: number = Dimensions.get('window').width;
 // const theme = useTheme(darkTheme);
+const container: {
+  flex: number;
+  padding: number;
+} = {
+  flex: 1,
+  padding: RF(20),
+};
 const h1: {
   color: string;
   fontSize: number;
@@ -162,4 +169,5 @@ export {
   smalltext,
   MovieView,
   overlay,
+  container,
 };

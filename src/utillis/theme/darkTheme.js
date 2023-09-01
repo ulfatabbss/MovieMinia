@@ -1,5 +1,6 @@
 // darkTheme.js
 import {DefaultTheme} from 'react-native-paper';
+import {Gray300} from './appTheme';
 
 const darkTheme = {
   ...DefaultTheme,
@@ -14,6 +15,7 @@ const darkTheme = {
     icon: 'white',
     tabs: '#313131',
     rightBar: '#0D0D0D',
+    eyeIcon: '#fff',
     topbar: '#313131',
   },
 };

@@ -1,5 +1,6 @@
 // lightTheme.js
 import {DefaultTheme} from 'react-native-paper';
+import {Gray300} from './appTheme';
 
 const lightTheme = {
   ...DefaultTheme,
@@ -14,6 +15,7 @@ const lightTheme = {
     icon: '#313131',
     tabs: '#fff',
     rightBar: '#fff',
+    eyeIcon: Gray300,
     topbar: '#f5e9cd',
   },
 };

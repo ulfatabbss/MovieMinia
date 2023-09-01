@@ -14,9 +14,13 @@ const lock = require('../assets/Auth/lock.png');
 const Message = require('../assets/Auth/Message.png');
 const show = require('../assets/Auth/show.png');
 const hide = require('../assets/Auth/hide.png');
+const backArrow = require('../assets/Auth/backArrow.png');
+const otpBack = require('../assets/Auth/otpBack.png');
 
 export {
+  otpBack,
   play,
+  backArrow,
   lock,
   Message,
   playFrame,
