@@ -8,34 +8,63 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
-import { LoginValidationSchema } from '../../utillis/validationSchema';
-import { Formik } from 'formik';
-import { Primary } from '../../utillis/colors';
-import { store } from '../../redux/store';
-import { setIsLogin, setUser } from '../../redux/reducers/userReducers';
-import { Login } from '../../services/AppServices';
+import React, {useEffect, useState} from 'react';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {LoginValidationSchema} from '../../utillis/validationSchema';
+import {Formik} from 'formik';
+import {Primary} from '../../utillis/colors';
+import {store} from '../../redux/store';
+import {setIsLogin, setUser} from '../../redux/reducers/userReducers';
+import {Login} from '../../services/AppServices';
 import Loader from '../../components/Loader';
-import { useToast } from 'react-native-toast-notifications';
-import { useSelector } from 'react-redux';
-import { useTheme } from 'react-native-paper';
+import {useToast} from 'react-native-toast-notifications';
+import {useSelector} from 'react-redux';
+import {useTheme} from 'react-native-paper';
 import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
-import { RF } from '../../utillis/theme/Responsive';
-import { applogo, hide, lock, Message, show } from '../../assets';
-import { Heading, smalltext } from '../../utillis/styles';
-import { Secondary } from '../../utillis/theme';
+import {RF} from '../../utillis/theme/Responsive';
+import {applogo, hide, lock, Message, show} from '../../assets';
+import {Heading, smalltext} from '../../utillis/styles';
+import {Secondary} from '../../utillis/theme';
 import Button from '../../components/Button';
 import CheckBox from '@react-native-community/checkbox';
 import Logo from '../../components/Logo';
-const Signin = ({ navigation }) => {
-  const { myTheme } = useSelector(state => state.root.user);
+const Signin = ({navigation}) => {
+  const {myTheme} = useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
   const Toast = useToast();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [eyeIcon, setEyeIcon] = useState(show);
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  useEffect(()=>{
+    GoogleSignin.configure()
+  },[])
+  const GoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo,"userinfooooooooooo")
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log(error)
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log(error)
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log(error)
+        // play services not available or outdated
+      } else {
+        console.log(error)
+        // some other error happened
+      }
+    }
+  };
   const TogglePassword = () => {
     if (eyeIcon == show) {
       setEyeIcon(hide);
@@ -135,7 +164,7 @@ const Signin = ({ navigation }) => {
         <View
           style={[
             styles.container,
-            { backgroundColor: theme.colors.background },
+            {backgroundColor: theme.colors.background},
           ]}>
           <Logo />
           <View style={styles.formWrapper}>
@@ -157,7 +186,7 @@ const Signin = ({ navigation }) => {
                   backgroundColor: theme.colors.tabs,
                 },
               ]}>
-              <Image style={{ height: RF(20), width: RF(20) }} source={Message} />
+              <Image style={{height: RF(20), width: RF(20)}} source={Message} />
               <TextInput
                 placeholder="Enter your email"
                 placeholderTextColor="grey"
@@ -186,7 +215,7 @@ const Signin = ({ navigation }) => {
                   backgroundColor: theme.colors.tabs,
                 },
               ]}>
-              <Image style={{ height: RF(20), width: RF(20) }} source={lock} />
+              <Image style={{height: RF(20), width: RF(20)}} source={lock} />
               <TextInput
                 placeholder="Password"
                 placeholderTextColor="grey"
@@ -206,7 +235,7 @@ const Signin = ({ navigation }) => {
 
               <TouchableOpacity onPress={TogglePassword}>
                 <Image
-                  style={{ height: 22, width: 22, tintColor: theme.colors.text }}
+                  style={{height: 22, width: 22, tintColor: theme.colors.text}}
                   source={eyeIcon}
                 />
               </TouchableOpacity>
@@ -264,11 +293,11 @@ const Signin = ({ navigation }) => {
                 alignItems: 'center',
               }}>
               <View
-                style={[styles.line, { backgroundColor: theme.colors.text }]}
+                style={[styles.line, {backgroundColor: theme.colors.text}]}
               />
-              <Text style={{ color: theme.colors.text }}>Or</Text>
+              <Text style={{color: theme.colors.text}}>Or</Text>
               <View
-                style={[styles.line, { backgroundColor: theme.colors.text }]}
+                style={[styles.line, {backgroundColor: theme.colors.text}]}
               />
             </View>
             <View
@@ -277,9 +306,8 @@ const Signin = ({ navigation }) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
-                onPress={() => guestLogin()}>
+              <TouchableOpacity onPress={GoogleLogin}
+                style={[styles.guestbtn, {backgroundColor: theme.colors.tabs}]}>
                 <Image
                   style={styles.guestIcons}
                   resizeMode={'contain'}
@@ -287,7 +315,7 @@ const Signin = ({ navigation }) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
+                style={[styles.guestbtn, {backgroundColor: theme.colors.tabs}]}
                 onPress={() => guestLogin()}>
                 <Image
                   style={styles.guestIcons}
@@ -296,7 +324,7 @@ const Signin = ({ navigation }) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
+                style={[styles.guestbtn, {backgroundColor: theme.colors.tabs}]}
                 onPress={() => guestLogin()}>
                 <Image
                   style={styles.guestIcons}
@@ -401,5 +429,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginVertical: 20, // Adjust this value to change the space above and below the line
   },
-  guestIcons: { height: "100%", width: "100%" },
+  guestIcons: {height: '100%', width: '100%'},
 });

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "898660163468",
+    "project_id": "movieminia-3f9b6",
+    "storage_bucket": "movieminia-3f9b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898660163468:android:93179bf25cb5ddfc6a40a9",
+        "android_client_info": {
+          "package_name": "com.webevis.movieminia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898660163468-f2h2p0u9bknqlc8bejhga9p80b12fo26.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webevis.movieminia",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "898660163468-5dsuvh59hp02s7adfpjng16aud2kbi0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBhzeD0JWkVoan56jjY4OK9LEeNhj5xxs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898660163468-5dsuvh59hp02s7adfpjng16aud2kbi0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
