@@ -30,7 +30,12 @@ const DellfromPlaylist = (obj1: any) => {
 const Register = (obj: any) => {
   return HTTP_APP.post(endPoints.register, obj);
 };
-
+const AddFeedback = (obj: any) => {
+  return HTTP_APP.post(endPoints.addFeedBack, obj);
+};
+const GetFeedback = () => {
+  return HTTP_APP.get(endPoints.getFeedBack);
+};
 export {
   GetMovies,
   GetUpcomming,
@@ -41,4 +46,6 @@ export {
   Addtoplaylist,
   GetPlaylist,
   DellfromPlaylist,
+  AddFeedback,
+  GetFeedback,
 };

@@ -1,7 +1,7 @@
-import {Dimensions, PixelRatio} from 'react-native';
-import {RFValue} from 'react-native-responsive-fontsize';
+import { Dimensions, PixelRatio } from 'react-native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 // 1st Way
 const widthPercentageToDP = widthPercent => {
@@ -18,7 +18,7 @@ const heightPercentageToDP = heightPercent => {
 const fontScale = PixelRatio.getFontScale();
 export const getFontSize = size => size / fontScale;
 
-export {widthPercentageToDP as WP, heightPercentageToDP as HP, RFValue as RF};
+export { widthPercentageToDP as WP, heightPercentageToDP as HP, RFValue as RF };
 // return Math.round
 // 2nd way
 const BASE_UNIT_WIDTH = 375;
@@ -27,7 +27,7 @@ const horizontalScale = size => (width / BASE_UNIT_WIDTH) * size;
 const verticalScale = size => (height / BASE_UNIT_HEIGHT) * size;
 const moderateScale = (size, factor = 0.5) =>
   size + (horizontalScale(size) - size) * factor;
-export {horizontalScale, verticalScale, moderateScale};
+export { horizontalScale, verticalScale, moderateScale };
 export const SCREEN_WIDTH = width;
 export const SCREEN_HEIGHT = height;
 export const ASPECT_RATIO = SCREEN_HEIGHT / SCREEN_WIDTH;

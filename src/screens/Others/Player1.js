@@ -28,7 +28,7 @@ const Player1 = ({ route }) => {
                 :
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <LottieView
-                        source={require('../assets/animation_lktc5fa8.json')} autoPlay loop />
+                        source={require('../../assets/animation_lktc5fa8.json')} autoPlay loop />
                 </View>
             }
 

@@ -3,8 +3,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import MainStack from './mainStack';
 import AuthStack from './authStack';
 import { useSelector } from 'react-redux';
-import LottieView from 'lottie-react-native';
-import { View, Text } from 'react-native';
 import Loader from '../components/Loader';
 
 const Routes = () => {

@@ -14,18 +14,26 @@ import {
   Dimensions,
 } from 'react-native';
 import { Image } from '@rneui/base';
-import { Primary, white } from '../utillis/colors';
+import { Primary, white } from '../../utillis/colors';
 import AnimatedLottieView from 'lottie-react-native';
 import { WebView } from 'react-native-webview';
 import { ActivityIndicator } from 'react-native';
-import LottieView from 'lottie-react-native';
-import Header2 from '../components/Header2';
-import Loader from '../components/Loader';
+import Header2 from '../../components/Header2';
+import Loader from '../../components/Loader';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
+import { useTheme } from 'react-native-paper';
+import { useSelector } from 'react-redux';
+import PlayImage from '../../assets/play.png';
+
+import { Heading, smalltext, text } from '../../utillis/styles';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 const Player = ({ navigation, route }) => {
   const { name, url, data, type } = route.params;
+  const { myTheme } = useSelector(state => state.root.user);
+  const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
   const [focused, setFocused] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [itemDetail, setItemDetail] = useState('');
@@ -50,85 +58,48 @@ const Player = ({ navigation, route }) => {
     } else if (focused == false) setFocused(true);
     setModalVisible(false);
   };
-  const MovieListView = ({ item }) => (
-    <View
-      style={{
-        height: 60,
-        width: Dimensions.get('window').width - 30,
-        alignSelf: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 5,
-        marginHorizontal: 10,
-        backgroundColor: 'black',
-        justifyContent: 'space-around',
-      }}>
-      {/* {console.log(item?.poster[0]?.image)} */}
-      {/* <Text style={{ color: 'gray', margin: 8 }}>{item.epi_no}</Text> */}
-      <TouchableOpacity
-        style={{ flexDirection: 'row', alignItems: 'center' }}
-        onPress={async () => {
+  // useEffect(() => {
+  //   console.log(url);
+  // })
+  const PlaylistItem = ({ item }) => (
+    <View style={{ ...styles.playlistItemContainer, backgroundColor: theme.colors.tabs, elevation: 2, shadowOffset: 3, gap: 5, padding: 5 }}>
+      <Image style={styles.playlistItemImage} resizeMode="contain" source={{
+        uri:
+          type == 'Movies' ? item.poster[0].image : data?.poster[0].image
+      }} />
+      <View style={styles.playlistItemInfo}>
+        <Text numberOfLines={1} style={{ ...smalltext, color: theme.colors.text }}>
+          {type == 'Movies' ? item.title : data?.title}
+        </Text>
+        <View style={styles.playlistItemDetail}>
+          <Text style={{ ...text, color: theme.colors.text }}>Director:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme.colors.text }}>
+
+            {type == 'Movies' ? item.director : data?.director}
+          </Text>
+        </View>
+        <View style={styles.playlistItemDetail}>
+          <Text style={{ ...text, color: theme.colors.text }}>Release year:</Text>
+          <Text style={{ ...text, color: theme.colors.text }}>
+            {type == 'Movies' ? item.releaseYear : data?.releaseYear}</Text>
+        </View>
+        <View style={styles.playlistItemDetail}>
+          <Text style={{ ...text, color: theme.colors.text }}>Category:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme.colors.text }}>
+
+            {type == 'Movies' ? item.category : data?.category}
+          </Text>
+        </View>
+      </View>
+      <View style={styles.playlistItemActions}>
+        <TouchableOpacity style={styles.playlistItemAction} onPress={async () => {
           setUrl(item.url);
           setName(type == 'Movies' ? item.title : data?.title)
         }
         }>
-        <Image
-          resizeMode="contain"
-          style={{
-            height: 50,
-            width: 50,
-            marginRight: 10,
-            borderRadius: 90,
-            borderWidth: 1,
-            borderColor: '#fff',
-          }}
-          source={{
-            uri:
-              type == 'Movies' ? item.poster[0].image : data?.poster[0].image,
-          }}
-        />
-        <View>
-          <Text
-            numberOfLines={1}
-            style={{
-              width: Dimensions.get('window').width / 2,
-              color: currentUrl == item.uri ? Primary : 'white',
-            }}>
-            {type == 'Movies' ? item.title : data?.title}
-          </Text>
-          <Text
-            numberOfLines={1}
-            style={{ color: 'gray', width: Dimensions.get('window').width / 2 }}>
-            {type == 'Movies' ? type : `Episode No ${item?.epi_no}`}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <View style={{ width: 30 }}>
-        {currentUrl == item?.url ? (
-          <AnimatedLottieView
-            autoPlay
-            loop
-            source={require('../assets/14805-playing-status.json')}
-            style={{
-              width: 30,
-              height: 30,
-              marginTop: 4,
-            }}></AnimatedLottieView>
-        ) : null}
+          <Image style={styles.actionIcon} resizeMode="contain" source={PlayImage} />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={() => setModalVisible(true) || setItemDetail(item)}>
-        <Image
-          source={require('../assets/more.png')}
-          style={{
-            width: 20,
-            height: 20,
-            tintColor: 'gray',
-            marginTop: 5,
-            marginStart: 15,
-          }}
-        />
-      </TouchableOpacity>
     </View>
   );
 
@@ -167,12 +138,12 @@ const Player = ({ navigation, route }) => {
     );
   }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <StatusBar backgroundColor="#333333" />
-      <Header2 navigation={navigation} text={currentName} />
+      {/* <Header2 navigation={navigation} text={currentName} /> */}
       <View
         style={{
-          height: 300,
+          height: "40%",
           alignItems: 'center',
           width: Dimensions.get("window").width, borderRadius: 10,
           justifyContent: 'center',
@@ -184,13 +155,11 @@ const Player = ({ navigation, route }) => {
           source={{
             uri: currentUrl,
           }}
-          onShouldStartLoadWithRequest={shouldStartLoadWithRequest}
+          allowsLinkPreview={true}
+          mediaPlaybackRequiresUserAction={false}
           allowsFullscreenVideo
           style={styles.mediaPlayer}
           scrollEnabled={false}
-          mediaPlaybackRequiresUserAction={true}
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
         />
         {visible && (
           <ActivityIndicator
@@ -205,7 +174,7 @@ const Player = ({ navigation, route }) => {
 
       </View>
 
-      <Text style={{ color: white, margin: 10, fontSize: 16 }}>
+      <Text style={{ ...Heading, color: theme.colors.text, margin: 10, }}>
         Related Videos
       </Text>
       <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
@@ -214,7 +183,7 @@ const Player = ({ navigation, route }) => {
       <FlatList
         data={type == 'show' ? data.episods : data}
         showsVerticalScrollIndicator={false}
-        renderItem={MovieListView}
+        renderItem={PlaylistItem}
       />
       <View style={{ flex: 1 }}>
         <Modal
@@ -267,7 +236,7 @@ const Player = ({ navigation, route }) => {
                     marginRight: 20,
                     tintColor: focused ? Primary : 'gray',
                   }}
-                  source={require('../assets/plus.png')}
+                  source={require('../../assets/plus.png')}
                 />
                 <Text style={{ color: 'white', fontWeight: '500', fontSize: 14 }}>
                   Add to PlayList
@@ -287,7 +256,7 @@ const Player = ({ navigation, route }) => {
                     marginRight: 20,
                     tintColor: 'gray',
                   }}
-                  source={require('../assets/share.png')}
+                  source={require('../../assets/share.png')}
                 />
                 <Text style={{ color: 'white', fontWeight: '500', fontSize: 14 }}>
                   Share
@@ -314,9 +283,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   mediaPlayer: {
-    height: 300,
-    width: Dimensions.get('window').width - 10,
-    backgroundColor: 'black', alignSelf: 'center',
+    height: "40%",
+    width: Dimensions.get('window').width, alignSelf: 'center',
   },
   modalContainer: {
     flex: 1,
@@ -340,5 +308,72 @@ const styles = StyleSheet.create({
   textStyle: {
     color: 'white',
     textAlign: 'center',
+  },
+  playlistListContainer: {
+    width: '100%',
+    marginTop: 10,
+  },
+  emptyImage: {
+    height: 298,
+    width: '100%',
+  },
+  playlistItemContainer: {
+    height: 110,
+    width: '98%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 20, alignSelf: 'center',
+    marginVertical: 5,
+  },
+  playlistItemImage: {
+    height: '100%',
+    width: 94,
+    // marginHorizontal: '5%',
+    borderRadius: 10,
+  },
+  playlistItemInfo: {
+    width: '40%',
+    height: '95%',
+  },
+  playlistItemName: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: 'black',
+    fontWeight: '600',
+    marginTop: '10%',
+  },
+  playlistItemDetail: {
+    flexDirection: 'row',
+    gap: 5
+  },
+  playlistItemLabel: {
+    fontSize: 10,
+    fontWeight: '400',
+    color: 'black',
+  },
+  playlistItemValue: {
+    fontSize: 10,
+    fontWeight: '400',
+    color: 'black',
+    marginLeft: '2%',
+  },
+  playlistItemActions: {
+    width: '25%',
+    // flexDirection: 'row',
+    height: '100%', gap: 10,
+    justifyContent: 'space-around',
+  },
+  playlistItemAction: {
+    height: 25,
+    width: 25,
+    borderRadius: 90,
+    backgroundColor: '#F8F8F8',
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionIcon: {
+    height: 30,
+    width: 30,
   },
 });

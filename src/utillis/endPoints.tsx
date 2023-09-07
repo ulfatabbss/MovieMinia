@@ -1,14 +1,4 @@
-const endPoints: {
-  login: string;
-  register: string;
-  getMovies: string;
-  getUpcomming: string;
-  getDrama: string;
-  getSlider: string;
-  deleteMovie: string;
-  addToplaylist: string;
-  getPlaylist: string;
-} = {
+const endPoints = {
   login: 'login',
   register: 'register',
   getMovies: 'movies',
@@ -18,6 +8,8 @@ const endPoints: {
   deleteMovie: 'dellplaylistmovie',
   addToplaylist: 'playlists',
   getPlaylist: 'getplaylists',
+  getFeedBack: 'get-feedback',
+  addFeedBack: 'submit-feedback',
 };
 
 export {endPoints};

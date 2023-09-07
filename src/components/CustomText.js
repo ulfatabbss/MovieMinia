@@ -3,7 +3,6 @@ import React from 'react';
 import { RF } from '../utillis/theme/Responsive';
 import { Black } from '../utillis/theme';
 
-
 const HeadingText = ({
     title,
     size,

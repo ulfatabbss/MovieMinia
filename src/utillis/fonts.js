@@ -4,7 +4,7 @@ const heading = {
 
 
     h1: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '600',
         color: "black",
 

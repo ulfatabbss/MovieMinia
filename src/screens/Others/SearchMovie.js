@@ -10,24 +10,24 @@ import {
     View, StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import MyWrapper from '../components/myWrapper';
+import MyWrapper from '../../components/myWrapper';
 import {
     Black,
     Gray200,
-    Gray300,
-    Gray400,
     Secondary,
     White,
-} from '../utillis/theme';
-import { SmallIcons, TopBar } from '../utillis/styles';
+} from '../../utillis/theme';
+import { SmallIcons, TopBar } from '../../utillis/styles';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 import { LogBox } from 'react-native';
-import { setRecentSearches } from '../redux/reducers/userReducers';
-import { store } from '../redux/store';
+import { setRecentSearches } from '../../redux/reducers/userReducers';
+import { store } from '../../redux/store';
 import { useTheme } from 'react-native-paper';
-import lightTheme from '../utillis/theme/lightTheme';
-import darkTheme from '../utillis/theme/darkTheme';
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
+import ExpandCard from '../../components/ExpnadCard';
+import { backErrow, searchIcon } from '../../assets';
 LogBox.ignoreLogs(['Warning: ...']);
 const SearchMovie = ({ navigation }) => {
     const {
@@ -133,20 +133,20 @@ const SearchMovie = ({ navigation }) => {
     );
     return (
         <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+            <StatusBar backgroundColor={theme.colors.topbar} barStyle={myTheme == 'lightTheme' ? 'dark-content' : 'light-content'} />
 
             <View style={{ ...TopBar, backgroundColor: theme.colors.topbar }}>
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
                     <Image
                         resizeMode="contain"
                         style={{ ...SmallIcons, tintColor: theme.colors.icon }}
-                        source={require('../assets/appIcons/arrow.png')} />
+                        source={backErrow} />
                 </TouchableOpacity>
 
                 <View style={{ ...styles.InputView, backgroundColor: theme.colors.background }}>
                     <Image
                         style={{ ...SmallIcons, tintColor: theme.colors.icon }}
-                        source={require('../assets/appIcons/search.png')}></Image>
+                        source={searchIcon}></Image>
                     <TextInput
                         value={search}
                         onChangeText={text => searchFilter(text)}
@@ -185,7 +185,7 @@ const SearchMovie = ({ navigation }) => {
                                 <Image
                                     resizeMode="contain"
                                     style={{ height: 300, width: 300 }}
-                                    source={require('../assets/appIcons/error404.png')}></Image>
+                                    source={require('../../assets/appIcons/error404.png')}></Image>
                                 <Text
                                     style={{
                                         color: Secondary,
@@ -209,8 +209,8 @@ const SearchMovie = ({ navigation }) => {
                             <View style={{ alignSelf: 'center', marginTop: 10 }}>
                                 <FlatList
                                     numColumns={2}
-                                    renderItem={SearchView}
-                                    data={movie}></FlatList>
+                                    renderItem={({ item }) => <ExpandCard item={item} data={movie} navigation={navigation} type={"Movies"} />}
+                                    data={movie} />
                             </View>
                         )}
                     </View>

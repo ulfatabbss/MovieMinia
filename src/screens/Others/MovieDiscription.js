@@ -10,48 +10,54 @@ import {
   Modal,
   Text,
 } from 'react-native';
-import React, { useState } from 'react';
-import { caution, clock, play, playFrame, timer } from '../assets';
-import HeadingText from '../components/CustomText';
-import { RF } from '../utillis/theme/Responsive';
+import React, { useEffect, useState } from 'react';
+import { caution, clock, play, playFrame, timer } from '../../assets';
+import HeadingText from '../../components/CustomText';
+import { RF } from '../../utillis/theme/Responsive';
 import {
   Gray400,
   Primary,
   Primary_Light,
   Secondary,
   White,
-} from '../utillis/theme';
-import { Extra, FlexDirection, Heading } from '../utillis/styles';
+} from '../../utillis/theme';
+import { Extra, FlexDirection, Heading } from '../../utillis/styles';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
-import lightTheme from '../utillis/theme/lightTheme';
-import darkTheme from '../utillis/theme/darkTheme';
-const Screenshots = [
-  {
-    id: 0,
-    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yZevl2vHQgmosfwUdVNzviIfaWS.jpg',
-  },
-  {
-    id: 1,
-    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/wHa6KOJAoNTFLFtp7wguUJKSnju.jpg',
-  },
-  {
-    id: 2,
-    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/m2duGsKjBOl3BB8uFOTnRUzdEhg.jpg',
-  },
-  {
-    id: 3,
-    img: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8CYSvYTw9tbFynivdcBcoqRWPGM.jpg',
-  },
-];
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
+import { GetFeedback } from '../../services/AppServices';
+import { store } from '../../redux/store';
+import { setGuest, setIsLogin } from '../../redux/reducers/userReducers';
+
 
 const MovieDetailPage = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { item, data, type } = route.params;
   const {
-    myTheme
+    myTheme, user, isGuest
   } = useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
+  const [feedbackData, setFeedbackData] = useState([])
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString(undefined, options);
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const FeedBackResponse = await GetFeedback()
+        // console.log(
+        // FeedBackResponse.data.data);
+        setFeedbackData(FeedBackResponse.data.data);
+      } catch (error) {
+        console.log(error, 'errors');
+      }
+    };
+
+    fetchData();
+  }, []);
   const Movies_Info_Pattern = () => {
     return (
       <>
@@ -72,7 +78,7 @@ const MovieDetailPage = ({ navigation, route }) => {
               style={{ height: RF(18), width: RF(18), marginRight: RF(10) }}
               source={timer}
             />
-            <HeadingText title={item.duration} medium size={16} />
+            <HeadingText title={item.duration} medium size={16} color={theme.colors.text} />
           </View>
         </View>
       </>
@@ -81,7 +87,8 @@ const MovieDetailPage = ({ navigation, route }) => {
   const Play_Button = ({ setModalVisible }) => {
     return (
       <View style={styles.playButton}>
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
+        <TouchableOpacity onPress={() => !isGuest ? navigation.navigate('Player', { name: item.title, url: type == 'show' ? item.episods[0].url : item.url, data: data, type: type }) : setModalVisible(true)}>
+          {/* name, url, data, type */}
           <Image
             style={{ height: RF(40), width: RF(40) }}
             resizeMode={'contain'}
@@ -97,7 +104,7 @@ const MovieDetailPage = ({ navigation, route }) => {
         <ImageBackground
           style={{ height: '100%', width: '100%' }}
           imageStyle={{ borderRadius: RF(20) }}
-          resizeMode={'contain'}
+          resizeMode={'stretch'}
           source={{ uri: item.image }} />
       </View>
     );
@@ -131,12 +138,12 @@ const MovieDetailPage = ({ navigation, route }) => {
           <Image
             style={{ height: RF(40), width: RF(40), borderRadius: 20 }}
             source={{
-              uri: 'https://www.themoviedb.org/t/p/w138_and_h175_face/AbXKtWQwuDiwhoQLh34VRglwuBE.jpg',
+              uri: feedbackData[0]?.user_id?.profilePicture,
             }}
             resizeMode={'contain'}
           />
           <View style={{ marginLeft: 10 }}>
-            <HeadingText title={'Ronald Richard'} medium size={14} color={theme.colors.text} />
+            <HeadingText title={feedbackData[0]?.user_id?.name} medium size={14} color={theme.colors.text} />
             <View
               style={{
                 flexDirection: 'row',
@@ -148,7 +155,7 @@ const MovieDetailPage = ({ navigation, route }) => {
                 resizeMode={'contain'}
               />
               <HeadingText
-                title={'13 Sep, 2020'}
+                title={formatDate(feedbackData[0]?.timestamp)}
                 medium
                 size={11}
                 regular
@@ -160,7 +167,7 @@ const MovieDetailPage = ({ navigation, route }) => {
         </View>
         <HeadingText color={theme.colors.text}
           title={
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
+            feedbackData[0]?.feedback_text
           }
           light
           size={14}
@@ -201,7 +208,7 @@ const MovieDetailPage = ({ navigation, route }) => {
             <View style={styles.button_View}>
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => setModalVisible(!modalVisible)}>
+                onPress={() => store.dispatch(setGuest(false)) && store.dispatch(setIsLogin(false))}>
                 <HeadingText
                   title={'Login'}
                   semi_bold
@@ -209,9 +216,10 @@ const MovieDetailPage = ({ navigation, route }) => {
                   color={White}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.signUp_Button]}>
+              <TouchableOpacity style={[styles.button, styles.signUp_Button]}
+                onPress={() => setModalVisible(!modalVisible)}>
                 <HeadingText
-                  title={'Sign Up'}
+                  title={'Cancel'}
                   semi_bold
                   size={16}
                   color={Secondary}
@@ -226,11 +234,13 @@ const MovieDetailPage = ({ navigation, route }) => {
         source={{
           uri: item?.poster[1] ? item.poster[1].image : item?.poster[0]?.image,
         }}
-        resizeMode={'stretch'}>
+        resizeMode={'stretch'}
+      >
         <View style={{ ...styles.chevronTriangle, ...styles.chevronTopLeft, borderLeftColor: theme.colors.background }} />
         <View style={{ ...styles.chevronTriangle, ...styles.chevronTopRight, borderLeftColor: theme.colors.background }} />
       </ImageBackground>
       <Play_Button setModalVisible={setModalVisible} />
+      {/* name, url, data, type */}
       <ScrollView
         style={{ ...styles.detail_Container, backgroundColor: theme.colors.background }}
         showsVerticalScrollIndicator={false}>
@@ -258,10 +268,12 @@ const MovieDetailPage = ({ navigation, route }) => {
           />
           <View style={FlexDirection}>
             <HeadingText title={'Reviews'} size={16} semi_bold top={20} color={theme.colors.text} />
-            <HeadingText title={'View All'} size={16} medium top={20} color={theme.colors.text} />
+            <TouchableOpacity onPress={() => navigation.navigate('Review', { data: feedbackData })}>
+              <HeadingText title={'View All'} size={16} medium top={20} color={theme.colors.text} />
+            </TouchableOpacity>
           </View>
           <Reviews_Section />
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('AddReview')}>
             <HeadingText
               title={'+ Add Feedback'}
               color={Secondary}

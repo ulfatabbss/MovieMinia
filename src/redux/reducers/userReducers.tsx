@@ -3,26 +3,32 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState: any = {
   user: null,
   isLogin: false,
-  popularMoviesData: null,
-  hindiMoviesData: null,
-  punjabiMoviesData: null,
-  upcommingMoviesData: null,
-  dramaData: null,
+  popularMoviesData: [],
+  hindiMoviesData: [],
+  punjabiMoviesData: [],
+  upcommingMoviesData: [],
+  dramaData: [],
   sliderData: [],
-  cartoonData: null,
-  animated1Data: null,
-  animated2Data: null,
+  cartoonData: [],
+  animated1Data: [],
+  animated2Data: [],
   dramaSlider: [],
   animatedSlider: [],
   playlist: [],
-  indianDrama: null,
-  turkishDrama: null,
-  hollywoodseasons: null,
-  hollywood: null,
-  hindiSeasons: null,
-  allMovies: null,
+  indianDrama: [],
+  turkishDrama: [],
+  hollywoodseasons: [],
+  hollywood: [],
+  hindiSeasons: [],
+  south: [],
+  allMovies: [],
   recentSearches: [],
   myTheme: 'lightTheme',
+  loading: true,
+  isGuest: false,
+  trendAnimSeason: [],
+  popularAnimSeason: [],
+  newAnimSeason: [],
 };
 
 export const userReducer = createSlice({
@@ -90,11 +96,29 @@ export const userReducer = createSlice({
     setAllMoviesData: (state, action) => {
       state.allMovies = action.payload;
     },
+    setSouthMoviesData: (state, action) => {
+      state.south = action.payload;
+    },
     setRecentSearches: (state, action) => {
       state.recentSearches = action.payload;
     },
     setTheme: (state, action) => {
       state.myTheme = action.payload;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setGuest: (state, action) => {
+      state.isGuest = action.payload;
+    },
+    setTrendAnimSeason: (state, action) => {
+      state.trendAnimSeason = action.payload;
+    },
+    setPopularAnimSeason: (state, action) => {
+      state.popularAnimSeason = action.payload;
+    },
+    setNewAnimSeason: (state, action) => {
+      state.newAnimSeason = action.payload;
     },
   },
 });
@@ -120,8 +144,14 @@ export const {
   setHollywood,
   setHindiSeasons,
   setAllMoviesData,
+  setSouthMoviesData,
   setRecentSearches,
   setTheme,
+  setLoading,
+  setGuest,
+  setNewAnimSeason,
+  setPopularAnimSeason,
+  setTrendAnimSeason,
 } = userReducer.actions;
 
 export default userReducer.reducer;

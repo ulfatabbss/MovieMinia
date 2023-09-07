@@ -4,6 +4,7 @@ import { DefaultTheme } from 'react-native-paper';
 const lightTheme = {
     ...DefaultTheme,
     dark: false,
+    myOwnProperty: true,
     mode: 'adaptive', // or 'exact' if you prefer
     colors: {
         ...DefaultTheme.colors,
@@ -13,7 +14,8 @@ const lightTheme = {
         icon: '#313131',
         tabs: '#fff',
         rightBar: '#fff',
-        topbar: '#f5e9cd'
+        topbar: '#f5e9cd',
+        bottomicon: '#C2C9D1'
     },
 };
 

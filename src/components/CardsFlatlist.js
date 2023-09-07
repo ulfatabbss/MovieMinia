@@ -12,7 +12,6 @@ const CardsFlatlist = ({ navigation, heading, data, type }) => {
         myTheme
     } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
-
     const dataArray = Array.isArray(data) ? data : [];
 
     // Sort the array by releaseYear in descending order

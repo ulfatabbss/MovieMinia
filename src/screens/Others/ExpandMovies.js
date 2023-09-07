@@ -10,15 +10,13 @@ import {
   TextInput,
   View, TouchableOpacity
 } from 'react-native';
-import { secondary } from '../utillis/colors';
-// import MainCard from '../components/MainCard';
-import ExpandCard from '../components/ExpnadCard';
-import { Heading, SmallIcons, TopBar } from '../utillis/styles';
-import { Gray400, White } from '../utillis/theme';
+import ExpandCard from '../../components/ExpnadCard';
+import { Heading, SmallIcons, TopBar } from '../../utillis/styles';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
-import lightTheme from '../utillis/theme/lightTheme';
-import darkTheme from '../utillis/theme/darkTheme';
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
+import { backErrow, searchIcon } from '../../assets';
 
 const ExpandMovies = ({ route, navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,7 +47,7 @@ const ExpandMovies = ({ route, navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       <View style={{
-        height: 120,
+        height: 60,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center', gap: 20,
@@ -59,15 +57,15 @@ const ExpandMovies = ({ route, navigation }) => {
           <Image
             resizeMode="contain"
             style={{ ...SmallIcons, tintColor: theme.colors.icon }}
-            source={require('../assets/appIcons/arrow.png')} />
+            source={backErrow} />
         </TouchableOpacity>
 
         <Text style={{ ...Heading, color: theme.colors.text }}>Movies</Text>
       </View>
-      <View style={{ ...styles.InputView, backgroundColor: theme.colors.topbar }}>
+      <View style={{ ...styles.InputView, backgroundColor: theme.colors.tabs, elevation: 2, shadowOffset: 3 }}>
         <Image
           style={{ ...SmallIcons, tintColor: theme.colors.icon }}
-          source={require('../assets/appIcons/search.png')}></Image>
+          source={searchIcon}></Image>
         <TextInput
           value={search}
           onChangeText={text => searchFilter(text)}
@@ -121,8 +119,9 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '100%',
-    alignItems: 'center',
-  }, InputView: {
+    alignItems: 'center', paddingBottom: '35%'
+  },
+  InputView: {
     height: 40,
     width: '92%', alignSelf: 'center',
     backgroundColor: '#E1E4E8',

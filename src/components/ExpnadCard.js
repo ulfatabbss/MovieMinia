@@ -17,7 +17,7 @@ const ExpandCard = ({ item, data, navigation, type }) => {
             <ImageBackground
                 source={{ uri: item.poster[0]?.image }}
                 style={styles.imageBackground}
-                resizeMode="cover"
+                resizeMode={'stretch'}
             >
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     container: {
         width: 161,
         height: 200,
-        borderRadius: 11.94,
+        borderRadius: 10,
         margin: 5,
         overflow: 'hidden',
         flexShrink: 0,

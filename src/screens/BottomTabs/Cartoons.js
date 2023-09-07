@@ -11,18 +11,18 @@ import {
   TouchableOpacity,
   View, Platform
 } from 'react-native';
-import { secondary } from '../utillis/colors';
-import Header from '../components/Header';
+import { secondary } from '../../utillis/colors';
+import Header from '../../components/Header';
 import { useSelector } from 'react-redux';
-import CardsFlatlist from '../components/CardsFlatlist';
+import CardsFlatlist from '../../components/CardsFlatlist';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
-import Carousel from '../components/ImageCarousel';
+import Carousel from '../../components/ImageCarousel';
 import { useState } from 'react';
 import { useTheme } from 'react-native-paper';
-import lightTheme from '../utillis/theme/lightTheme';
-import darkTheme from '../utillis/theme/darkTheme';
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
 const Cartoons = ({ navigation }) => {
-  const { cartoonData, animated1Data, animated2Data, animatedSlider, myTheme } =
+  const { cartoonData, animated1Data, animated2Data, animatedSlider, myTheme, trendAnimSeason, popularAnimSeason, newAnimSeason } =
     useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
   const [value, setValue] = useState("movies")
@@ -54,16 +54,26 @@ const Cartoons = ({ navigation }) => {
               <Text style={{ color: value == 'seasons' ? '#fff' : '#313131', fontFamily: value == 'seasons' ? 'Raleway-Bold' : 'Raleway-Regular' }}>Seasons</Text>
             </TouchableOpacity>
           </View>
+          {value === 'movies' && (
+            <>
+              <CardsFlatlist navigation={navigation} heading={'Trending'} data={cartoonData} type={"Movies"} />
+              <View style={{ width: "100%", marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+                <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
+              </View>
+              <CardsFlatlist navigation={navigation} heading={'Popular'} data={animated1Data} type={"Movies"} />
+              <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+                <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/9698237176"} />
+              </View>
+              <CardsFlatlist navigation={navigation} heading={'new'} data={animated2Data} type={"Movies"} />
 
-          <CardsFlatlist navigation={navigation} heading={'Trending'} data={cartoonData} type={"Movies"} />
-          <View style={{ width: "100%", marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-            <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
-          </View>
-          <CardsFlatlist navigation={navigation} heading={'Popular'} data={animated1Data} type={"Movies"} />
-          <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-            <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/9698237176"} />
-          </View>
-          <CardsFlatlist navigation={navigation} heading={'new'} data={animated2Data} type={"Movies"} />
+            </>)}
+          {value === 'seasons' && (
+            <>
+              <CardsFlatlist navigation={navigation} heading={'New Season'} data={newAnimSeason} type={"show"} />
+              {/* <CardsFlatlist navigation={navigation} heading={'Trend Season'} data={trendAnimSeason} type={"show"} /> */}
+              <CardsFlatlist navigation={navigation} heading={'Popular Season'} data={popularAnimSeason} type={"show"} />
+            </>)}
+
         </ScrollView>
       </SafeAreaView>
     </>

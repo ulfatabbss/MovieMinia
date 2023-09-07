@@ -5,25 +5,24 @@ import {
   View, SafeAreaView, TouchableOpacity
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { secondary } from '../utillis/colors';
-import Header from '../components/Header';
-import { GetDrama } from '../services/AppServices';
-import { setDramaData, setHindiSeasons, setHollywoodseasons, setIndianDrama, setTurkishDrama } from '../redux/reducers/userReducers';
+import { secondary } from '../../utillis/colors';
+import Header from '../../components/Header';
+import { GetDrama } from '../../services/AppServices';
+import { setDramaData, setHindiSeasons, setHollywoodseasons, setIndianDrama, setLoading, setNewAnimSeason, setPopularAnimSeason, setTrendAnimSeason, setTurkishDrama } from '../../redux/reducers/userReducers';
 import { useSelector } from 'react-redux';
-import { store } from '../redux/store';
+import { store } from '../../redux/store';
 // import MySlider from '../components/ImageCarousel';
-import CardsFlatlist from '../components/CardsFlatlist';
-import Loader from '../components/Loader';
+import CardsFlatlist from '../../components/CardsFlatlist';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
-import Carousel from '../components/ImageCarousel';
+import Carousel from '../../components/ImageCarousel';
 import { Text } from '@rneui/base';
 import { useTheme } from 'react-native-paper';
-import lightTheme from '../utillis/theme/lightTheme';
-import darkTheme from '../utillis/theme/darkTheme';
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
+import ScreenPreLoader from '../../components/ScreenPreLoader';
 const TvShowes = ({ navigation }) => {
-  const [loding, setLoding] = useState(true);
   const [value, setValue] = useState("season")
-  const { dramaData, dramaSlider, indianDrama, turkishDrama, hollywoodseasons, hindiSeasons, myTheme } = useSelector(
+  const { dramaData, dramaSlider, indianDrama, turkishDrama, hollywoodseasons, hindiSeasons, myTheme, loading } = useSelector(
     state => state.root.user,
   );
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
@@ -31,7 +30,7 @@ const TvShowes = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoding(true);
+        store.dispatch(setLoading(true));
         const response = await GetDrama();
         const { data } = response;
         store.dispatch(setDramaData(data.filter(object => object.category === 'Urdu')));
@@ -39,20 +38,22 @@ const TvShowes = ({ navigation }) => {
         store.dispatch(setTurkishDrama(data.filter(object => object.category === 'Turkish')));
         store.dispatch(setHollywoodseasons(data.filter(object => object.category === 'Season')));
         store.dispatch(setHindiSeasons(data.filter(object => object.category === 'HindiSeason')));
-
-        setLoding(false);
+        store.dispatch(setNewAnimSeason(data.filter((object) => object.category == 'newAnimSeason')));
+        store.dispatch(setTrendAnimSeason(data.filter((object) => object.category == 'trendAnimSeason')));
+        store.dispatch(setPopularAnimSeason(data.filter((object) => object.category == 'popularAnimSeason')));
+        store.dispatch(setLoading(false));
       } catch (error) {
         console.log(error, 'errors');
-        setLoding(false);
+        store.dispatch(setLoading(false));
       }
     };
 
     fetchData();
   }, []);
 
-  if (loding) {
+  if (loading) {
     return (
-      <Loader />
+      <ScreenPreLoader />
     );
   }
   return (

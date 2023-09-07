@@ -2,111 +2,61 @@ import {Dimensions} from 'react-native';
 import React from 'react';
 import {Primary, white} from './colors';
 import {RF} from './theme/Responsive';
-import {useTheme} from 'react-native-paper';
-import darkTheme from './theme/darkTheme';
 const Width: number = Dimensions.get('window').width;
-// const theme = useTheme(darkTheme);
-const h1: {
-  color: string;
-  fontSize: number;
-  fontFamily: string;
-  marginHorizontal: number;
-} = {
+
+const h1: any = {
   color: white,
   fontSize: 16,
   fontFamily: 'Raleway',
   marginHorizontal: 10,
 };
 
-const h2: {
-  color: string;
-  fontSize: number;
-  fontWeight: string;
-} = {
+const h2: any = {
   color: white,
   fontSize: 14,
   fontWeight: '500',
 };
 
-const h3: {
-  color: string;
-  fontSize: number;
-  fontWeight: string;
-} = {
+const h3: any = {
   color: white,
   fontSize: 10,
   fontWeight: 'normal',
 };
 
-const linearGradient: {
-  height: number;
-  width: string;
-  padding: number;
-} = {
+const linearGradient: any = {
   height: 330,
   width: '100%',
   padding: 20,
 };
 
-const logoIcon: {
-  width: number;
-  height: number;
-} = {
+const logoIcon: any = {
   width: 50,
   height: 50,
 };
 
-const movieTitle: {
-  color: string;
-  fontSize: number;
-  fontWeight: string;
-} = {
+const movieTitle: any = {
   color: white,
   fontSize: 24,
   fontWeight: '700',
 };
 
-const Heading: {
-  // color: string;
-  fontSize: number;
-  // marginLeft: number;
-  fontFamily: string;
-  fontStyle: string;
-  // fontWeight: string;
-} = {
-  // color: 'gray',
+const Heading: any = {
   fontSize: 18,
-  // marginLeft: 16,
   fontStyle: 'normal',
   fontFamily: 'Raleway-SemiBold',
-  // fontWeight: '600',
 };
 
-const smalltext: {
-  color: string;
-  // marginRight: number;
-  fontFamily: string;
-} = {
+const smalltext: any = {
   color: '#313131',
-  // marginRight: 3,
+  fontSize: 16,
   fontFamily: 'Raleway-Medium',
 };
-
-const MovieView: {
-  backgroundColor: string;
-  height: number;
-  width: number;
-  borderWidth: number;
-  borderColor: string;
-  marginHorizontal: number;
-  marginVertical: number;
-  borderRadius: number;
-  overflow: 'hidden';
-  justifyContent: 'space-around';
-  alignItems: 'center';
-  elevation: number;
-  shadowColor: string;
-} = {
+const text: any = {
+  color: '#313131',
+  fontSize: 12,
+  fontFamily: 'Raleway-Regular',
+};
+const MovieView: any = {
   backgroundColor: 'black',
   height: Dimensions.get('window').height / 5 - 10,
   width: Dimensions.get('window').width / 3 - 10,
@@ -122,10 +72,7 @@ const MovieView: {
   shadowColor: 'white',
 };
 
-const overlay: {
-  flex: number;
-  backgroundColor: string;
-} = {
+const overlay: any = {
   flex: 1,
   backgroundColor: 'rgba(21,20,31, 0.8)',
 };
@@ -139,7 +86,7 @@ export const FlexDirection = {
 export const Extra = {marginTop: {marginTop: RF(20)}};
 
 export const TopBar = {
-  height: 140,
+  height: 100,
   width: '100%',
   backgroundColor: '#f5e9cd',
   flexDirection: 'row',
@@ -147,8 +94,8 @@ export const TopBar = {
   paddingHorizontal: 20,
 };
 export const SmallIcons = {
-  height: 24,
-  width: 24,
+  height: 20,
+  width: 20,
 };
 export {
   h1,
@@ -161,4 +108,5 @@ export {
   smalltext,
   MovieView,
   overlay,
+  text,
 };

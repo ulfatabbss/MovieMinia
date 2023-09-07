@@ -15,6 +15,7 @@ import { useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import lightTheme from '../utillis/theme/lightTheme';
 import darkTheme from '../utillis/theme/darkTheme';
+import { searchIcon } from '../assets';
 const Header = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const {
@@ -66,16 +67,16 @@ const Header = ({ navigation }) => {
           <Image
             resizeMode="contain"
             style={[styles.logoutIcon, { tintColor: theme.colors.icon }]}
-            source={require('../assets/search.png')}
+            source={searchIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={toggleModal}>
+        {/* <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
           <Image
             resizeMode="contain"
-            style={[styles.logoutIcon, { tintColor: theme.colors.icon }]}
-            source={require('../assets/notification.png')}
+            style={styles.logoutIcon}
+            source={myTheme == 'lightTheme' ? require('../assets/HeaderIcon/dark.png') : require('../assets/HeaderIcon/whiteBell.png')}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
