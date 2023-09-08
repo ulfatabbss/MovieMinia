@@ -22,7 +22,7 @@ const Settings = ({ navigation }) => {
     const renderSettingItem = (icon, label, onPress) => (
         <TouchableOpacity style={styles.settingItem} onPress={onPress}>
             <Image style={{ ...styles.settingIcon, tintColor: theme.colors.icon }} resizeMode="contain" source={icon} />
-            <Text style={{ ...Heading, color: theme.colors.text }}>{label}</Text>
+            <Text style={{ ...Heading, color: theme.colors.text, fontSize: 16 }}>{label}</Text>
         </TouchableOpacity>
     );
     return (
@@ -41,7 +41,7 @@ const Settings = ({ navigation }) => {
             <View style={{ ...styles.content, backgroundColor: theme.colors.background }}>
                 <View style={styles.settingsList}>
                     {renderSettingItem(passSettings, 'Password Settings', () => navigation.navigate('PasswordSettings'))}
-                    <View style={styles.themeSetting}>
+                    {/* <View style={styles.themeSetting}>
                         <View style={styles.themeSettingContent}>
                             <Image style={[styles.settingIcon, { tintColor: theme.colors.icon }]} resizeMode="contain" source={require('../../assets/HeaderIcon/dark.png')} />
                             <Text style={{ ...Heading, color: theme.colors.text }}>Theme</Text>
@@ -54,14 +54,14 @@ const Settings = ({ navigation }) => {
                             onValueChange={toggleTheme}
                             value={myTheme == 'darkTheme' ? false : true}
                         />
-                    </View>
+                    </View> */}
                     {renderSettingItem(terms, 'Terms & Conditions', () => navigation.navigate('Terms'))}
                     {renderSettingItem(policy, 'Privacy Policy', () => navigation.navigate('Policy'))}
                     {renderSettingItem(faq, 'FAQs', () => navigation.navigate('Faq'))}
                     {renderSettingItem(require('../../assets/logout.png'), 'Logout', () => { })}
                 </View>
             </View>
-            <View style={{ ...styles.deleteAccount, borderTopColor: theme.colors.icon }}>
+            <View style={{ ...styles.deleteAccount, borderTopColor: '#E1E4E8' }}>
                 <TouchableOpacity style={styles.deleteAccountButton} onPress={() => navigation.navigate('DeleteAccount')}>
                     <Image
                         style={styles.deleteAccountIcon}

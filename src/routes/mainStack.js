@@ -20,6 +20,7 @@ import Review from '../screens/ReviewScreens/SeeReview';
 import Profile from '../screens/Auth/Profile';
 import EditProfile from '../screens/Auth/EditProfile';
 import Terms from '../screens/Settings/Terms';
+import Faq from '../screens/Settings/FAQ';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const MyDrawer = () => {
@@ -60,6 +61,7 @@ const MainStack = () => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="Terms" component={Terms} />
+        <Stack.Screen name="Faq" component={Faq} />
 
       </Stack.Navigator>
     </>

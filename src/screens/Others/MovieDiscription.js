@@ -26,10 +26,12 @@ import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
-import { GetFeedback } from '../../services/AppServices';
+import { Addtoplaylist, GetFeedback, GetPlaylist } from '../../services/AppServices';
 import { store } from '../../redux/store';
 import { setGuest, setIsLogin } from '../../redux/reducers/userReducers';
-
+import { useToast } from "react-native-toast-notifications";
+import Loader from '../../components/Loader';
+import { useFocusEffect } from '@react-navigation/native';
 
 const MovieDetailPage = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -43,6 +45,50 @@ const MovieDetailPage = ({ navigation, route }) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, options);
+  };
+  const Toast = useToast();
+  const [playlistAdded, setPlaylistAdded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [ischeck, setIsCheck] = useState(false)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      CheckPlaylist();
+    }, [])
+  );
+  const HandlePlaylist = async () => {
+    setIsLoading(true);
+    setIsCheck(true);
+    const obj = {
+      movieIds: [item._id],
+      userId: user._id
+    }
+    try {
+      const check = await Addtoplaylist(obj)
+      console.log(check, "ghdjhjwekdnkdn");
+      setPlaylistAdded(true);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+      setIsCheck(false)
+    }
+  };
+  const CheckPlaylist = async () => {
+    setIsLoading(true);
+    const obj = {
+      userId: user._id
+    };
+    await GetPlaylist(obj)
+      .then(({ data }) => {
+        const movies = data[0]?.movies || [];
+        const isMovieInPlaylist = movies.some((movie) => movie._id === item._id);
+        setPlaylistAdded(isMovieInPlaylist);
+      })
+      .catch(err => {
+        console.log(err, 'errors');
+      });
+    setIsLoading(false);
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -61,11 +107,14 @@ const MovieDetailPage = ({ navigation, route }) => {
   const Movies_Info_Pattern = () => {
     return (
       <>
-        <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center' }}>
-          <Text style={{ ...Heading, color: theme.colors.text, fontSize: 20 }}>{item.title}</Text>
+        <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center', marginTop: 10 }}>
+          <Text style={{ ...Heading, color: theme.colors.text, fontSize: 20, width: "70%" }}>{item.title}</Text>
           {/* <HeadingText title={item.title} size={20} semi_bold color={theme.colors.text} /> */}
-          <TouchableOpacity style={styles.playframe}>
-            <Image style={{ height: RF(21), width: RF(21) }} source={playFrame} />
+          <TouchableOpacity style={{ ...styles.playframe, backgroundColor: playlistAdded ? 'red' : Primary_Light, }} disabled={playlistAdded}
+            onPress={() => {
+              HandlePlaylist()
+            }}>
+            <Image style={{ height: RF(21), width: RF(21), tintColor: playlistAdded ? 'white' : null }} source={playFrame} />
           </TouchableOpacity>
         </View>
         <View style={[FlexDirection, Extra.marginTop]}>
@@ -176,6 +225,12 @@ const MovieDetailPage = ({ navigation, route }) => {
       </View>
     );
   };
+  if (isLoading) {
+    return (
+      <Loader />
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <StatusBar
@@ -341,7 +396,6 @@ const styles = StyleSheet.create({
     height: RF(35),
     width: RF(35),
     borderRadius: 20,
-    backgroundColor: Primary_Light,
     justifyContent: 'center',
     alignItems: 'center',
   },

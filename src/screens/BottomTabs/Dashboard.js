@@ -114,12 +114,7 @@ const Dashboard = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 60 }}>
         <Header navigation={navigation} />
         <Carousel images={sliderData} />
-        <CardsFlatlist
-          navigation={navigation}
-          heading={'Movies Trailer'}
-          data={upcommingMoviesData}
-          type={'Movies'}
-        />
+        <CardsFlatlist navigation={navigation} heading={'Movies Trailer'} data={upcommingMoviesData} type={'Movies'} />
         <CardsFlatlist
           navigation={navigation}
           heading={'Hollywood'}

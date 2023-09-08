@@ -15,7 +15,8 @@ const darkTheme = {
         tabs: '#313131',
         rightBar: '#0D0D0D',
         topbar: '#313131',
-        bottomicon: '#92979D'
+        bottomicon: '#92979D',
+        boarder: '#313131',
 
 
     },

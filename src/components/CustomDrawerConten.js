@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { setTheme } from '../redux/reducers/userReducers';
+import { setIsLogin, setTheme } from '../redux/reducers/userReducers';
 import { useTheme } from 'react-native-paper';
+import { store } from '../redux/store';
 const CustomDrawerContent = ({ navigation }) => {
   const dispatch = useDispatch();
   const { myTheme, user, isGuest } = useSelector((state) => state.root.user);
@@ -34,17 +35,17 @@ const CustomDrawerContent = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={styles.othercontainer}>
           <Image
-            style={{ ...styles.logoutImage, tintColor: theme.colors.icon }}
+            style={{ ...styles.logoutImage, tintColor: textColor }}
             source={require('../assets/settings.png')}
           />
           <Text style={{ ...styles.otherText, color: textColor }}>Settings</Text>
         </TouchableOpacity>
       </View>
       {/* Other content */}
-      <View style={styles.bottomContainer}>
+      <TouchableOpacity style={styles.bottomContainer} onPress={() => store.dispatch(setIsLogin(false))}>
         <Image resizeMode='contain' style={{ ...styles.logoutImage, tintColor: textColor }} source={require('../assets/logout.png')} />
         <Text style={{ ...styles.logoutText, color: textColor }}>Logout</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -55,7 +55,7 @@ const Profile = ({ navigation }) => {
             <Text
                 style={[heading.h4, { alignSelf: 'center', marginTop: '5%', color: theme.colors.text }]}>{user?.name}</Text>
             <View
-                style={[styles.V4, { backgroundColor: theme.colors.tabs }]}>
+                style={[styles.V4, { backgroundColor: theme.colors.background }]}>
                 <Text
                     style={[heading.h5, { marginTop: '5%', marginLeft: '5%', color: theme.colors.text }]}>Email</Text>
                 <Text

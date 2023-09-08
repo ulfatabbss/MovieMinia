@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, Text, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { Image, SafeAreaView, Text, TouchableOpacity, View, StyleSheet, StatusBar } from 'react-native'
 import React from 'react'
 import Color from '../../utillis/colors'
 import { useSelector } from 'react-redux'
@@ -14,24 +14,16 @@ const Terms = ({ navigation }) => {
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor: theme.colors.topbar }}>
-            <View
-                style={styles.V2}>
-                <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image
-                            style={[styles.img1, { tintColor: theme.colors.icon }]}
-                            resizeMode='contain'
-                            source={backErrow} />
-
-                    </TouchableOpacity>
-                    <Text
-                        style={{ ...Heading, color: theme.colors.text }}>Terms & Conditions
-
-                    </Text>
-
-                </View>
-
-
+            <StatusBar backgroundColor={theme.colors.topbar} barStyle={myTheme == 'lightTheme' ? 'dark-content' : 'light-content'} />
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image
+                        style={[styles.backButton, { tintColor: theme.colors.icon }]}
+                        resizeMode="contain"
+                        source={backErrow}
+                    />
+                </TouchableOpacity>
+                <Text style={{ ...Heading, color: theme.colors.text }}>Terms & Conditions</Text>
             </View>
             <View
                 style={[styles.V5, { backgroundColor: theme.colors.background }]}>
@@ -85,4 +77,19 @@ const styles = StyleSheet.create({
         width: 20,
         alignSelf: 'center'
     }, V5: { height: '100%' },
+    header: {
+        flexDirection: 'row',
+        marginTop: '5%',
+        width: '90%',
+        height: '10%',
+        alignSelf: 'center',
+        alignItems: 'center',
+        gap: 10
+        // justifyContent: 'space-between',
+    },
+    backButton: {
+        height: 25,
+        width: 20,
+        alignSelf: 'center',
+    },
 })

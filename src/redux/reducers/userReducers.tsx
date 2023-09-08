@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState: any = {
   user: null,
-  isLogin: false,
+  isLogin: null,
   popularMoviesData: [],
   hindiMoviesData: [],
   punjabiMoviesData: [],

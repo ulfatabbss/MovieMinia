@@ -36,6 +36,11 @@ const AddFeedback = (obj: any) => {
 const GetFeedback = () => {
   return HTTP_APP.get(endPoints.getFeedBack);
 };
+const EditProfileAPi = (id: any, obj: any) => {
+  console.log(id, obj);
+
+  return HTTP_APP.post(`${endPoints.editProfile}${id}`, obj);
+};
 export {
   GetMovies,
   GetUpcomming,
@@ -48,4 +53,5 @@ export {
   DellfromPlaylist,
   AddFeedback,
   GetFeedback,
+  EditProfileAPi,
 };

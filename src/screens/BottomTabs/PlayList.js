@@ -9,7 +9,7 @@ import {
   TextInput,
   StatusBar,
   SafeAreaView,
-  TouchableOpacity,
+  TouchableOpacity, Modal, Pressable, Dimensions
 } from 'react-native';
 import EmptyImage from '../../assets/emptyplaylist.png';
 import PlayImage from '../../assets/play.png';
@@ -23,8 +23,9 @@ import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { searchIcon } from '../../assets';
+import PlaylistSkelton from '../../components/ShimmerPlaceHolder/PlaylistSkelton';
 
-const Playlist = () => {
+const Playlist = ({ navigation }) => {
   const { myTheme, user, isGuest } = useSelector((state) => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
   const Toast = useToast();
@@ -39,7 +40,6 @@ const Playlist = () => {
       HandlePlaylist();
     }, [])
   );
-
   const HandlePlaylist = async () => {
     setIsLoading(true);
     if (!isGuest) {
@@ -58,8 +58,9 @@ const Playlist = () => {
   };
 
   const toggleModal = (item) => {
-    setIsModalVisible(!isModalVisible);
     setSelectedItem(item);
+    setIsModalVisible(!isModalVisible);
+
   };
 
   const handleDeleteConfirm = async () => {
@@ -79,19 +80,13 @@ const Playlist = () => {
     };
 
     await fetch(
-      `https://giant-eel-panama-hat.cyclic.app/moveminia/playlists/${myplaylist[0]._id}/movies/${selectedItem.item._id}`,
+      `https://giant-eel-panama-hat.cyclic.app/moveminia/playlists/${myplaylist[0]._id}/movies/${selectedItem._id}`,
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
+
         HandlePlaylist();
-        Toast.show('⭐ Successfully removed from playlist......!', {
-          type: 'success',
-          placement: 'top',
-          duration: 3000,
-          offset: 30,
-          animationType: 'zoom-in',
-        });
         setIsModalVisible(false);
       })
       .catch((error) => {
@@ -153,7 +148,7 @@ const Playlist = () => {
         </View>
       </View>
       <View style={styles.playlistItemActions}>
-        <TouchableOpacity style={styles.playlistItemAction}>
+        <TouchableOpacity style={styles.playlistItemAction} onPress={() => navigation.navigate('Player1', { url: item.url })}>
           <Image style={styles.actionIcon} resizeMode="contain" source={PlayImage} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -167,7 +162,7 @@ const Playlist = () => {
   );
 
   if (isLoading) {
-    return <Loader />;
+    return <PlaylistSkelton />;
   }
 
   return (
@@ -176,6 +171,48 @@ const Playlist = () => {
       <View style={{ ...styles.headerContainer, backgroundColor: theme.colors.topbar }}>
         <Text style={{ ...styles.headerText, color: theme.colors.text }}>My Playlist</Text>
       </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => {
+          // Alert.alert('Modal has been closed.');
+          setIsModalVisible(!isModalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Are you sure to delete movie </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                height: '35%',
+                width: '100%',
+                position: 'absolute',
+                bottom: 0,
+                alignSelf: 'flex-end',
+                borderColor: '#fff',
+                justifyContent: 'space-between',
+              }}>
+              <Pressable
+                style={[
+                  styles.button,
+                  { backgroundColor: 'green', borderTopRightRadius: 10 },
+                ]}
+                onPress={() => setIsModalVisible(!isModalVisible)}>
+                <Text style={styles.textStyle}>No</Text>
+              </Pressable>
+              <Pressable
+                style={[
+                  styles.button,
+                  { backgroundColor: 'red', borderTopLeftRadius: 10 },
+                ]}
+                onPress={handleDeleteConfirm}>
+                <Text style={styles.textStyle}>Yes</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={{ ...styles.contentContainer, backgroundColor: theme.colors.background }}>
         <View style={{ ...styles.InputView, backgroundColor: theme.colors.tabs, elevation: 2, shadowOffset: { width: 3, height: 3 } }}>
           <Image
@@ -191,15 +228,17 @@ const Playlist = () => {
             style={{ width: '90%' }}
           />
         </View>
-        <View style={styles.playlistContainer}>
+        <View style={{ ...styles.playlistContainer, paddingBottom: "36%" }}>
           <Text style={{ ...Heading, color: theme.colors.text }}>
-            {myplaylist.length == 0 || isGuest ? null : `${myplaylist[0].movies.length} Playlists Found`}
+            {myplaylist[0]?.movies?.length == 0 && isGuest == false ? null : `${myplaylist[0]?.movies?.length} Playlists Found`}
           </Text>
-          {myplaylist?.length == 0 || isGuest ? (
-            <Image style={styles.emptyImage} resizeMode="contain" source={EmptyImage} />
-          ) : (
+          {myplaylist[0]?.movies?.length == 0 && isGuest == false ?
+            <Image style={styles.emptyImage} resizeMode="contain" source={EmptyImage} /> : null
+          }
+          {
+            !myplaylist[0]?.movies?.length == 0 && !isGuest &&
             <FlatList renderItem={PlaylistItem} data={filteredData} />
-          )}
+          }
         </View>
       </View>
     </SafeAreaView>
@@ -284,7 +323,38 @@ const styles = StyleSheet.create({
   },
   emptyImage: {
     height: 298,
-    width: '100%',
+    width: Dimensions.get('window').width,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    alignItems: 'center',
+  },
+  modalView: {
+    height: 100,
+    width: '60%',
+    borderRadius: 10,
+    borderWidth: 0.4,
+    borderColor: 'gray',
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+  },
+  button: {
+    width: '45%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalText: {
+    marginTop: 15,
+    color: '#fff',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  details_View: {
+    height: '100%',
+    width: '68%',
   },
 });
 

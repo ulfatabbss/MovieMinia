@@ -6,9 +6,10 @@ import {
   Dimensions,
   Image,
   TextInput,
-  TouchableOpacity,
+  TouchableOpacity, Keyboard
 } from 'react-native';
-import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
 import { LoginValidationSchema } from '../../utillis/validationSchema';
 import { Formik } from 'formik';
 import { Primary } from '../../utillis/colors';
@@ -35,6 +36,7 @@ const Signin = ({ navigation }) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [eyeIcon, setEyeIcon] = useState(show);
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const TogglePassword = () => {
     if (eyeIcon == show) {
@@ -46,6 +48,21 @@ const Signin = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    const loadRememberMePreference = async () => {
+      try {
+        const value = await AsyncStorage.getItem('rememberMe');
+        if (value !== null) {
+          // Convert the stored value to a boolean
+          setToggleCheckBox(value === '1');
+        }
+      } catch (error) {
+        console.error('Error loading "Remember Me" preference:', error);
+      }
+    };
+
+    loadRememberMePreference();
+  }, []);
   const guestLogin = async () => {
     setIsLoading(true);
     const guestCredentials = {
@@ -75,6 +92,14 @@ const Signin = ({ navigation }) => {
     email: '',
     password: '',
   };
+  const handleRememberMe = async () => {
+    try {
+      await AsyncStorage.setItem('rememberMe', toggleCheckBox ? '1' : '0');
+    } catch (error) {
+      console.error('Error saving "Remember Me" preference:', error);
+    }
+  };
+
   const handleLogin = async values => {
     setIsLoading(true);
     const obj = {
@@ -109,6 +134,22 @@ const Signin = ({ navigation }) => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardOpen(true);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardOpen(false);
+    });
+
+    // Clean up the listeners when the component unmounts
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   if (isLoading) {
     return <Loader />;
   }
@@ -137,8 +178,8 @@ const Signin = ({ navigation }) => {
             styles.container,
             { backgroundColor: theme.colors.background },
           ]}>
-          <Logo />
-          <View style={styles.formWrapper}>
+          {!isKeyboardOpen && <Logo />}
+          <View style={{ ...styles.formWrapper, marginTop: !isKeyboardOpen ? null : "20%" }}>
             <Text
               style={{
                 ...Heading,
@@ -230,7 +271,10 @@ const Signin = ({ navigation }) => {
                 boxType="circle"
                 onFillColor={theme.colors.text}
                 value={toggleCheckBox}
-                onValueChange={newValue => setToggleCheckBox(newValue)}
+                onValueChange={newValue => {
+                  setToggleCheckBox(newValue);
+                  handleRememberMe(); // Save the preference when the checkbox changes
+                }}
               />
               <Text
                 style={{

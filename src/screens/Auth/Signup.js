@@ -113,7 +113,7 @@ const Signup = ({ navigation }) => {
             { backgroundColor: theme.colors.background },
           ]}>
           {logoVisible && <Logo />}
-          <View style={styles.formWrapper}>
+          <View style={{ ...styles.formWrapper, marginTop: logoVisible ? null : "20%" }}>
             <Text
               style={{
                 ...Heading,

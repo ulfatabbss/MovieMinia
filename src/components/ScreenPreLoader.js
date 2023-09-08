@@ -29,6 +29,9 @@ const ScreenPreLoader = () => {
             {renderShimmerSection(30)}
 
             {renderShimmerCards(3, 150, 'card')}
+            {renderShimmerSection(30)}
+
+            {renderShimmerCards(3, 150, 'card')}
         </View>
     );
 };

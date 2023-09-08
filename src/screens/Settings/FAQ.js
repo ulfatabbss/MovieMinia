@@ -1,31 +1,37 @@
 import { Image, SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput } from 'react-native'
 import React, { useState } from 'react'
-import Color from '../Utilities/Color'
-import heading from '../Utilities/font'
+import heading from '../../utillis/fonts'
 import { useSelector } from 'react-redux'
+import { useTheme } from 'react-native-paper'
+import lightTheme from '../../utillis/theme/lightTheme'
+import darkTheme from '../../utillis/theme/darkTheme'
+import { backErrow } from '../../assets'
+const Up = require('../../assets/appIcons/up.png')
+const Down = require('../../assets/appIcons/down.png')
 
 const Faq = ({ navigation }) => {
-    const { dark } = useSelector(state => state.root.user);
+    const { myTheme } = useSelector((state) => state.root.user);
+    const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     const [down, setDown] = useState(false)
     const [down1, setDown1] = useState(false)
     const [down2, setDown2] = useState(false)
     const [down3, setDown3] = useState(false)
     return (
         <SafeAreaView
-            style={[styles.V1, { backgroundColor: dark ? Color.bg : '#313131' }]}>
+            style={[styles.V1, { backgroundColor: theme.colors.topbar }]}>
             <View
                 style={styles.V2}>
                 <View style={{ flexDirection: 'row' }}>
 
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image
-                            style={[styles.img1, { tintColor: dark ? 'black' : 'white' }]}
+                            style={{ ...styles.img1, tintColor: theme.colors.icon }}
                             resizeMode='contain'
-                            source={require('../Assets/back.png')}></Image>
+                            source={backErrow} />
 
                     </TouchableOpacity>
                     <Text
-                        style={[heading.h4, { marginLeft: '5%', color: dark ? 'black' : 'white' }]}>FAQ'S
+                        style={[heading.h4, { marginLeft: '5%', color: theme.colors.text }]}>FAQ'S
 
                     </Text>
 
@@ -34,7 +40,7 @@ const Faq = ({ navigation }) => {
 
             </View>
             <View
-                style={[styles.V5, { backgroundColor: dark ? Color.prime : 'black' }]}>
+                style={[styles.V5, { backgroundColor: theme.colors.background }]}>
                 <View
                     style={{
                         height: down ? 164 : 45,
@@ -43,21 +49,21 @@ const Faq = ({ navigation }) => {
                         backgroundColor: 'white',
                         marginTop: '10%',
                         borderRadius: 20
-                        , backgroundColor: dark ? 'white' : '#313131',
+                        , backgroundColor: theme.colors.tabs,
 
 
 
                     }}>
                     <View
-                        style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-between', height: 45, backgroundColor: dark ? 'white' : '#313131', borderRadius: 20 }}>
+                        style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-between', height: 45, backgroundColor: theme.colors.tabs, borderRadius: 20 }}>
                         <Text
                             numberOfLines={1}
-                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: dark ? 'black' : 'white' }]}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</Text>
+                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: theme.colors.text }]}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</Text>
                         <TouchableOpacity onPress={down ? () => setDown(false) : () => setDown(true)}>
                             <Image
-                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: dark ? 'black' : 'white' }}
+                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: theme.colors.icon }}
                                 resizeMode='contain'
-                                source={down ? require('../Assets/up.png') : require('../Assets/down.png')}>
+                                source={down ? Up : Down}>
 
                             </Image>
 
@@ -73,7 +79,7 @@ const Faq = ({ navigation }) => {
 
                         </View>
                         <Text
-                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: dark ? 'black' : 'white' }]}>
+                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: theme.colors.text }]}>
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.
                         </Text>
 
@@ -93,7 +99,7 @@ const Faq = ({ navigation }) => {
                         backgroundColor: 'white',
                         marginTop: '5%',
                         borderRadius: 20
-                        , backgroundColor: dark ? 'white' : '#313131'
+                        , backgroundColor: theme.colors.tabs
 
 
 
@@ -102,13 +108,13 @@ const Faq = ({ navigation }) => {
                         style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-between', height: 45 }}>
                         <Text
                             numberOfLines={1}
-                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: dark ? 'black' : 'white' }]}
+                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: theme.colors.text }]}
                         >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</Text>
                         <TouchableOpacity onPress={down1 ? () => setDown1(false) : () => setDown1(true)}>
                             <Image
-                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: dark ? 'black' : 'white' }}
+                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: theme.colors.icon }}
                                 resizeMode='contain'
-                                source={down1 ? require('../Assets/up.png') : require('../Assets/down.png')}>
+                                source={down1 ? Up : Down}>
 
                             </Image>
 
@@ -124,7 +130,7 @@ const Faq = ({ navigation }) => {
 
                         </View>
                         <Text
-                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: dark ? 'black' : 'white' }]}>
+                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: theme.colors.text }]}>
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.
                         </Text>
 
@@ -144,7 +150,7 @@ const Faq = ({ navigation }) => {
                         backgroundColor: 'white',
                         marginTop: '5%',
                         borderRadius: 20
-                        , backgroundColor: dark ? 'white' : '#313131',
+                        , backgroundColor: theme.colors.tabs,
 
 
 
@@ -153,13 +159,13 @@ const Faq = ({ navigation }) => {
                         style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-between', height: 45 }}>
                         <Text
                             numberOfLines={1}
-                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: dark ? 'black' : 'white' }]}
+                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: theme.colors.text }]}
                         >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</Text>
                         <TouchableOpacity onPress={down2 ? () => setDown2(false) : () => setDown2(true)}>
                             <Image
-                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: dark ? 'black' : 'white' }}
+                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: theme.colors.icon }}
                                 resizeMode='contain'
-                                source={down2 ? require('../Assets/up.png') : require('../Assets/down.png')}>
+                                source={down2 ? Up : Down}>
 
                             </Image>
 
@@ -175,17 +181,12 @@ const Faq = ({ navigation }) => {
 
                         </View>
                         <Text
-                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: dark ? 'black' : 'white' }]}>
+                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: theme.colors.text }]}>
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.
                         </Text>
-
                     </View>
 
                         : null}
-
-
-
-
                 </View>
                 <View
                     style={{
@@ -195,22 +196,19 @@ const Faq = ({ navigation }) => {
                         backgroundColor: 'white',
                         marginTop: '5%',
                         borderRadius: 20,
-                        backgroundColor: dark ? 'white' : '#313131',
-
-
-
+                        backgroundColor: theme.colors.tabs
                     }}>
                     <View
                         style={{ flexDirection: 'row', width: '100%', alignItems: 'center', justifyContent: 'space-between', height: 45 }}>
                         <Text
                             numberOfLines={1}
-                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: dark ? 'black' : 'white' }]}
+                            style={[heading.h6, { marginLeft: '5%', width: '70%', borderBottomWidth: 1, color: theme.colors.text }]}
                         >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</Text>
                         <TouchableOpacity onPress={down3 ? () => setDown3(false) : () => setDown3(true)}>
                             <Image
-                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: dark ? 'black' : 'white' }}
+                                style={{ height: 18, width: 18, marginRight: '5%', tintColor: theme.colors.icon }}
                                 resizeMode='contain'
-                                source={down3 ? require('../Assets/up.png') : require('../Assets/down.png')}>
+                                source={down3 ? Up : Down}>
 
                             </Image>
 
@@ -226,7 +224,7 @@ const Faq = ({ navigation }) => {
 
                         </View>
                         <Text
-                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: dark ? 'black' : 'white' }]}>
+                            style={[heading.h7, { alignSelf: 'center', width: '90%', marginTop: '5%', color: theme.colors.text }]}>
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.
                         </Text>
 
@@ -252,8 +250,7 @@ export default Faq
 
 const styles = StyleSheet.create({
     V1: {
-        flex: 1,
-        backgroundColor: Color.bg
+        flex: 1
 
     },
     V2: {
@@ -268,7 +265,7 @@ const styles = StyleSheet.create({
         height: 25,
         width: 20,
         alignSelf: 'center'
-    }, V5: { height: '100%', backgroundColor: Color.prime },
+    }, V5: { height: '100%' },
     V6: {
         height: 45,
         width: '90%',

@@ -15,7 +15,8 @@ const lightTheme = {
         tabs: '#fff',
         rightBar: '#fff',
         topbar: '#f5e9cd',
-        bottomicon: '#C2C9D1'
+        bottomicon: '#C2C9D1',
+        boarder: '#E1E4E8'
     },
 };
 

@@ -1,11 +1,13 @@
 import { Image, SafeAreaView, Text, TouchableOpacity, View, StyleSheet } from 'react-native'
 import React from 'react'
-import Color from '../Utilities/Color'
+import Color from '../../utillis/colors'
 import heading from '../Utilities/font'
 import { useSelector } from 'react-redux'
 
 const Policy = ({ navigation }) => {
     const { dark } = useSelector(state => state.root.user);
+    const { myTheme, } = useSelector((state) => state.root.user);
+    const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     return (
         <SafeAreaView
             style={[styles.V1, { backgroundColor: dark ? Color.bg : '#313131' }]}>

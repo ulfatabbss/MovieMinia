@@ -10,6 +10,7 @@ const endPoints = {
   getPlaylist: 'getplaylists',
   getFeedBack: 'get-feedback',
   addFeedBack: 'submit-feedback',
+  editProfile: 'editProfile/',
 };
 
 export {endPoints};

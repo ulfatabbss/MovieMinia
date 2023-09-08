@@ -4,15 +4,14 @@ import { RF } from '../../utillis/theme/Responsive';
 import { FlexDirection, Heading } from '../../utillis/styles';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
-import darkTheme from '../../utillis/theme/darkTheme';
-import lightTheme from '../../utillis/theme/lightTheme';
+
 import { applogo, guest, user } from '../../assets';
 import Button from '../../components/Button';
 import { store } from '../../redux/store';
-import { setGuest, setIsLogin, setLoading, setUser } from '../../redux/reducers/userReducers';
-import { Login } from '../../services/AppServices';
+import { setGuest, setIsLogin } from '../../redux/reducers/userReducers';
 import ScreenPreLoader from '../../components/ScreenPreLoader';
-
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
 const AccountType = ({ navigation }) => {
     const { myTheme } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
