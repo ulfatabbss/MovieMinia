@@ -1,4 +1,4 @@
-package com.movieminia;
+package com.webevis.movieminia;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

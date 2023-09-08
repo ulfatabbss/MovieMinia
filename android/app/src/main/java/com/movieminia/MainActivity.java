@@ -1,4 +1,4 @@
-package com.movieminia;
+package com.webevis.movieminia;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
