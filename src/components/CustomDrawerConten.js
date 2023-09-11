@@ -6,7 +6,7 @@ import { useTheme } from 'react-native-paper';
 import { store } from '../redux/store';
 const CustomDrawerContent = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { myTheme, user, isGuest } = useSelector((state) => state.root.user);
+  const { myTheme, user, isGuest, google } = useSelector((state) => state.root.user);
   const [textColor, setTextColor] = useState(myTheme == 'darkTheme' ? 'white' : 'black')
   const theme = useTheme(myTheme == 'darkTheme' ? 'lightTheme' : 'darkTheme');
   const toggleTheme = async () => {
@@ -21,7 +21,7 @@ const CustomDrawerContent = ({ navigation }) => {
           <View style={styles.profileImageWrapper}>
             <Image
               style={styles.profileImage}
-              source={{ uri: user?.profilePicture }}
+              source={{ uri: isGuest ? "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg?size=626&ext=jpg&uid=R28842868&ga=GA1.2.332396238.1691144532&semt=ais" : google ? user.photo : user?.profilePicture }}
             />
             <Text style={{ ...styles.profileName, color: textColor }}>{isGuest ? 'Guest User' : user.name}</Text>
           </View>

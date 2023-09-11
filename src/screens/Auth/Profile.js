@@ -8,7 +8,7 @@ import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
 
 const Profile = ({ navigation }) => {
-    const { myTheme, user } = useSelector(state => state.root.user);
+    const { myTheme, user, google } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'darkTheme' ? darkTheme : lightTheme);
     return (
         <SafeAreaView
@@ -47,7 +47,7 @@ const Profile = ({ navigation }) => {
                 <Image
                     style={styles.img3}
                     resizeMode='contain'
-                    source={{ uri: user.profilePicture }}>
+                    source={{ uri: google ? user.photo : user?.profilePicture }}>
 
                 </Image>
 

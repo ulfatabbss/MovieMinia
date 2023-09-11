@@ -19,9 +19,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const EditProfile = ({ navigation }) => {
-    const { myTheme, user, isGuest } = useSelector(state => state.root.user);
+    const { myTheme, user, isGuest, google } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-    const [selectimage, setSelectimage] = useState(isGuest ? null : user.profilePicture)
+    const [selectimage, setSelectimage] = useState(google ? user.photo : user.profilePicture)
 
     const ImagePicker = () => {
         let options = {

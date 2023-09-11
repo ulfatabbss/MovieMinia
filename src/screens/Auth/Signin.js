@@ -20,7 +20,7 @@ import { LoginValidationSchema } from '../../utillis/validationSchema';
 import { Formik } from 'formik';
 import { Primary } from '../../utillis/colors';
 import { store } from '../../redux/store';
-import { setIsLogin, setUser } from '../../redux/reducers/userReducers';
+import { setIsGoogle, setIsLogin, setUser } from '../../redux/reducers/userReducers';
 import { Login } from '../../services/AppServices';
 import Loader from '../../components/Loader';
 import { useToast } from 'react-native-toast-notifications';
@@ -51,6 +51,9 @@ const Signin = ({ navigation }) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
+      store.dispatch(setUser(userInfo.user))
+      store.dispatch(setIsGoogle(true))
+      store.dispatch(setIsLogin(true))
       console.log(userInfo, "userinfooooooooooo")
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {

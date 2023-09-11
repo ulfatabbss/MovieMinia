@@ -21,6 +21,7 @@ import Profile from '../screens/Auth/Profile';
 import EditProfile from '../screens/Auth/EditProfile';
 import Terms from '../screens/Settings/Terms';
 import Faq from '../screens/Settings/FAQ';
+import PasswordSettings from '../screens/Auth/ResetPassword';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const MyDrawer = () => {
@@ -62,6 +63,8 @@ const MainStack = () => {
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="Terms" component={Terms} />
         <Stack.Screen name="Faq" component={Faq} />
+        <Stack.Screen name="PasswordSettings" component={PasswordSettings} />
+
 
       </Stack.Navigator>
     </>

@@ -10,14 +10,16 @@ import { Gray200, Gray300, Secondary, Primary } from '../../utillis/theme';
 import { arrow, onBoard1, onBoard2, onBoard3 } from '../../assets';
 import { RF } from '../../utillis/theme/Responsive';
 import HeadingText from '../../components/CustomText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { store } from '../../redux/store';
+import { setIsFirstTime } from '../../redux/reducers/userReducers';
 
 const OnBoarding1 = ({ navigation }) => {
     const [value, setValue] = useState(1); // Initialize as a number
-
     const Toggle = () => {
         let nextValue = value + 1;
         if (nextValue > 3) {
-            navigation.navigate('AccountType');
+            store.dispatch(setIsFirstTime(false))
         }
         setValue(nextValue);
     };
@@ -39,7 +41,7 @@ const OnBoarding1 = ({ navigation }) => {
                         backgroundColor: value === 3 ? null : 'rgba(0, 0, 0, 0.5)',
                     },
                 ]}>
-                <TouchableOpacity onPress={() => navigation.navigate('AccountType')} style={styles.topBar}>
+                <TouchableOpacity onPress={() => store.dispatch(setIsFirstTime(false))} style={styles.topBar}>
                     <HeadingText
                         title={value === 3 ? null : 'Skip'}
                         semiBold

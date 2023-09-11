@@ -6,24 +6,23 @@ import Signup from '../screens/Auth/Signup';
 import Signin from '../screens/Auth/Signin';
 import OnBoarding1 from '../screens/Auth/OnBoarding1';
 import AccountType from '../screens/Auth/AccountType';
+import { store } from '../redux/store';
+import { setIsFirstTime } from '../redux/reducers/userReducers';
+import { useSelector } from 'react-redux';
 
 const Stack = createNativeStackNavigator();
 
 const AuthStack = () => {
-  const [isFirstTime, setIsFirstTime] = useState(null);
+  const { isFirstTime } = useSelector(state => state.root.user);
+
   useEffect(() => {
     // Check if the app is opened for the first time
-    AsyncStorage.getItem('firstTime').then((value) => {
-      if (value === null) {
-        // If 'firstTime' is not in AsyncStorage, it's the first time
-        setIsFirstTime(true);
-
-        // Store that it's not the first time
-        AsyncStorage.setItem('firstTime', 'false');
-      } else {
-        setIsFirstTime(false);
-      }
-    });
+    if (isFirstTime === null) {
+      // If 'firstTime' is not in AsyncStorage, it's the first time
+      store.dispatch(setIsFirstTime(true));
+    } else {
+      store.dispatch(setIsFirstTime(false));
+    }
   }, []);
   return (
     <>

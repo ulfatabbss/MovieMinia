@@ -2,6 +2,8 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState: any = {
   user: null,
+  isFirstTime: null,
+  google: false,
   isLogin: null,
   popularMoviesData: [],
   hindiMoviesData: [],
@@ -38,7 +40,9 @@ export const userReducer = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
-
+    setIsFirstTime: (state, action) => {
+      state.isFirstTime = action.payload;
+    },
     setIsLogin: (state, action) => {
       state.isLogin = action.payload;
     },
@@ -120,6 +124,9 @@ export const userReducer = createSlice({
     setNewAnimSeason: (state, action) => {
       state.newAnimSeason = action.payload;
     },
+    setIsGoogle: (state, action) => {
+      state.google = action.payload;
+    },
   },
 });
 
@@ -152,6 +159,8 @@ export const {
   setNewAnimSeason,
   setPopularAnimSeason,
   setTrendAnimSeason,
+  setIsFirstTime,
+  setIsGoogle,
 } = userReducer.actions;
 
 export default userReducer.reducer;

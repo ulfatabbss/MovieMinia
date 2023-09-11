@@ -232,7 +232,7 @@ const Playlist = ({ navigation }) => {
           <Text style={{ ...Heading, color: theme.colors.text }}>
             {myplaylist[0]?.movies?.length == 0 && isGuest == false ? null : `${myplaylist[0]?.movies?.length} Playlists Found`}
           </Text>
-          {myplaylist[0]?.movies?.length == 0 && isGuest == false ?
+          {myplaylist[0]?.movies?.length == 0 || isGuest ?
             <Image style={styles.emptyImage} resizeMode="contain" source={EmptyImage} /> : null
           }
           {
