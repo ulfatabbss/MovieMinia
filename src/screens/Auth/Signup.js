@@ -20,8 +20,7 @@ import { store } from '../../redux/store';
 import { setIsLogin } from '../../redux/reducers/userReducers';
 import { Register } from '../../services/AppServices';
 import Loader from '../../components/Loader';
-import { useToast } from 'react-native-toast-notifications';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
@@ -33,7 +32,7 @@ import { Secondary } from '../../utillis/theme';
 const Signup = ({ navigation }) => {
   const { myTheme } = useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-  const Toast = useToast();
+  const dispatch = useDispatch();
   const [eyeIcon, setEyeIcon] = useState(show);
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
   const TogglePassword = () => {
@@ -79,7 +78,7 @@ const Signup = ({ navigation }) => {
     Register(obj)
       .then(async ({ data }) => {
         if (data.status == true) {
-          store.dispatch(setIsLogin(true));
+          dispatch(setIsLogin(true));
         } else {
         }
       })

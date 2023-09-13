@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from 'axios';
 import {store} from '../redux/store';
-const BASE_URL = 'https://giant-eel-panama-hat.cyclic.app/moveminia/';
+const BASE_URL = 'https://backend.movieminia.com/moveminia/';
 axios.defaults.headers.get['Content-Type'] = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.delete['Content-Type'] = 'application/json';

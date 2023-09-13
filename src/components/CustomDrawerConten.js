@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { setIsLogin, setTheme } from '../redux/reducers/userReducers';
+import { HP, RF, WP } from '../utillis/theme/Responsive';
 import { useTheme } from 'react-native-paper';
 import { store } from '../redux/store';
 const CustomDrawerContent = ({ navigation }) => {
@@ -67,25 +68,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center'
   },
   profileImage: {
-    width: 52,
-    height: 52,
-    borderRadius: 52,
+    width: WP(16),
+    height: HP(8),
+    borderRadius: 100,
   },
   profileName: {
     color: '#313131',
     fontFamily: 'Raleway-Bold',
     marginLeft: 10,
-    fontSize: 16, textTransform: 'uppercase'
+    width: WP(40),
+    fontSize: RF(16), textTransform: 'uppercase'
 
   },
   logoutImage: {
-    height: 22,
-    width: 22, resizeMode: 'contain',
+    height: HP(3),
+    width: WP(10), resizeMode: 'contain',
   },
   logoutText: {
     color: '#313131',
     fontFamily: 'Raleway-Bold',
     marginLeft: 10,
+    fontSize: RF(16)
   }, bottomContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -101,7 +104,7 @@ const styles = StyleSheet.create({
   }, otherText: {
     color: '#313131',
     fontFamily: 'Raleway-Regular',
-    fontSize: 13
+    fontSize: RF(13)
   }
 
 });

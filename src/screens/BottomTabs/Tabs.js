@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
+import { HP, RF, WP } from '../../utillis/theme/Responsive';
 
 
 const Tabs = () => {
@@ -29,13 +30,13 @@ const Tabs = () => {
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: theme.colors.tabs,
-        width: 70,
-        height: 60
+        width: HP(10),
+        height: HP(10)
       }}
     >
       <Image
         style={{
-          height: focused ? 30 : 25,
+          height: focused ? HP(4) : HP(3),
           tintColor: focused ? theme.colors.primary : theme.colors.bottomicon,
         }}
         source={source}
@@ -46,10 +47,10 @@ const Tabs = () => {
         style={{
           color: focused ? theme.colors.primary : theme.colors.bottomicon,
           textAlign: 'center',
-          fontFamily: 'Poppins',
-          fontSize: 12,
-          fontStyle: 'normal',
-          fontWeight: '400',
+          fontFamily: 'Raleway-Medium',
+          fontSize: RF(10),
+          // fontStyle: 'normal',
+          // fontWeight: '400',
         }}
       >
         {text}
@@ -103,8 +104,8 @@ const Tabs = () => {
           tabBarShowLabel: false,
           // tabBarActiveTintColor: Primary,
           tabBarStyle: {
-            height: 60,
-            width: '100%',
+            height: HP(8),
+            width: WP(100),
             alignSelf: 'center',
             justifyContent: 'center',
             position: 'absolute',

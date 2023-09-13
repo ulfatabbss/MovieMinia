@@ -24,6 +24,7 @@ import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { searchIcon } from '../../assets';
 import PlaylistSkelton from '../../components/ShimmerPlaceHolder/PlaylistSkelton';
+import { HP, RF, WP } from '../../utillis/theme/Responsive';
 
 const Playlist = ({ navigation }) => {
   const { myTheme, user, isGuest } = useSelector((state) => state.root.user);
@@ -80,7 +81,7 @@ const Playlist = ({ navigation }) => {
     };
 
     await fetch(
-      `https://giant-eel-panama-hat.cyclic.app/moveminia/playlists/${myplaylist[0]._id}/movies/${selectedItem._id}`,
+      `https://backend.movieminia.com/moveminia/playlists/${myplaylist[0]._id}/movies/${selectedItem._id}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -229,7 +230,7 @@ const Playlist = ({ navigation }) => {
           />
         </View>
         <View style={{ ...styles.playlistContainer, paddingBottom: "36%" }}>
-          <Text style={{ ...Heading, color: theme.colors.text }}>
+          <Text style={{ ...Heading, color: theme.colors.text, marginHorizontal: WP(2) }}>
             {myplaylist[0]?.movies?.length == 0 && isGuest == false ? null : `${myplaylist[0]?.movies?.length} Playlists Found`}
           </Text>
           {myplaylist[0]?.movies?.length == 0 || isGuest ?
@@ -256,7 +257,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerText: {
-    fontSize: 18,
+    fontSize: RF(18),
     fontWeight: '600',
     color: 'black',
     marginLeft: '5%',
@@ -280,13 +281,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   playlistItemContainer: {
-    height: 110,
-    width: '98%',
+    height: HP(15),
+    width: WP(95),
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 20,
     alignSelf: 'center',
-    marginVertical: 5,
+    marginHorizontal: WP(1),
+    marginVertical: WP(2),
   },
   playlistItemImage: {
     height: '100%',

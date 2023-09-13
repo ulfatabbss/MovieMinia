@@ -41,6 +41,12 @@ const EditProfileAPi = (id: any, obj: any) => {
 
   return HTTP_APP.post(`${endPoints.editProfile}${id}`, obj);
 };
+const DeleteAccountApi = (id: any) => {
+  return HTTP_APP.post(`${endPoints.deleteAccount}${id}`);
+};
+const SendOTP = (obj: any) => {
+  return HTTP_APP.post(endPoints.sendOTP, obj);
+};
 export {
   GetMovies,
   GetUpcomming,
@@ -54,4 +60,6 @@ export {
   AddFeedback,
   GetFeedback,
   EditProfileAPi,
+  DeleteAccountApi,
+  SendOTP,
 };

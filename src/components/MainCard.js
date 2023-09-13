@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { HP, RF, WP } from '../utillis/theme/Responsive';
 
 const MainCard = ({ item, data, navigation, type }) => {
     return (
@@ -35,8 +36,8 @@ export default MainCard;
 
 const styles = StyleSheet.create({
     container: {
-        height: 165,
-        width: 135,
+        height: HP(20),
+        width: WP(35),
         borderRadius: 10,
         margin: 5,
         overflow: 'hidden',
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     },
     title: {
         color: '#FFFFFF',
-        fontSize: 14,
+        fontSize: RF(14),
         fontFamily: 'Raleway-Bold',
         textAlign: 'center',
         position: 'absolute',

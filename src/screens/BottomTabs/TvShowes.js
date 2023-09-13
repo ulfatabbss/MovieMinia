@@ -4,12 +4,12 @@ import {
   StyleSheet,
   View, SafeAreaView, TouchableOpacity
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { secondary } from '../../utillis/colors';
 import Header from '../../components/Header';
 import { GetDrama } from '../../services/AppServices';
 import { setDramaData, setHindiSeasons, setHollywoodseasons, setIndianDrama, setLoading, setNewAnimSeason, setPopularAnimSeason, setTrendAnimSeason, setTurkishDrama } from '../../redux/reducers/userReducers';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { store } from '../../redux/store';
 // import MySlider from '../components/ImageCarousel';
 import CardsFlatlist from '../../components/CardsFlatlist';
@@ -25,31 +25,44 @@ const TvShowes = ({ navigation }) => {
   const { dramaData, dramaSlider, indianDrama, turkishDrama, hollywoodseasons, hindiSeasons, myTheme, loading } = useSelector(
     state => state.root.user,
   );
+  const dispatch = useDispatch();
+  const apiCalledOnMount = useRef(false);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
+  const [refreshInterval, setRefreshInterval] = useState(12 * 60 * 60 * 1000);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        store.dispatch(setLoading(true));
+        dispatch(setLoading(true));
         const response = await GetDrama();
         const { data } = response;
-        store.dispatch(setDramaData(data.filter(object => object.category === 'Urdu')));
-        store.dispatch(setIndianDrama(data.filter(object => object.category === 'Indian')));
-        store.dispatch(setTurkishDrama(data.filter(object => object.category === 'Turkish')));
-        store.dispatch(setHollywoodseasons(data.filter(object => object.category === 'Season')));
-        store.dispatch(setHindiSeasons(data.filter(object => object.category === 'HindiSeason')));
-        store.dispatch(setNewAnimSeason(data.filter((object) => object.category == 'newAnimSeason')));
-        store.dispatch(setTrendAnimSeason(data.filter((object) => object.category == 'trendAnimSeason')));
-        store.dispatch(setPopularAnimSeason(data.filter((object) => object.category == 'popularAnimSeason')));
-        store.dispatch(setLoading(false));
+        dispatch(setDramaData(data.filter(object => object.category === 'Urdu')));
+        dispatch(setIndianDrama(data.filter(object => object.category === 'Indian')));
+        dispatch(setTurkishDrama(data.filter(object => object.category === 'Turkish')));
+        dispatch(setHollywoodseasons(data.filter(object => object.category === 'Season')));
+        dispatch(setHindiSeasons(data.filter(object => object.category === 'HindiSeason')));
+        dispatch(setNewAnimSeason(data.filter((object) => object.category == 'newAnimSeason')));
+        dispatch(setTrendAnimSeason(data.filter((object) => object.category == 'trendAnimSeason')));
+        dispatch(setPopularAnimSeason(data.filter((object) => object.category == 'popularAnimSeason')));
+        dispatch(setLoading(false));
       } catch (error) {
         console.log(error, 'errors');
-        store.dispatch(setLoading(false));
+        dispatch(setLoading(false));
       }
     };
+    if (!apiCalledOnMount.current) {
+      fetchData();
+      apiCalledOnMount.current = true;
+    }
 
-    fetchData();
-  }, []);
+    // Set up an interval to call the API every 12 hours
+    const intervalId = setInterval(fetchData, refreshInterval);
+
+    // Cleanup the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [dispatch, refreshInterval]);
 
   if (loading) {
     return (

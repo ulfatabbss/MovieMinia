@@ -110,11 +110,11 @@ const MovieDetailPage = ({ navigation, route }) => {
         <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center', marginTop: 10 }}>
           <Text style={{ ...Heading, color: theme.colors.text, fontSize: 20, width: "70%" }}>{item.title}</Text>
           {/* <HeadingText title={item.title} size={20} semi_bold color={theme.colors.text} /> */}
-          <TouchableOpacity style={{ ...styles.playframe, backgroundColor: playlistAdded ? 'red' : Primary_Light, }} disabled={playlistAdded}
+          <TouchableOpacity style={{ ...styles.playframe, backgroundColor: Primary_Light }} disabled={playlistAdded}
             onPress={() => {
               HandlePlaylist()
             }}>
-            <Image style={{ height: RF(21), width: RF(21), tintColor: playlistAdded ? 'white' : null }} source={playFrame} />
+            <Image style={{ height: RF(21), width: RF(21), tintColor: null }} source={playFrame} />
           </TouchableOpacity>
         </View>
         <View style={[FlexDirection, Extra.marginTop]}>

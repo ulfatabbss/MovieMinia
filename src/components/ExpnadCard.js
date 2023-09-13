@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import { HP, RF, WP } from '../utillis/theme/Responsive';
 
 const ExpandCard = ({ item, data, navigation, type }) => {
     return (
@@ -17,7 +18,7 @@ const ExpandCard = ({ item, data, navigation, type }) => {
             <ImageBackground
                 source={{ uri: item.poster[0]?.image }}
                 style={styles.imageBackground}
-                resizeMode={'stretch'}
+                resizeMode={'cover'}
             >
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
@@ -35,8 +36,8 @@ export default ExpandCard;
 
 const styles = StyleSheet.create({
     container: {
-        width: 161,
-        height: 200,
+        width: WP(45),
+        height: HP(25),
         borderRadius: 10,
         margin: 5,
         overflow: 'hidden',
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     },
     title: {
         color: '#FFFFFF',
-        fontSize: 14,
+        fontSize: RF(12),
         fontFamily: 'Raleway-Bold',
         textAlign: 'center',
         position: 'absolute',

@@ -1,24 +1,41 @@
 import React, { useState } from 'react';
-import { Image, SafeAreaView, StatusBar, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, SafeAreaView, StatusBar, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import heading from '../../utillis/fonts';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
-import { backErrow, dellUser, faq, passSettings, policy, terms } from '../../assets';
-import { setTheme } from '../../redux/reducers/userReducers';
+import { backErrow, caution, dellUser, faq, passSettings, policy, terms } from '../../assets';
+import { setIsLogin, setLoading, setTheme } from '../../redux/reducers/userReducers';
 import { Heading } from '../../utillis/styles';
+import { DeleteAccountApi } from '../../services/AppServices';
+import { Primary, Secondary, White } from '../../utillis/theme';
+import { RF } from '../../utillis/theme/Responsive';
+import HeadingText from '../../components/CustomText';
 
 const Settings = ({ navigation }) => {
-    const { myTheme } = useSelector((state) => state.root.user);
+    const { myTheme, user } = useSelector((state) => state.root.user);
     const theme = useTheme(myTheme === 'lightTheme' ? lightTheme : darkTheme);
     const dispatch = useDispatch();
+    const [modalVisible, setModalVisible] = useState(false)
 
-    const toggleTheme = () => {
-        const newTheme = myTheme === 'darkTheme' ? 'lightTheme' : 'darkTheme';
-        dispatch(setTheme(newTheme));
-    };
 
+    const handleDeleteAccount = async () => {
+
+        const id = user._id
+        // const id = '64c3e3b0eb8bd300eb4cad71'
+        const result = await DeleteAccountApi(id)
+        if (result.data.status == true) {
+            dispatch(setIsLogin(false))
+            setModalVisible(false)
+        }
+        else {
+            setModalVisible(false)
+            Alert.alert('something went wronggggg!')
+        }
+        // dispatch(setLoading(false))
+        // console.log(result.data, "uyghihiouioj");
+    }
     const renderSettingItem = (icon, label, onPress) => (
         <TouchableOpacity style={styles.settingItem} onPress={onPress}>
             <Image style={{ ...styles.settingIcon, tintColor: theme.colors.icon }} resizeMode="contain" source={icon} />
@@ -27,8 +44,49 @@ const Settings = ({ navigation }) => {
     );
     return (
         <SafeAreaView style={{ ...styles.container, backgroundColor: theme.colors.topbar }}>
+
+            {modalVisible ? <View style={styles.modal_FadeView} /> : null}
+            <Modal animationType="slide" transparent={true} visible={modalVisible}><View style={styles.modalContainer}>
+                <View style={styles.modalCard}>
+                    <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
+                    <HeadingText title={'Alert'} bold size={20} top={5} />
+                    <HeadingText
+                        title={
+                            'Are you sure to delete this Account?'
+                        }
+                        regular
+                        size={16}
+                        top={10}
+                        alignCenter
+                    />
+                    <View style={styles.button_View}>
+
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleDeleteAccount}>
+                            <HeadingText
+                                title={'Ok'}
+                                semi_bold
+                                size={16}
+                                color={White}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button, styles.signUp_Button]}
+                            onPress={() => setModalVisible(!modalVisible)}>
+                            <HeadingText
+                                title={'Cancel'}
+                                semi_bold
+                                size={16}
+                                color={Secondary}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View></Modal>
+
             <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
             <View style={styles.header}>
+
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
                         style={[styles.backButton, { tintColor: theme.colors.icon }]}
@@ -38,31 +96,19 @@ const Settings = ({ navigation }) => {
                 </TouchableOpacity>
                 <Text style={{ ...Heading, color: theme.colors.text }}>Settings</Text>
             </View>
+
             <View style={{ ...styles.content, backgroundColor: theme.colors.background }}>
                 <View style={styles.settingsList}>
                     {renderSettingItem(passSettings, 'Password Settings', () => navigation.navigate('PasswordSettings'))}
-                    {/* <View style={styles.themeSetting}>
-                        <View style={styles.themeSettingContent}>
-                            <Image style={[styles.settingIcon, { tintColor: theme.colors.icon }]} resizeMode="contain" source={require('../../assets/HeaderIcon/dark.png')} />
-                            <Text style={{ ...Heading, color: theme.colors.text }}>Theme</Text>
-                        </View>
-                        <Switch
-                            style={styles.themeSwitch}
-                            trackColor={{ false: '#767577', true: '#C89B28' }}
-                            thumbColor={'#f4f3f4'}
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={toggleTheme}
-                            value={myTheme == 'darkTheme' ? false : true}
-                        />
-                    </View> */}
                     {renderSettingItem(terms, 'Terms & Conditions', () => navigation.navigate('Terms'))}
                     {renderSettingItem(policy, 'Privacy Policy', () => navigation.navigate('Policy'))}
                     {renderSettingItem(faq, 'FAQs', () => navigation.navigate('Faq'))}
                     {renderSettingItem(require('../../assets/logout.png'), 'Logout', () => { })}
                 </View>
             </View>
+
             <View style={{ ...styles.deleteAccount, borderTopColor: '#E1E4E8' }}>
-                <TouchableOpacity style={styles.deleteAccountButton} onPress={() => navigation.navigate('DeleteAccount')}>
+                <TouchableOpacity style={styles.deleteAccountButton} onPress={() => setModalVisible(true)}>
                     <Image
                         style={styles.deleteAccountIcon}
                         resizeMode="contain"
@@ -70,6 +116,8 @@ const Settings = ({ navigation }) => {
                     />
                     <Text style={{ ...Heading, color: 'red' }}>Delete Account</Text>
                 </TouchableOpacity>
+
+
             </View>
         </SafeAreaView>
     );
@@ -132,6 +180,47 @@ const styles = StyleSheet.create({
     },
     themeSwitch: {
         transform: [{ scaleX: 1 }, { scaleY: 1 }],
+    },
+    modal_FadeView: {
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
+        zIndex: 500,
+        backgroundColor: 'rgba(0,0,0,0.7)',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    modalCard: {
+        height: RF(300),
+        width: '100%',
+        borderRadius: RF(30),
+        backgroundColor: White,
+        padding: 20,
+        alignItems: 'center',
+    },
+    button_View: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+        alignItems: 'center',
+        marginTop: RF(40),
+    },
+    button: {
+        height: RF(40),
+        width: '45%',
+        borderRadius: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Primary,
+    },
+    signUp_Button: {
+
+        backgroundColor: White,
+        borderColor: Secondary,
     },
     deleteAccount: {
         width: '100%',

@@ -1,159 +1,127 @@
-import { Image, SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput } from 'react-native'
-import React, { useState } from 'react'
-import Color from '../../utillis/colors'
-import heading from '../../utillis/fonts'
-import { useSelector } from 'react-redux'
-import lightTheme from '../../utillis/theme/lightTheme'
-import darkTheme from '../../utillis/theme/darkTheme'
-import { useTheme } from 'react-native-paper'
-import { backErrow, hide } from '../../assets'
-
+import {
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    TextInput, Alert
+} from 'react-native';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useTheme } from 'react-native-paper';
+import darkTheme from '../../utillis/theme/darkTheme';
+import lightTheme from '../../utillis/theme/lightTheme';
+import { RF } from '../../utillis/theme/Responsive';
+import HeadingTitle from '../../components/HeadingTitle';
+import NavHeader from '../../components/NavHeader';
+import { Message } from '../../assets';
+import Button from '../../components/Button';
+import { container } from '../../utillis/styles';
+import { Formik } from 'formik';
+import { Primary } from '../../utillis/colors';
+import { otpVerification } from '../../utillis/validationSchema';
+import { SendOTP } from '../../services/AppServices';
 const ChangePassword = ({ navigation }) => {
-    const { myTheme } = useSelector(state => state.root.user);
+    const [isLoading, setIsLoading] = useState(false);
+    const { myTheme = 'lightTheme' } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
+    const initialValues = { email: '' };
+    const handleVerification = async (values) => {
+        // console.log(values);
+        const obj = {
+            email: values.email,
+        };
+        if (obj) {
+            console.log('true');
+            const result = await SendOTP(obj)
+            if (result.data.status === true) {
+                navigation.navigate("OTPverification", { value: values.email });
+            } else {
+                Alert.alert(
+                    result?.data?.message
+                )
+            }
+
+        }
+    };
+
     return (
-        <SafeAreaView
-            style={[styles.V1, { backgroundColor: '#313131' }]}>
-            <View
-                style={styles.V2}>
-                <View style={{ flexDirection: 'row' }}>
-
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Formik
+            initialValues={initialValues}
+            validateOnMount={true}
+            validationSchema={otpVerification}
+            onSubmit={values => {
+                // console.log('values', values);
+                handleVerification(values);
+            }}>
+            {({ values, errors, touched, handleChange, handleSubmit }) => (
+                <View style={[container, { backgroundColor: theme.colors.background }]}>
+                    <NavHeader navigation={navigation} />
+                    <HeadingTitle
+                        title1={'RESET PASSWORD'}
+                        titile2={'Please enter your email to request a password reset!'}
+                    />
+                    <View
+                        style={[styles.inputView, { backgroundColor: theme.colors.tabs }]}>
                         <Image
-                            style={{ ...styles.img1, tintColor: theme.colors.icon }}
-                            resizeMode='contain'
-                            source={backErrow}></Image>
-
-                    </TouchableOpacity>
-                    <Text
-                        style={{ ...heading.h4, marginLeft: '5%', color: theme.colors.text }}>Change Password
-
-                    </Text>
-
+                            style={{
+                                height: RF(20),
+                                width: RF(20),
+                                tintColor: theme.colors.icon,
+                            }}
+                            source={Message}
+                        />
+                        <TextInput
+                            placeholder="Enter your email"
+                            placeholderTextColor="grey"
+                            onChangeText={handleChange('email')}
+                            value={values.email}
+                            autoCapitalize={'none'}
+                            style={[
+                                styles.emailInput,
+                                { backgroundColor: theme.colors.tabs, color: theme.colors.text },
+                            ]}
+                        />
+                    </View>
+                    {errors.email && touched.email && (
+                        <Text style={styles.errors}>{errors.email}</Text>
+                    )}
+                    <View style={styles.centeredView}>
+                        <Button title={'Send OTP'} screen={() => handleSubmit()} />
+                    </View>
                 </View>
+            )}
+        </Formik>
+    );
+};
 
-
-            </View>
-            <View
-                style={[styles.V5, { backgroundColor: theme.colors.background }]}>
-                <Text
-                    style={[heading.h5, { fontWeight: '700', marginLeft: '7%', marginTop: '5%', color: theme.colors.text }]}>CHANGE PASSWORD
-
-                </Text>
-                <Text
-                    style={[heading.h6, { fontWeight: '400', marginLeft: '7%', marginTop: '2%', color: theme.colors.text }]}>Please enter a new password!
-
-                </Text>
-                <View
-                    style={[styles.V6, { backgroundColor: '#313131' }]}>
-                    <TextInput
-                        style={[heading.h6, { marginLeft: '5%' }]} placeholderTextColor={theme.colors.text}
-                        placeholder='Current Password'></TextInput>
-                    <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
-                        <Image
-                            style={styles.img2}
-                            resizeMode='contain'
-                            source={hide}>
-
-                        </Image>
-
-                    </TouchableOpacity>
-
-
-                </View>
-                <View
-                    style={[styles.V6, { marginTop: '5%', backgroundColor: '#313131' }]}>
-                    <TextInput
-                        style={[heading.h6, { marginLeft: '5%' }]} placeholderTextColor={theme.colors.text}
-                        placeholder='New Password'></TextInput>
-                    <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
-                        <Image
-                            style={styles.img2}
-                            resizeMode='contain'
-                            source={hide}>
-
-                        </Image>
-
-                    </TouchableOpacity>
-
-
-                </View>
-                <View
-                    style={[styles.V6, { marginTop: '5%', backgroundColor: '#313131' }]}>
-                    <TextInput
-                        style={[heading.h6, { marginLeft: '5%' }]} placeholderTextColor={theme.colors.text}
-                        placeholder='Confirm New Password'></TextInput>
-                    <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
-                        <Image
-                            style={styles.img2}
-                            resizeMode='contain'
-                            source={hide}>
-
-                        </Image>
-
-                    </TouchableOpacity>
-
-
-                </View>
-
-
-
-            </View>
-            <TouchableOpacity
-                style={styles.V8}>
-                <Text
-                    style={[heading.h5, { fontWeight: '700', color: 'white' }]}>Save Password</Text>
-
-            </TouchableOpacity>
-        </SafeAreaView>
-    )
-}
-
-export default ChangePassword
+export default ChangePassword;
 
 const styles = StyleSheet.create({
-    V1: {
-        flex: 1,
-
-
-    },
-    V2: {
+    inputView: {
+        width: '100%',
         flexDirection: 'row',
-        marginTop: '5%',
-        width: '90%',
-        height: '10%',
-        alignSelf: 'center',
-        justifyContent: 'space-between'
-    },
-    img1: {
-        height: 25,
-        width: 20,
-        alignSelf: 'center'
-    }, V5: { height: '100%' },
-    V6: {
-        height: 45,
-        width: '90%',
-        alignSelf: 'center',
-        backgroundColor: 'white',
-        marginTop: '10%',
-        borderRadius: 20,
         alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        paddingHorizontal: 10,
+        marginTop: RF(20),
+        borderRadius: 50,
+        backgroundColor: '#333333',
+        color: '#fff',
     },
-    img2: {
-        height: 20, width: 20, marginRight: '5%'
+    emailInput: {
+        width: '85%',
+        paddingLeft: RF(10),
+        height: '100%',
+        fontSize: RF(14),
     },
-    V8: {
-        height: 48,
-        width: '90%',
-        alignSelf: 'center',
-        borderRadius: 20,
-        backgroundColor: '#720808',
-        position: 'absolute',
-        bottom: 30,
-        justifyContent: 'center',
-        alignItems: 'center'
-
+    centeredView: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
     },
-})
+    errors: {
+        fontSize: 12,
+        marginStart: 10,
+        color: Primary,
+    },
+});

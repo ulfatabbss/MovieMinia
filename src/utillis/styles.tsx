@@ -41,14 +41,14 @@ const movieTitle: any = {
 };
 
 const Heading: any = {
-  fontSize: 18,
+  fontSize: RF(18),
   fontStyle: 'normal',
   fontFamily: 'Raleway-SemiBold',
 };
 
 const smalltext: any = {
   color: '#313131',
-  fontSize: 16,
+  fontSize: RF(16),
   fontFamily: 'Raleway-Medium',
 };
 const text: any = {
@@ -97,6 +97,13 @@ export const SmallIcons = {
   height: 20,
   width: 20,
 };
+const container: {
+  flex: number;
+  padding: number;
+} = {
+  flex: 1,
+  padding: RF(20),
+};
 export {
   h1,
   h2,
@@ -109,4 +116,5 @@ export {
   MovieView,
   overlay,
   text,
+  container,
 };

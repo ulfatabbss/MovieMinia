@@ -28,6 +28,7 @@ import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import ExpandCard from '../../components/ExpnadCard';
 import { backErrow, searchIcon } from '../../assets';
+import { RF } from '../../utillis/theme/Responsive';
 LogBox.ignoreLogs(['Warning: ...']);
 const SearchMovie = ({ navigation }) => {
     const {
@@ -190,7 +191,7 @@ const SearchMovie = ({ navigation }) => {
                                     style={{
                                         color: Secondary,
                                         fontFamily: 'Raleway-Bold',
-                                        fontSize: 22,
+                                        fontSize: RF(22),
                                     }}>
                                     Not Found
                                 </Text>

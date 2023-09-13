@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   ScrollView,
@@ -39,7 +39,6 @@ import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
 
 const Dashboard = ({ navigation }) => {
-  const dispatch = useDispatch();
 
   const {
     popularMoviesData,
@@ -51,8 +50,11 @@ const Dashboard = ({ navigation }) => {
     myTheme,
     loading, south, popularAnimSeason
   } = useSelector((state) => state.root.user);
-
+  const dispatch = useDispatch();
+  const apiCalledOnMount = useRef(false);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
+
+  const [refreshInterval, setRefreshInterval] = useState(12 * 60 * 60 * 1000);
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -84,8 +86,21 @@ const Dashboard = ({ navigation }) => {
         dispatch(setLoading(false));
       }
     };
-    integrate();
-  }, [dispatch]);
+
+    // Call the API when the component mounts only if it hasn't been called before
+    if (!apiCalledOnMount.current) {
+      integrate();
+      apiCalledOnMount.current = true;
+    }
+
+    // Set up an interval to call the API every 12 hours
+    const intervalId = setInterval(integrate, refreshInterval);
+
+    // Cleanup the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [dispatch, refreshInterval]);
 
   if (loading) {
     return <ScreenPreLoader />;
@@ -115,33 +130,30 @@ const Dashboard = ({ navigation }) => {
         <Header navigation={navigation} />
         <Carousel images={sliderData} />
         <CardsFlatlist navigation={navigation} heading={'Movies Trailer'} data={upcommingMoviesData} type={'Movies'} />
-        <CardsFlatlist
-          navigation={navigation}
-          heading={'Hollywood'}
-          data={hollywood}
-          type={'Movies'}
-        />
+        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
+        </View>
+        <CardsFlatlist navigation={navigation} heading={'Hollywood'} data={hollywood} type={'Movies'} />
         <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
           <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
         </View>
-        <CardsFlatlist
-          navigation={navigation}
-          heading={'Hindi Dubbed'}
-          data={popularMoviesData}
-          type={'Movies'}
-        />
+        <CardsFlatlist navigation={navigation} heading={'Hindi Dubbed'} data={popularMoviesData} type={'Movies'} />
+        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
+        </View>
         <CardsFlatlist navigation={navigation} heading={'Bollywood'} data={hindiMoviesData} type={'Movies'}
         />
         <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
           <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
         </View>
         <CardsFlatlist navigation={navigation} heading={'South Indian'} data={south} type={'Movies'} />
-        <CardsFlatlist
-          navigation={navigation}
-          heading={'Punjabi'}
-          data={punjabiMoviesData}
-          type={'Movies'}
-        />
+        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
+        </View>
+        <CardsFlatlist navigation={navigation} heading={'Punjabi'} data={punjabiMoviesData} type={'Movies'} />
+        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

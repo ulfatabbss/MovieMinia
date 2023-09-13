@@ -11,6 +11,8 @@ const endPoints = {
   getFeedBack: 'get-feedback',
   addFeedBack: 'submit-feedback',
   editProfile: 'editProfile/',
+  deleteAccount: 'deleteAccount/',
+  sendOTP: 'sendOtp',
 };
 
 export {endPoints};
