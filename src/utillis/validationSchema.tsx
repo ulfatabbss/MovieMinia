@@ -14,7 +14,6 @@ export const SignUpValidationSchema: Yup.SchemaOf<{
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }> = Yup.object().shape({
   name: Yup.string().required('Please enter your name'),
   email: Yup.string()
@@ -27,10 +26,6 @@ export const SignUpValidationSchema: Yup.SchemaOf<{
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
       'Must contain min 8 characters uppercase, lowercase, number, and special symbol',
     ),
-  confirmPassword: Yup.string()
-    .required('No Confirm Password provided.')
-    .label('Confirm Password')
-    .oneOf([Yup.ref('password')], 'Passwords do not match'),
 });
 export const otpVerification: Yup.SchemaOf<{
   email: string;
@@ -46,6 +41,7 @@ export const changePassword: Yup.SchemaOf<{
   password: Yup.string()
     .required('Please enter your password.')
     .min(8, 'Password is too short.')
+    .max(15, 'fwqyskqjsqjwhs')
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
       'Must contain min 8 characters uppercase, lowercase, number, and special symbol',
@@ -53,5 +49,5 @@ export const changePassword: Yup.SchemaOf<{
   confirmPassword: Yup.string()
     .required('No Confirm Password provided.')
     .label('Confirm Password')
-    .oneOf([Yup.ref('password')], 'Passwords do not match'),
+    .oneOf([Yup.ref('password')], 'Passwords does not match'),
 });

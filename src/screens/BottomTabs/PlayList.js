@@ -231,7 +231,7 @@ const Playlist = ({ navigation }) => {
         </View>
         <View style={{ ...styles.playlistContainer, paddingBottom: "36%" }}>
           <Text style={{ ...Heading, color: theme.colors.text, marginHorizontal: WP(2) }}>
-            {myplaylist[0]?.movies?.length == 0 && isGuest == false ? null : `${myplaylist[0]?.movies?.length} Playlists Found`}
+            {myplaylist[0]?.movies?.length == 0 || isGuest ? 'Playlist Not Found' : `${myplaylist[0]?.movies?.length} Playlists Found`}
           </Text>
           {myplaylist[0]?.movies?.length == 0 || isGuest ?
             <Image style={styles.emptyImage} resizeMode="contain" source={EmptyImage} /> : null
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   emptyImage: {
-    height: 298,
+    height: '100%', resizeMode: 'contain',
     width: Dimensions.get('window').width,
   },
   centeredView: {

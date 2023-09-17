@@ -21,6 +21,7 @@ import { Formik } from 'formik';
 import { Primary } from '../../utillis/colors';
 import { otpVerification } from '../../utillis/validationSchema';
 import { SendOTP } from '../../services/AppServices';
+import Loader from '../../components/Loader';
 const ChangePassword = ({ navigation }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { myTheme = 'lightTheme' } = useSelector(state => state.root.user);
@@ -28,23 +29,29 @@ const ChangePassword = ({ navigation }) => {
     const initialValues = { email: '' };
     const handleVerification = async (values) => {
         // console.log(values);
-        const obj = {
-            email: values.email,
-        };
-        if (obj) {
-            console.log('true');
-            const result = await SendOTP(obj)
-            if (result.data.status === true) {
-                navigation.navigate("OTPverification", { value: values.email });
-            } else {
-                Alert.alert(
-                    result?.data?.message
-                )
+        try {
+            setIsLoading(true)
+            const obj = {
+                email: values.email,
+            };
+            if (obj) {
+                const result = await SendOTP(obj)
+                if (result.data.status === true) {
+                    navigation.navigate("OTPverification", { value: values.email });
+                } else {
+                    Alert.alert(
+                        result?.data?.message
+                    )
+                }
             }
-
+            setIsLoading(false)
+        } catch {
+            Alert.alert('⚠️ Check your internet connection and try again .....!');
         }
     };
-
+    if (isLoading) {
+        return <Loader />;
+    }
     return (
         <Formik
             initialValues={initialValues}
@@ -56,9 +63,9 @@ const ChangePassword = ({ navigation }) => {
             }}>
             {({ values, errors, touched, handleChange, handleSubmit }) => (
                 <View style={[container, { backgroundColor: theme.colors.background }]}>
-                    <NavHeader navigation={navigation} />
+                    <NavHeader navigation={navigation} title={'Email conformation'} />
                     <HeadingTitle
-                        title1={'RESET PASSWORD'}
+                        // title1={'RESET PASSWORD'}
                         titile2={'Please enter your email to request a password reset!'}
                     />
                     <View
@@ -118,6 +125,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-end',
+        bottom: 20
     },
     errors: {
         fontSize: 12,

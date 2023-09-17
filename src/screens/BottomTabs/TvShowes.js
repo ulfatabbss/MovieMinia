@@ -34,16 +34,20 @@ const TvShowes = ({ navigation }) => {
     const fetchData = async () => {
       try {
         dispatch(setLoading(true));
-        const response = await GetDrama();
-        const { data } = response;
-        dispatch(setDramaData(data.filter(object => object.category === 'Urdu')));
-        dispatch(setIndianDrama(data.filter(object => object.category === 'Indian')));
-        dispatch(setTurkishDrama(data.filter(object => object.category === 'Turkish')));
-        dispatch(setHollywoodseasons(data.filter(object => object.category === 'Season')));
-        dispatch(setHindiSeasons(data.filter(object => object.category === 'HindiSeason')));
-        dispatch(setNewAnimSeason(data.filter((object) => object.category == 'newAnimSeason')));
-        dispatch(setTrendAnimSeason(data.filter((object) => object.category == 'trendAnimSeason')));
-        dispatch(setPopularAnimSeason(data.filter((object) => object.category == 'popularAnimSeason')));
+        if (value == 'season') {
+          const pakistani = await GetDrama("Urdu");
+          dispatch(setDramaData(pakistani?.data?.dramas))
+          const indian = await GetDrama("Indian")
+          dispatch(setIndianDrama(indian?.data?.dramas))
+          const turkish = await GetDrama("Turkish")
+          dispatch(setTurkishDrama(turkish?.data?.dramas))
+        }
+        else {
+          const hindiSeasons = await GetDrama("HindiSeason")
+          dispatch(setHindiSeasons(hindiSeasons?.data?.dramas))
+          const hollywooodSeasons = await GetDrama("Season")
+          dispatch(setHollywoodseasons(hollywooodSeasons?.data?.dramas))
+        }
         dispatch(setLoading(false));
       } catch (error) {
         console.log(error, 'errors');
@@ -54,7 +58,6 @@ const TvShowes = ({ navigation }) => {
       fetchData();
       apiCalledOnMount.current = true;
     }
-
     // Set up an interval to call the API every 12 hours
     const intervalId = setInterval(fetchData, refreshInterval);
 

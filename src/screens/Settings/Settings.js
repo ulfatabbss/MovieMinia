@@ -6,7 +6,7 @@ import heading from '../../utillis/fonts';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { backErrow, caution, dellUser, faq, passSettings, policy, terms } from '../../assets';
-import { setIsLogin, setLoading, setTheme } from '../../redux/reducers/userReducers';
+import { setGuest, setIsFacebook, setIsGoogle, setIsLogin, setLoading, setTheme } from '../../redux/reducers/userReducers';
 import { Heading } from '../../utillis/styles';
 import { DeleteAccountApi } from '../../services/AppServices';
 import { Primary, Secondary, White } from '../../utillis/theme';
@@ -14,27 +14,15 @@ import { RF } from '../../utillis/theme/Responsive';
 import HeadingText from '../../components/CustomText';
 
 const Settings = ({ navigation }) => {
-    const { myTheme, user } = useSelector((state) => state.root.user);
+    const { myTheme, user, isGuest, google, facebook } = useSelector((state) => state.root.user);
     const theme = useTheme(myTheme === 'lightTheme' ? lightTheme : darkTheme);
-    const dispatch = useDispatch();
-    const [modalVisible, setModalVisible] = useState(false)
-
-
-    const handleDeleteAccount = async () => {
-
-        const id = user._id
-        // const id = '64c3e3b0eb8bd300eb4cad71'
-        const result = await DeleteAccountApi(id)
-        if (result.data.status == true) {
-            dispatch(setIsLogin(false))
-            setModalVisible(false)
-        }
-        else {
-            setModalVisible(false)
-            Alert.alert('something went wronggggg!')
-        }
-        // dispatch(setLoading(false))
-        // console.log(result.data, "uyghihiouioj");
+    const [logOutModalVisible, setIsLogOutModalVisible] = useState(false)
+    const dispatch = useDispatch()
+    const handleLogout = () => {
+        dispatch(setGuest(false))
+        dispatch(setIsGoogle(false))
+        dispatch(setIsFacebook(false))
+        dispatch(setIsLogin(false))
     }
     const renderSettingItem = (icon, label, onPress) => (
         <TouchableOpacity style={styles.settingItem} onPress={onPress}>
@@ -44,15 +32,15 @@ const Settings = ({ navigation }) => {
     );
     return (
         <SafeAreaView style={{ ...styles.container, backgroundColor: theme.colors.topbar }}>
-
-            {modalVisible ? <View style={styles.modal_FadeView} /> : null}
-            <Modal animationType="slide" transparent={true} visible={modalVisible}><View style={styles.modalContainer}>
+            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+            {logOutModalVisible ? <View style={styles.modal_FadeView} /> : null}
+            <Modal animationType="slide" transparent={true} visible={logOutModalVisible}><View style={styles.modalContainer}>
                 <View style={styles.modalCard}>
                     <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
-                    <HeadingText title={'Alert'} bold size={20} top={5} />
+                    <HeadingText title={'Come back Soon!'} bold size={20} top={5} />
                     <HeadingText
                         title={
-                            'Are you sure to delete this Account?'
+                            'Are you Sure You Want to Logout?'
                         }
                         regular
                         size={16}
@@ -60,19 +48,18 @@ const Settings = ({ navigation }) => {
                         alignCenter
                     />
                     <View style={styles.button_View}>
-
                         <TouchableOpacity
                             style={styles.button}
-                            onPress={handleDeleteAccount}>
+                            onPress={() => handleLogout()}>
                             <HeadingText
-                                title={'Ok'}
+                                title={'Yes'}
                                 semi_bold
                                 size={16}
                                 color={White}
                             />
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.button, styles.signUp_Button]}
-                            onPress={() => setModalVisible(!modalVisible)}>
+                            onPress={() => setIsLogOutModalVisible(!logOutModalVisible)}>
                             <HeadingText
                                 title={'Cancel'}
                                 semi_bold
@@ -82,11 +69,9 @@ const Settings = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View></Modal>
-
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+            </View>
+            </Modal>
             <View style={styles.header}>
-
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
                         style={[styles.backButton, { tintColor: theme.colors.icon }]}
@@ -96,19 +81,17 @@ const Settings = ({ navigation }) => {
                 </TouchableOpacity>
                 <Text style={{ ...Heading, color: theme.colors.text }}>Settings</Text>
             </View>
-
             <View style={{ ...styles.content, backgroundColor: theme.colors.background }}>
                 <View style={styles.settingsList}>
                     {renderSettingItem(passSettings, 'Password Settings', () => navigation.navigate('PasswordSettings'))}
                     {renderSettingItem(terms, 'Terms & Conditions', () => navigation.navigate('Terms'))}
                     {renderSettingItem(policy, 'Privacy Policy', () => navigation.navigate('Policy'))}
                     {renderSettingItem(faq, 'FAQs', () => navigation.navigate('Faq'))}
-                    {renderSettingItem(require('../../assets/logout.png'), 'Logout', () => { })}
+                    {renderSettingItem(require('../../assets/logout.png'), 'Logout', () => { setIsLogOutModalVisible(true) })}
                 </View>
             </View>
-
             <View style={{ ...styles.deleteAccount, borderTopColor: '#E1E4E8' }}>
-                <TouchableOpacity style={styles.deleteAccountButton} onPress={() => setModalVisible(true)}>
+                <TouchableOpacity style={styles.deleteAccountButton} onPress={() => navigation.navigate('DeleteAccount')}>
                     <Image
                         style={styles.deleteAccountIcon}
                         resizeMode="contain"
@@ -116,8 +99,6 @@ const Settings = ({ navigation }) => {
                     />
                     <Text style={{ ...Heading, color: 'red' }}>Delete Account</Text>
                 </TouchableOpacity>
-
-
             </View>
         </SafeAreaView>
     );
@@ -218,9 +199,8 @@ const styles = StyleSheet.create({
         backgroundColor: Primary,
     },
     signUp_Button: {
-
         backgroundColor: White,
-        borderColor: Secondary,
+        borderColor: Secondary, elevation: 5
     },
     deleteAccount: {
         width: '100%',

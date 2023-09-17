@@ -3,6 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState: any = {
   user: null,
   isFirstTime: null,
+  facebook: false,
   google: false,
   isLogin: null,
   popularMoviesData: [],
@@ -127,6 +128,9 @@ export const userReducer = createSlice({
     setIsGoogle: (state, action) => {
       state.google = action.payload;
     },
+    setIsFacebook: (state, action) => {
+      state.facebook = action.payload;
+    },
   },
 });
 
@@ -161,6 +165,7 @@ export const {
   setTrendAnimSeason,
   setIsFirstTime,
   setIsGoogle,
+  setIsFacebook,
 } = userReducer.actions;
 
 export default userReducer.reducer;

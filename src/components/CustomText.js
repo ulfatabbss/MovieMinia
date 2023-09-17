@@ -39,7 +39,7 @@ const HeadingText = ({
                 fontWeight: weight ? weight : '600',
                 color: color ? color : Black,
                 marginRight: R_Margin ? R_Margin : 0,
-                marginTop: top ? top : 0,
+                marginTop: top ? top : null,
                 textAlign: alignCenter ? 'center' : 'auto',
             }}>
             {title}

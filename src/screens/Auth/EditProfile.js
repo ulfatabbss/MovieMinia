@@ -19,9 +19,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const EditProfile = ({ navigation }) => {
-    const { myTheme, user, isGuest, google } = useSelector(state => state.root.user);
+    const { myTheme, user, isGuest } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-    const [selectimage, setSelectimage] = useState(google ? user.photo : user.profilePicture)
+    const [selectimage, setSelectimage] = useState(user.profilePicture)
 
     const ImagePicker = () => {
         let options = {
@@ -29,6 +29,7 @@ const EditProfile = ({ navigation }) => {
                 path: 'image'
             },
         };
+
         launchImageLibrary(options, response => {
             if (response?.assets && response.assets.length > 0) {
                 const selectedImageUri = response.assets[0].uri;
@@ -101,10 +102,6 @@ const EditProfile = ({ navigation }) => {
                     </Text>
 
                 </View>
-
-
-
-
             </View>
             <View
                 style={styles.V3}>

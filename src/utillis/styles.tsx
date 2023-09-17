@@ -23,6 +23,34 @@ const h3: any = {
   fontWeight: 'normal',
 };
 
+const h4: any = {
+  fontSize: 18,
+  fontWeight: '600',
+  color: 'black',
+};
+
+const h5: any = {
+  fontSize: 16,
+  fontWeight: '400',
+  color: 'black',
+};
+
+const h6: any = {
+  fontSize: 14,
+  fontWeight: '500',
+  color: 'black',
+};
+
+const h7: any = {
+  fontSize: 12,
+  fontWeight: '400',
+  color: 'black',
+};
+const h8: any = {
+  fontSize: 10,
+  fontWeight: '400',
+  color: 'black',
+};
 const linearGradient: any = {
   height: 330,
   width: '100%',
@@ -53,7 +81,7 @@ const smalltext: any = {
 };
 const text: any = {
   color: '#313131',
-  fontSize: 12,
+  fontSize: RF(13),
   fontFamily: 'Raleway-Regular',
 };
 const MovieView: any = {
@@ -99,15 +127,20 @@ export const SmallIcons = {
 };
 const container: {
   flex: number;
-  padding: number;
+  paddingHorizontal: number;
 } = {
   flex: 1,
-  padding: RF(20),
+  paddingHorizontal: RF(20),
 };
 export {
   h1,
   h2,
   h3,
+  h4,
+  h5,
+  h6,
+  h7,
+  h8,
   linearGradient,
   logoIcon,
   movieTitle,

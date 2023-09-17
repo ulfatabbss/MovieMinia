@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Alert, Keyboard
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {
@@ -15,21 +16,21 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk-next';
 import { LoginValidationSchema } from '../../utillis/validationSchema';
 import { Formik } from 'formik';
 import { Primary } from '../../utillis/colors';
 import { store } from '../../redux/store';
-import { setIsGoogle, setIsLogin, setUser } from '../../redux/reducers/userReducers';
-import { Login } from '../../services/AppServices';
+import { setIsFacebook, setIsGoogle, setIsLogin, setUser } from '../../redux/reducers/userReducers';
+import { Login, Register, checkUserExist } from '../../services/AppServices';
 import Loader from '../../components/Loader';
 import { useToast } from 'react-native-toast-notifications';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
-import { RF } from '../../utillis/theme/Responsive';
-import { applogo, hide, lock, Message, show } from '../../assets';
+import { HP, RF, WP } from '../../utillis/theme/Responsive';
+import { hide, lock, Message, show } from '../../assets';
 import { Heading, smalltext } from '../../utillis/styles';
 import { Secondary } from '../../utillis/theme';
 import Button from '../../components/Button';
@@ -38,23 +39,113 @@ import Logo from '../../components/Logo';
 const Signin = ({ navigation }) => {
   const { myTheme } = useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-  const Toast = useToast();
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [eyeIcon, setEyeIcon] = useState(show);
   const [PasswordVisibility, setPasswordVisibility] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [logoVisible, setLogoVisible] = useState(true);
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => setLogoVisible(false),
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => setLogoVisible(true),
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+  const TogglePassword = () => {
+    if (eyeIcon == show) {
+      setEyeIcon(hide);
+      setPasswordVisibility(false);
+    } else if (eyeIcon == hide) {
+      setEyeIcon(show);
+      setPasswordVisibility(true);
+    }
+  };
+  const initialValues = {
+    email: '',
+    password: '',
+  };
+  const handleLogin = async values => {
+    setIsLoading(true);
+    try {
+      const obj = {
+        email: values.email,
+        password: values.password,
+      };
+      const response = await Login(obj);
+      if (response.data.status == true) {
+        dispatch(setUser(response.data.user));
+        console.log(response.data);
+
+        dispatch(setIsLogin(true));
+      } else {
+        Alert.alert('⚠️ Login credentials incorrect, please try again .....!');
+
+      }
+    } catch (error) {
+      Alert.alert('⚠️ Check your internet connection and try again .....!');
+
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     GoogleSignin.configure()
 
   }, [])
   const GoogleLogin = async () => {
+    setIsLoading(true);
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      store.dispatch(setUser(userInfo.user))
-      store.dispatch(setIsGoogle(true))
-      store.dispatch(setIsLogin(true))
-      console.log(userInfo, "userinfooooooooooo")
+      // console.log(userInfo.user, "userinfooooooooooo")
+      const userExists = await checkIfUserExists(userInfo.user.email);
+      if (userExists) {
+        // User exists, log them in
+        const loginObj = {
+          email: userInfo.user.email,
+          password: userInfo.user.id, // You may need to provide a default password
+        };
+        const response = await Login(loginObj);
+        if (response.data.status == true) {
+          dispatch(setUser(response.data.user));
+          dispatch(setIsGoogle(true))
+          // console.log(response.data);
+          dispatch(setIsLogin(true));
+        } else {
+          Alert.alert('⚠️ Login credentials incorrect, please try again .....!');
+        }
+      } else {
+        // User doesn't exist, register them
+        console.log("Signup");
+        const registerObj = {
+          name: userInfo.user.name,
+          email: userInfo.user.email,
+          password: userInfo.user.id, // You may need to provide a default password
+        };
+        Register(registerObj)
+          .then(async ({ data }) => {
+            if (data.status == true) {
+              console.log(data);
+              // dispatch(setIsLogin(true));
+            } else {
+              Alert.alert('⚠️ Credentials incorrect, please try again .....!');
+            }
+          })
+          .catch(error => {
+            Alert.alert('⚠️ Check your internet connection and try again .....!');
+          })
+      }
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log(error)
@@ -69,98 +160,112 @@ const Signin = ({ navigation }) => {
         console.log(error)
         // some other error happened
       }
-    }
-  };
-  const onFacebookButtonPress = async () => {
-    // Attempt login with permissions
-    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-    console.log(result, "fbbbbbbbbb")
-    if (result.isCancelled) {
-      throw 'User cancelled the login process';
-    }
-
-    // Once signed in, get the users AccessToken
-    const data = await AccessToken.getCurrentAccessToken();
-
-    if (!data) {
-      throw 'Something went wrong obtaining access token';
-    }
-
-    // Create a Firebase credential with the AccessToken
-    const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(facebookCredential);
-  }
-  const TogglePassword = () => {
-    if (eyeIcon == show) {
-      setEyeIcon(hide);
-      setPasswordVisibility(false);
-    } else if (eyeIcon == hide) {
-      setEyeIcon(show);
-      setPasswordVisibility(true);
-    }
-  };
-
-  const guestLogin = async () => {
-    setIsLoading(true);
-    const guestCredentials = {
-      email: 'guest@example.com',
-      password: 'Guest#123',
-    };
-    try {
-      const response = await Login(guestCredentials);
-      if (response.data.status == true) {
-        store.dispatch(setUser(response.data.user));
-        console.log(response.data);
-        store.dispatch(setIsLogin(true));
-      }
-    } catch (error) {
-      Toast.show(error, {
-        type: 'error',
-        placement: 'top',
-        duration: 3000,
-        offset: 30,
-        animationType: 'zoom-in',
-      });
     } finally {
       setIsLoading(false);
     }
   };
-  const initialValues = {
-    email: '',
-    password: '',
-  };
-  const handleLogin = async values => {
-    setIsLoading(true);
-    const obj = {
-      email: values.email,
-      password: values.password,
-    };
-    try {
-      const response = await Login(obj);
-      if (response.data.status == true) {
-        store.dispatch(setUser(response.data.user));
-        console.log(response.data);
 
-        store.dispatch(setIsLogin(true));
-      } else {
-        // Toast.show(' 🚧 Login credentials are incorrect .....!', {
-        //   type: 'error',
-        //   placement: 'bottom',
-        //   duration: 3000,
-        //   offset: 30,
-        //   animationType: 'zoom-in',
-        // });
+  const checkIfUserExists = async (email) => {
+    try {
+      // Perform an API call or database query to check if the user exists
+      // Return true if the user exists, false otherwise
+      const obj = {
+        email: email
       }
+      const response = await checkUserExist(obj);
+      return response.data.status;
     } catch (error) {
-      Toast.show(error, {
-        type: 'error',
-        placement: 'top',
-        duration: 3000,
-        offset: 30,
-        animationType: 'zoom-in',
-      });
+      // Handle any errors that occur during the check
+      console.error('Error checking user existence:', error);
+      return false; // Assuming the user doesn't exist in case of an error
+    }
+  };
+
+  const onFacebookButtonPress = async () => {
+    setIsLoading(true);
+    try {
+      // Attempt login with permissions
+      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+      if (result.isCancelled) {
+        throw 'User cancelled the login process';
+      }
+
+      // Once signed in, get the user's AccessToken
+      const data = await AccessToken.getCurrentAccessToken();
+
+      if (!data) {
+        throw 'Something went wrong obtaining access token';
+      }
+
+      // Fetch user profile data
+      const responseInfoCallback = async (error, result) => {
+        if (error) {
+          console.log('Error fetching user data:', error);
+          throw 'Error fetching user data';
+        } else {
+          // You can access user profile data in result
+          // console.log('User data:', result);
+          const userExists = await checkIfUserExists(result.email);
+          if (userExists) {
+            // User exists, log them in
+            const loginObj = {
+              email: result.email,
+              password: result.id, // You may need to provide a default password
+            };
+            const response = await Login(loginObj);
+            if (response.data.status == true) {
+              dispatch(setUser(response.user));
+              dispatch(setIsFacebook(true))
+              // console.log(response.data);
+              dispatch(setIsLogin(true));
+            } else {
+              Alert.alert('⚠️ Login credentials incorrect, please try again .....!');
+            }
+          } else {
+            // User doesn't exist, register them
+            console.log("Signup");
+            const registerObj = {
+              name: result.name,
+              email: result.email,
+              password: result.id, // You may need to provide a default password
+            };
+            Register(registerObj)
+              .then(async ({ data }) => {
+                if (data.status == true) {
+                  console.log(data);
+                  // dispatch(setIsLogin(true));
+                } else {
+                  Alert.alert('⚠️ Credentials incorrect, please try again .....!');
+                }
+              })
+              .catch(error => {
+                Alert.alert('⚠️ Check your internet connection and try again .....!');
+              })
+          }
+          // You can access user profile picture like this:
+          // const profilePictureUrl = `https://graph.facebook.com/${result.id}/picture?type=large`;
+
+          // Now, you can use the user data as needed in your app
+        }
+      };
+
+      const graphRequest = new GraphRequest(
+        '/me',
+        {
+          parameters: {
+            fields: {
+              string: 'id,email,name,first_name,last_name,picture.type(large)',
+            },
+          },
+        },
+        responseInfoCallback
+      );
+
+      // Start the graph request
+      new GraphRequestManager().addRequest(graphRequest).start();
+    } catch (error) {
+      console.error('Facebook login error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -193,7 +298,7 @@ const Signin = ({ navigation }) => {
             styles.container,
             { backgroundColor: theme.colors.background },
           ]}>
-          <Logo />
+          {logoVisible && <Logo />}
           <View style={styles.formWrapper}>
             <Text
               style={{
@@ -210,7 +315,7 @@ const Signin = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs,
+                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
               <Image style={{ height: RF(20), width: RF(20) }} source={Message} />
@@ -239,7 +344,7 @@ const Signin = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs,
+                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
               <Image style={{ height: RF(20), width: RF(20) }} source={lock} />
@@ -257,6 +362,7 @@ const Signin = ({ navigation }) => {
                   color: theme.colors.text,
                   backgroundColor: theme.colors.tabs,
                   fontSize: RF(14),
+
                 }}
               />
 
@@ -297,7 +403,7 @@ const Signin = ({ navigation }) => {
                 }}>
                 Remember me
               </Text>
-              <Text
+              <Text onPress={() => navigation.navigate("ChangePassword")}
                 style={{
                   ...smalltext,
                   fontFamily: 'Raleway-SemiBold',
@@ -331,34 +437,141 @@ const Signin = ({ navigation }) => {
               style={{
                 width: '100%',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'space-evenly',
               }}>
-              <TouchableOpacity onPress={GoogleLogin}
+
+              <TouchableOpacity onPress={() => GoogleLogin()}
                 style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}>
                 <Image
                   style={styles.guestIcons}
                   resizeMode={'contain'}
                   source={require('../../assets/Auth/google.png')}
                 />
+
               </TouchableOpacity>
-              <TouchableOpacity onPress={onFacebookButtonPress}
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
-              >
+              <TouchableOpacity onPress={() => onFacebookButtonPress()}
+                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}>
                 <Image
                   style={styles.guestIcons}
                   resizeMode={'contain'}
                   source={require('../../assets/Auth/facebook.png')}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
-                onPress={() => guestLogin()}>
-                <Image
+              {/* <View style={{ ...styles.guestbtn, overflow: 'hidden' }}>
+                <LoginButton
+                  style={{
+                    height: RF(35),
+                    width: '100%', backgroundColor: '#4267B2'
+                  }}
+                  onLoginFinished={
+                    (error, result) => {
+                      if (error) {
+                        Alert.alert("login has error: " + result.error);
+                      } else if (result.isCancelled) {
+                        Alert.alert("login is cancelled.");
+                      } else {
+
+                        AccessToken.getCurrentAccessToken().then(
+                          (data) => {
+                            let accessToken = data.accessToken
+                            Alert.alert(accessToken.toString())
+                            console.log(data, "helllllllo i am your data");
+                            const responseInfoCallback = (error, result) => {
+                              if (error) {
+                                console.log(error)
+                                Alert.alert('Error fetching data: ' + error.toString());
+                              } else {
+                                console.log(result)
+                                Alert.alert('Success fetching data: ' + result.toString());
+                              }
+                            }
+
+                            const infoRequest = new GraphRequest(
+                              '/me',
+                              {
+                                accessToken: accessToken,
+                                parameters: {
+                                  fields: {
+                                    string: 'email,name,first_name,middle_name,last_name'
+                                  }
+                                }
+                              },
+                              responseInfoCallback
+                            );
+
+                            // Start the graph request.
+                            new GraphRequestManager().addRequest(infoRequest).start()
+                          }
+                        )
+                      }
+                    }
+                  }
+                  onLogoutFinished={() => Alert.alert("logout.")} />
+              </View> */}
+
+              {/* <Image
                   style={styles.guestIcons}
-                  source={require('../../assets/Auth/apple.png')}
                   resizeMode={'contain'}
-                />
-              </TouchableOpacity>
+                  source={require('../../assets/Auth/facebook.png')}
+                /> */}
+              {/* </LoginButton> */}
+              {/* <LoginButton
+                style={{ height: HP(5), width: WP(95), borderRadius: 10, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}
+                onLoginFinished={
+                  (error, result) => {
+                    if (error) {
+                      Alert.alert("login has error: " + result.error);
+                    } else if (result.isCancelled) {
+                      Alert.alert("login is cancelled.");
+                    } else {
+
+                      AccessToken.getCurrentAccessToken().then(
+                        (data) => {
+                          let accessToken = data.accessToken
+                          Alert.alert(accessToken.toString())
+                          console.log(data, "helllllllo i am your data");
+                          const responseInfoCallback = (error, result) => {
+                            if (error) {
+                              console.log(error)
+                              Alert.alert('Error fetching data: ' + error.toString());
+                            } else {
+                              console.log(result)
+                              Alert.alert('Success fetching data: ' + result.toString());
+                            }
+                          }
+
+                          const infoRequest = new GraphRequest(
+                            '/me',
+                            {
+                              accessToken: accessToken,
+                              parameters: {
+                                fields: {
+                                  string: 'email,name,first_name,middle_name,last_name'
+                                }
+                              }
+                            },
+                            responseInfoCallback
+                          );
+
+                          // Start the graph request.
+                          new GraphRequestManager().addRequest(infoRequest).start()
+                        }
+                      )
+                    }
+                  }
+                }
+                onLogoutFinished={() => Alert.alert("logout.")} /> */}
+              {Platform.OS === 'ios' &&
+                <TouchableOpacity
+                  style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
+                >
+                  <Image
+                    style={styles.guestIcons}
+                    source={require('../../assets/Auth/apple.png')}
+                    resizeMode={'contain'}
+                  />
+                </TouchableOpacity>
+              }
             </View>
             <View
               style={{
@@ -448,7 +661,7 @@ const styles = StyleSheet.create({
     width: '30%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: 20, elevation: 1, shadowOffset: .3
   },
   line: {
     height: 1,

@@ -1,14 +1,19 @@
 import {HTTP_APP} from '../utillis/config';
 import {endPoints} from '../utillis/endPoints';
-const GetMovies = () => {
-  return HTTP_APP.get(endPoints.getMovies);
+const GetMovies = (category: any, page: any) => {
+  // console.log(`${endPoints.getMovies}${category}&page=${page ? page : 1}`);
+  return HTTP_APP.get(
+    `${endPoints.getMovies}${category}&page=${page ? page : 1}`,
+  );
 };
 const GetUpcomming = () => {
   return HTTP_APP.get(endPoints.getUpcomming);
 };
 
-const GetDrama = () => {
-  return HTTP_APP.get(endPoints.getDrama);
+const GetDrama = (category: any, page: any) => {
+  return HTTP_APP.get(
+    `${endPoints.getDrama}${category}&page=${page ? page : 1}`,
+  );
 };
 const GetSlider = () => {
   return HTTP_APP.get(endPoints.getSlider);
@@ -29,6 +34,12 @@ const DellfromPlaylist = (obj1: any) => {
 
 const Register = (obj: any) => {
   return HTTP_APP.post(endPoints.register, obj);
+};
+
+const checkUserExist = (obj: any) => {
+  console.log(obj);
+
+  return HTTP_APP.post(endPoints.checkUserExist, obj);
 };
 const AddFeedback = (obj: any) => {
   return HTTP_APP.post(endPoints.addFeedBack, obj);
@@ -62,4 +73,5 @@ export {
   EditProfileAPi,
   DeleteAccountApi,
   SendOTP,
+  checkUserExist,
 };

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView, Alert, SafeAreaView } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { container, FlexDirection, smalltext } from '../../utillis/styles';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
@@ -7,14 +7,18 @@ import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
 import { RF } from '../../utillis/theme/Responsive';
 import NavHeader from '../../components/NavHeader';
-// import OTPInputView from '@twotalltotems/react-native-otp-input';
-import { otpBack } from '../../assets';
+import OTPTextInput from 'react-native-otp-textinput';
 import HeadingTitle from '../../components/HeadingTitle';
 import Button from '../../components/Button';
-import { Secondary } from '../../utillis/theme';
+import { SendOTP } from '../../services/AppServices';
+import { Black, Secondary } from '../../utillis/theme';
+import { Primary, black } from '../../utillis/colors';
+import { backErrow } from '../../assets';
+
 const OTPverification = ({ navigation, route }) => {
     const [timer, setTimer] = useState(30);
     const { value } = route.params || {};
+    let otpInput = useRef(null);
     const { myTheme } = useSelector(state => state.root.user) || {};
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     useEffect(() => {
@@ -32,84 +36,97 @@ const OTPverification = ({ navigation, route }) => {
             };
         }
     }, [timer]);
+    const handleVerification = async () => {
+        console.log(value, 'gggggggggggggggg');
+        const obj = {
+            email: value,
+        };
+        if (obj) {
+            console.log('true');
+            const result = await SendOTP(obj);
+            console.log(result.data.status, "agyaaa otp")
+            //   if (result.data.status === true) {
+
+            //   } else {
+            //     Alert.alert(result?.data?.message);
+            //   }
+        }
+    };
     const resetTimer = () => {
+        handleVerification();
         setTimer(30); // Reset the timer to 30 seconds
     };
+    const handleCodeFilled = otp => {
+        console.log('OTP Entered:', otp);
+        // You can perform any actions with the entered OTP here
+    };
     return (
-        <ScrollView style={[container, { backgroundColor: theme.colors.background }]}>
-            <NavHeader navigation={navigation} />
-            <Image
-                style={{ height: RF(300), width: '100%' }}
-                source={otpBack}
-                resizeMode={'contain'}
-            />
-            <HeadingTitle
-                title1={'Hi there!'}
-                titile2={`Please enter the 4 digit OTP we just sent on  ${value}!`}
-            />
-            {/* <OTPInputView
-                style={{ width: '100%', height: RF(100) }}
-                pinCount={4}
-                keyboardType={'phone-pad'}
-                autoFocusOnLoad
-                codeInputFieldStyle={styles.underlineStyleBase}
-                codeInputHighlightStyle={styles.underlineStyleHighLighted}
-                onCodeFilled={code => {
-                    // console.log(`Code is ${code}, you are good to go!`);
-                }}
-            /> */}
-            {/* <TextInput
-        style={{
-          borderWidth: 1,
-          borderColor: 'gray',
-          borderRadius: 10,
-          paddingHorizontal: 10,
-          fontSize: 16,
-        }}
-        keyboardType="numeric"
-        maxLength={4}
-        value={otp}
-        onChangeText={(text) => setOTP(text)}
-      />
-      <Button title="Clear" onPress={clearText} /> */}
-            <View style={[FlexDirection, { marginBottom: RF(30) }]}>
-                <Text
-                    // onPress={() => resetTimer()}
-                    disabled={timer == 0 ? false : true}
-                    style={{
-                        ...smalltext,
-                        fontSize: RF(14),
-                        color: timer == 0 ? '#000' : 'gray',
-                        fontFamily: 'Raleway-Regular',
-                    }}>
-                    Re-send OTP
-                </Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <SafeAreaView style={[container, { backgroundColor: theme.colors.background }]}>
+            <NavHeader navigation={navigation} title={'OTP Verification'} />
+            <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+                <Image
+                    style={{ height: RF(300), width: '100%' }}
+                    source={require('../../assets/appIcons/otp.png')}
+                    resizeMode={'contain'}
+                />
+                <HeadingTitle
+                    title1={'Hi there!'}
+                    titile2={`Please enter the 4 digit OTP we just sent on  ${value}!`}
+                />
+                <OTPTextInput
+                    tintColor={Primary}
+                    textInputStyle={{
+                        backgroundColor: theme.colors.tabs,
+                        borderRadius: 10,
+                        height: RF(54),
+                        width: RF(54),
+                    }}
+                    handleTextChange={text => {
+                        if (text.length === 4) {
+                            handleCodeFilled(text); // Handle OTP input completion
+                        }
+                    }}
+                    ref={e => (otpInput = e)}></OTPTextInput>
+
+                <View style={[FlexDirection, { marginBottom: RF(30) }]}>
                     <Text
+                        onPress={() => resetTimer()}
+                        disabled={timer == 0 ? false : true}
                         style={{
                             ...smalltext,
                             fontSize: RF(14),
+                            color: timer == 0 ? 'black' : 'lightgray',
                             fontFamily: 'Raleway-Regular',
                         }}>
-                        Time:
+                        Re-send OTP
                     </Text>
-                    <Text
-                        style={{
-                            ...smalltext,
-                            fontSize: RF(14),
-                            color: Secondary,
-                            marginLeft: 5,
-                            fontFamily: 'Raleway-Bold',
-                        }}>
-                        0:{timer} sec
-                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text
+                            style={{
+                                ...smalltext,
+                                fontSize: RF(14),
+                                fontFamily: 'Raleway-Regular',
+                            }}>
+                            Time:
+                        </Text>
+                        <Text
+                            style={{
+                                ...smalltext,
+                                fontSize: RF(14),
+                                color: Secondary,
+                                marginLeft: 5,
+                                fontFamily: 'Raleway-Bold',
+                            }}>
+                            0:{timer} sec
+                        </Text>
+                    </View>
                 </View>
+                <Button
+                    title={'Confirm'}
+                    screen={() => navigation.navigate('UpdatePassword')}
+                />
             </View>
-            <Button
-                title={'Confirm'}
-                screen={() => navigation.navigate('ChangePassword')}
-            />
-        </ScrollView>
+        </SafeAreaView>
     );
 };
 
@@ -138,5 +155,10 @@ const styles = StyleSheet.create({
 
     underlineStyleHighLighted: {
         borderColor: '#03DAC6',
+    },
+    img1: {
+        height: 25,
+        width: 20,
+        alignSelf: 'center'
     },
 });

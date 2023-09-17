@@ -6,6 +6,7 @@ import { useTheme } from 'react-native-paper'
 import lightTheme from '../../utillis/theme/lightTheme'
 import darkTheme from '../../utillis/theme/darkTheme'
 import { backErrow } from '../../assets'
+import NavHeader from '../../components/NavHeader'
 
 const PasswordSettings = ({ navigation }) => {
     const { myTheme } = useSelector(state => state.root.user);
@@ -14,26 +15,7 @@ const PasswordSettings = ({ navigation }) => {
     return (
         <SafeAreaView
             style={[styles.V1, { backgroundColor: theme.colors.topbar }]}>
-            <View
-                style={styles.V2}>
-                <View style={{ flexDirection: 'row' }}>
-
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image
-                            style={[styles.img1, { tintColor: theme.colors.icon }]}
-                            resizeMode='contain'
-                            source={backErrow}></Image>
-
-                    </TouchableOpacity>
-                    <Text
-                        style={[heading.h4, { marginLeft: '5%', color: theme.colors.text }]}>Password Settings
-
-                    </Text>
-
-                </View>
-
-
-            </View>
+            <NavHeader navigation={navigation} title={'Password Settings'} />
             <View
                 style={[styles.V5, { backgroundColor: theme.colors.background }]}>
                 <View

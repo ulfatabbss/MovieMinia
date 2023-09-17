@@ -25,6 +25,8 @@ import PasswordSettings from '../screens/Auth/ResetPassword';
 import OTPverification from '../screens/Auth/OtpVerification';
 import ChangePassword from '../screens/Auth/ChangePassword';
 import { WP } from '../utillis/theme/Responsive';
+import DeleteAccount from '../screens/Settings/DeleteAccount';
+import UpdatePassword from '../screens/Auth/UpdatePassword';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const MyDrawer = () => {
@@ -69,6 +71,10 @@ const MainStack = () => {
         <Stack.Screen name="PasswordSettings" component={PasswordSettings} />
         <Stack.Screen name="OTPverification" component={OTPverification} />
         <Stack.Screen name="ChangePassword" component={ChangePassword} />
+        <Stack.Screen name="DeleteAccount" component={DeleteAccount} />
+        <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
+
+
 
 
 

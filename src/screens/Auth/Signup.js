@@ -9,11 +9,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Keyboard,
+  Alert,
+  Platform,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Primary } from '../../utillis/colors';
 import { Formik } from 'formik';
-import { applogo, hide, lock, Message, show } from '../../assets';
+import { applogo, hide, lock, Message, show, user } from '../../assets';
 
 import { SignUpValidationSchema } from '../../utillis/validationSchema';
 import { store } from '../../redux/store';
@@ -68,19 +70,23 @@ const Signup = ({ navigation }) => {
     confirmPassword: '',
   };
   const handlSignUp = values => {
-    console.log('ssssss');
     setLoading(true);
     const obj = {
+      name: values.name,
       email: values.email,
-      password: values.password,
-      confirmPassword: values.confirmPassword,
+      password: values.password
     };
     Register(obj)
       .then(async ({ data }) => {
         if (data.status == true) {
+          console.log(data);
           dispatch(setIsLogin(true));
         } else {
+          Alert.alert('⚠️ Credentials incorrect, please try again .....!');
         }
+      })
+      .catch(error => {
+        Alert.alert('⚠️ Check your internet connection and try again .....!');
       })
       .finally(() => setLoading(false));
   };
@@ -93,6 +99,7 @@ const Signup = ({ navigation }) => {
       validateOnMount={true}
       validationSchema={SignUpValidationSchema}
       onSubmit={values => {
+        console.log(values);
         handlSignUp(values);
       }}>
       {({
@@ -128,7 +135,43 @@ const Signup = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
+                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
+                },
+              ]}>
+              <Image
+                style={{
+                  height: RF(20),
+                  width: RF(20),
+                  tintColor: theme.colors.text,
+                }}
+                source={user}
+              />
+              <TextInput
+                placeholder="Enter Your Name"
+                placeholderTextColor="grey"
+                value={values.name}
+                autoCapitalize={'none'}
+                onChangeText={handleChange('name')}
+                style={{
+                  width: '85%',
+                  height: '100%',
+                  paddingLeft: RF(10),
+                  color: theme.colors.text,
                   backgroundColor: theme.colors.tabs,
+                  fontSize: RF(14),
+                }}
+              />
+            </View>
+            {errors.name && touched.email && (
+              <Text style={styles.errors}>{errors.name}</Text>
+            )}
+            <View
+              style={[
+                styles.inputTxt,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
               <Image
@@ -158,13 +201,14 @@ const Signup = ({ navigation }) => {
             {errors.email && touched.email ? (
               <Text style={styles.errors}>{errors.email}</Text>
             ) : null}
+
             <View
               style={[
                 styles.inputTxt,
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs,
+                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
               <Image
@@ -176,7 +220,7 @@ const Signup = ({ navigation }) => {
                 source={lock}
               />
               <TextInput
-                placeholder="Enter New Password"
+                placeholder="Enter Your Password"
                 placeholderTextColor="grey"
                 value={values.password}
                 autoCapitalize={'none'}
@@ -199,52 +243,8 @@ const Signup = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </View>
-            {errors.password && touched.email && (
+            {errors.password && touched.password && (
               <Text style={styles.errors}>{errors.password}</Text>
-            )}
-            <View
-              style={[
-                styles.inputTxt,
-                {
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: theme.colors.tabs,
-                },
-              ]}>
-              <Image
-                style={{
-                  height: RF(20),
-                  width: RF(20),
-                  tintColor: theme.colors.text,
-                }}
-                source={lock}
-              />
-              <TextInput
-                placeholder="Confirm Password"
-                placeholderTextColor="grey"
-                value={values.confirmPassword}
-                autoCapitalize={'none'}
-                onChangeText={handleChange('confirmPassword')}
-                secureTextEntry={PasswordVisibility}
-                style={{
-                  width: '85%',
-                  height: '100%',
-                  paddingLeft: RF(10),
-                  color: theme.colors.text,
-                  backgroundColor: theme.colors.tabs,
-                  fontSize: RF(14),
-                }}
-              />
-
-              <TouchableOpacity onPress={TogglePassword}>
-                <Image
-                  style={{ height: 22, width: 22, tintColor: theme.colors.text }}
-                  source={eyeIcon}
-                />
-              </TouchableOpacity>
-            </View>
-            {errors.confirmPassword && touched.confirmPassword && (
-              <Text style={styles.errors}>{errors.confirmPassword}</Text>
             )}
             <Button title={'Sign Up'} screen={() => handleSubmit()} />
             <View
@@ -266,10 +266,10 @@ const Signup = ({ navigation }) => {
               style={{
                 width: '100%',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'space-evenly',
               }}>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
+                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3 }]}
                 onPress={() => guestLogin()}>
                 <Image
                   style={styles.guestIcons}
@@ -278,7 +278,7 @@ const Signup = ({ navigation }) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
+                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3 }]}
                 onPress={() => guestLogin()}>
                 <Image
                   style={styles.guestIcons}
@@ -286,15 +286,17 @@ const Signup = ({ navigation }) => {
                   source={require('../../assets/Auth/facebook.png')}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
-                onPress={() => guestLogin()}>
-                <Image
-                  style={styles.guestIcons}
-                  source={require('../../assets/Auth/apple.png')}
-                  resizeMode={'contain'}
-                />
-              </TouchableOpacity>
+              {Platform.OS === 'ios' &&
+                <TouchableOpacity
+                  style={[styles.guestbtn, { backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3 }]}
+                  onPress={() => guestLogin()}>
+                  <Image
+                    style={styles.guestIcons}
+                    source={require('../../assets/Auth/apple.png')}
+                    resizeMode={'contain'}
+                  />
+                </TouchableOpacity>
+              }
             </View>
             <View
               style={{

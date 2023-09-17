@@ -1,9 +1,9 @@
 const endPoints = {
   login: 'login',
   register: 'register',
-  getMovies: 'movies',
+  getMovies: 'movies?category=',
   getUpcomming: 'UpComming_movies',
-  getDrama: 'darama',
+  getDrama: 'darama?category=',
   getSlider: 'slider',
   deleteMovie: 'dellplaylistmovie',
   addToplaylist: 'playlists',
@@ -13,6 +13,7 @@ const endPoints = {
   editProfile: 'editProfile/',
   deleteAccount: 'deleteAccount/',
   sendOTP: 'sendOtp',
+  checkUserExist: 'check-user-exist',
 };
 
 export {endPoints};

@@ -11,7 +11,7 @@ import {
   Text,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { caution, clock, play, playFrame, timer } from '../../assets';
+import { caution, clock, hide, play, playFrame, timer } from '../../assets';
 import HeadingText from '../../components/CustomText';
 import { RF } from '../../utillis/theme/Responsive';
 import {
@@ -53,7 +53,11 @@ const MovieDetailPage = ({ navigation, route }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      CheckPlaylist();
+      {
+        !isGuest &&
+          CheckPlaylist();
+
+      }
     }, [])
   );
   const HandlePlaylist = async () => {
@@ -110,11 +114,11 @@ const MovieDetailPage = ({ navigation, route }) => {
         <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center', marginTop: 10 }}>
           <Text style={{ ...Heading, color: theme.colors.text, fontSize: 20, width: "70%" }}>{item.title}</Text>
           {/* <HeadingText title={item.title} size={20} semi_bold color={theme.colors.text} /> */}
-          <TouchableOpacity style={{ ...styles.playframe, backgroundColor: Primary_Light }} disabled={playlistAdded}
+          <TouchableOpacity style={{ ...styles.playframe, backgroundColor: Primary_Light }} disabled={playlistAdded || isGuest}
             onPress={() => {
               HandlePlaylist()
             }}>
-            <Image style={{ height: RF(21), width: RF(21), tintColor: null }} source={playFrame} />
+            <Image style={{ height: RF(21), width: RF(21) }} source={playlistAdded ? hide : playFrame} />
           </TouchableOpacity>
         </View>
         <View style={[FlexDirection, Extra.marginTop]}>
@@ -328,7 +332,7 @@ const MovieDetailPage = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
           <Reviews_Section />
-          <TouchableOpacity onPress={() => navigation.navigate('AddReview')}>
+          <TouchableOpacity disabled={isGuest} onPress={() => navigation.navigate('AddReview')}>
             <HeadingText
               title={'+ Add Feedback'}
               color={Secondary}
