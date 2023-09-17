@@ -76,30 +76,30 @@ const Notification = ({ navigation }) => {
                     source={item.img}
                 />
             </View>
-            <Text style={{ ...styles.notificationText, color: theme.colors.text }}>{item.Notify}</Text>
-            <Text style={{ ...styles.notificationTime, color: theme.colors.text }}>{item.time}</Text>
+            <Text style={{ ...styles.notificationText, color: theme?.colors?.text }}>{item.Notify}</Text>
+            <Text style={{ ...styles.notificationTime, color: theme?.colors?.text }}>{item.time}</Text>
         </View>
     );
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.topbar }]}>
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+        <SafeAreaView style={[styles.container, { backgroundColor: theme?.colors?.topbar }]}>
+            <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
 
-            <View style={[styles.header, { backgroundColor: theme.colors.topbar }]}>
+            <View style={[styles.header, { backgroundColor: theme?.colors?.topbar }]}>
                 <View style={styles.headerContent}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image
-                            style={[styles.backButton, { tintColor: theme.colors.icon }]}
+                            style={[styles.backButton, { tintColor: theme?.colors?.icon }]}
                             resizeMode='contain'
                             source={backErrow}
                         />
                     </TouchableOpacity>
-                    <Text style={[styles.headerText, { color: theme.colors.text }]}>Notification</Text>
+                    <Text style={[styles.headerText, { color: theme?.colors?.text }]}>Notification</Text>
                 </View>
             </View>
-            <View style={[styles.content, { backgroundColor: theme.colors.background }]}>
+            <View style={[styles.content, { backgroundColor: theme?.colors?.background }]}>
                 <View style={styles.notificationList}>
                     {data.length === 0 ? null : (
-                        <Text style={[styles.notificationCount, { color: theme.colors.text }]}>
+                        <Text style={[styles.notificationCount, { color: theme?.colors?.text }]}>
                             {data.length} Notification
                         </Text>
                     )}

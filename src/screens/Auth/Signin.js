@@ -89,10 +89,13 @@ const Signin = ({ navigation }) => {
         dispatch(setIsLogin(true));
       } else {
         Alert.alert('⚠️ Login credentials incorrect, please try again .....!');
-
       }
     } catch (error) {
-      Alert.alert('⚠️ Check your internet connection and try again .....!');
+      if (error.message === 'Network Error') {
+        Alert.alert('⚠️ Check your internet connection and try again .....!');
+      } else {
+        Alert.alert('⚠️ An error occurred. Please try again later.');
+      }
 
     } finally {
       setIsLoading(false);
@@ -143,7 +146,11 @@ const Signin = ({ navigation }) => {
             }
           })
           .catch(error => {
-            Alert.alert('⚠️ Check your internet connection and try again .....!');
+            if (error.message === 'Network Error') {
+              Alert.alert('⚠️ Check your internet connection and try again .....!');
+            } else {
+              Alert.alert('⚠️ An error occurred. Please try again later.');
+            }
           })
       }
     } catch (error) {
@@ -215,7 +222,8 @@ const Signin = ({ navigation }) => {
             };
             const response = await Login(loginObj);
             if (response.data.status == true) {
-              dispatch(setUser(response.user));
+              // console.log(response.data.user);
+              dispatch(setUser(response.data.user));
               dispatch(setIsFacebook(true))
               // console.log(response.data);
               dispatch(setIsLogin(true));
@@ -233,14 +241,18 @@ const Signin = ({ navigation }) => {
             Register(registerObj)
               .then(async ({ data }) => {
                 if (data.status == true) {
-                  console.log(data);
+                  // console.log(data);
                   // dispatch(setIsLogin(true));
                 } else {
                   Alert.alert('⚠️ Credentials incorrect, please try again .....!');
                 }
               })
               .catch(error => {
-                Alert.alert('⚠️ Check your internet connection and try again .....!');
+                if (error.message === 'Network Error') {
+                  Alert.alert('⚠️ Check your internet connection and try again .....!');
+                } else {
+                  Alert.alert('⚠️ An error occurred. Please try again later.');
+                }
               })
           }
           // You can access user profile picture like this:
@@ -296,14 +308,14 @@ const Signin = ({ navigation }) => {
         <View
           style={[
             styles.container,
-            { backgroundColor: theme.colors.background },
+            { backgroundColor: theme?.colors?.background },
           ]}>
           {logoVisible && <Logo />}
           <View style={styles.formWrapper}>
             <Text
               style={{
                 ...Heading,
-                color: theme.colors.text,
+                color: theme?.colors?.text,
                 fontSize: RF(16),
                 fontFamily: 'Raleway-Bold',
               }}>
@@ -315,10 +327,10 @@ const Signin = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
+                  backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
-              <Image style={{ height: RF(20), width: RF(20) }} source={Message} />
+              <Image style={{ height: RF(20), width: RF(20), tintColor: theme?.colors?.icon }} source={Message} />
               <TextInput
                 placeholder="Enter your email"
                 placeholderTextColor="grey"
@@ -329,8 +341,8 @@ const Signin = ({ navigation }) => {
                   width: '85%',
                   paddingLeft: RF(10),
                   height: '100%',
-                  backgroundColor: theme.colors.tabs,
-                  color: theme.colors.text,
+                  backgroundColor: theme?.colors?.tabs,
+                  color: theme?.colors?.text,
                   fontSize: RF(14),
                 }}
               />
@@ -344,10 +356,10 @@ const Signin = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
+                  backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
-              <Image style={{ height: RF(20), width: RF(20) }} source={lock} />
+              <Image style={{ height: RF(20), width: RF(20), tintColor: theme?.colors?.icon }} source={lock} />
               <TextInput
                 placeholder="Password"
                 placeholderTextColor="grey"
@@ -359,8 +371,8 @@ const Signin = ({ navigation }) => {
                   width: '85%',
                   height: '100%',
                   paddingLeft: RF(10),
-                  color: theme.colors.text,
-                  backgroundColor: theme.colors.tabs,
+                  color: theme?.colors?.text,
+                  backgroundColor: theme?.colors?.tabs,
                   fontSize: RF(14),
 
                 }}
@@ -368,7 +380,7 @@ const Signin = ({ navigation }) => {
 
               <TouchableOpacity onPress={TogglePassword}>
                 <Image
-                  style={{ height: 22, width: 22, tintColor: theme.colors.text }}
+                  style={{ height: 22, width: 22, tintColor: theme?.colors?.icon }}
                   source={eyeIcon}
                 />
               </TouchableOpacity>
@@ -390,7 +402,7 @@ const Signin = ({ navigation }) => {
               }}>
               <CheckBox
                 boxType="circle"
-                onFillColor={theme.colors.text}
+                onFillColor={theme?.colors?.text}
                 value={toggleCheckBox}
                 onValueChange={newValue => setToggleCheckBox(newValue)}
               />
@@ -399,7 +411,7 @@ const Signin = ({ navigation }) => {
                   ...smalltext,
                   fontFamily: 'Raleway-Regular',
                   fontSize: RF(12),
-                  color: theme.colors.text,
+                  color: theme?.colors?.text,
                 }}>
                 Remember me
               </Text>
@@ -426,11 +438,11 @@ const Signin = ({ navigation }) => {
                 alignItems: 'center',
               }}>
               <View
-                style={[styles.line, { backgroundColor: theme.colors.text }]}
+                style={[styles.line, { backgroundColor: theme?.colors?.text }]}
               />
-              <Text style={{ color: theme.colors.text }}>Or</Text>
+              <Text style={{ color: theme?.colors?.text }}>Or</Text>
               <View
-                style={[styles.line, { backgroundColor: theme.colors.text }]}
+                style={[styles.line, { backgroundColor: theme?.colors?.text }]}
               />
             </View>
             <View
@@ -441,7 +453,7 @@ const Signin = ({ navigation }) => {
               }}>
 
               <TouchableOpacity onPress={() => GoogleLogin()}
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}>
+                style={[styles.guestbtn, { backgroundColor: "#ffff" }]}>
                 <Image
                   style={styles.guestIcons}
                   resizeMode={'contain'}
@@ -450,120 +462,16 @@ const Signin = ({ navigation }) => {
 
               </TouchableOpacity>
               <TouchableOpacity onPress={() => onFacebookButtonPress()}
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}>
+                style={[styles.guestbtn, { backgroundColor: "#ffff" }]}>
                 <Image
                   style={styles.guestIcons}
                   resizeMode={'contain'}
                   source={require('../../assets/Auth/facebook.png')}
                 />
               </TouchableOpacity>
-              {/* <View style={{ ...styles.guestbtn, overflow: 'hidden' }}>
-                <LoginButton
-                  style={{
-                    height: RF(35),
-                    width: '100%', backgroundColor: '#4267B2'
-                  }}
-                  onLoginFinished={
-                    (error, result) => {
-                      if (error) {
-                        Alert.alert("login has error: " + result.error);
-                      } else if (result.isCancelled) {
-                        Alert.alert("login is cancelled.");
-                      } else {
-
-                        AccessToken.getCurrentAccessToken().then(
-                          (data) => {
-                            let accessToken = data.accessToken
-                            Alert.alert(accessToken.toString())
-                            console.log(data, "helllllllo i am your data");
-                            const responseInfoCallback = (error, result) => {
-                              if (error) {
-                                console.log(error)
-                                Alert.alert('Error fetching data: ' + error.toString());
-                              } else {
-                                console.log(result)
-                                Alert.alert('Success fetching data: ' + result.toString());
-                              }
-                            }
-
-                            const infoRequest = new GraphRequest(
-                              '/me',
-                              {
-                                accessToken: accessToken,
-                                parameters: {
-                                  fields: {
-                                    string: 'email,name,first_name,middle_name,last_name'
-                                  }
-                                }
-                              },
-                              responseInfoCallback
-                            );
-
-                            // Start the graph request.
-                            new GraphRequestManager().addRequest(infoRequest).start()
-                          }
-                        )
-                      }
-                    }
-                  }
-                  onLogoutFinished={() => Alert.alert("logout.")} />
-              </View> */}
-
-              {/* <Image
-                  style={styles.guestIcons}
-                  resizeMode={'contain'}
-                  source={require('../../assets/Auth/facebook.png')}
-                /> */}
-              {/* </LoginButton> */}
-              {/* <LoginButton
-                style={{ height: HP(5), width: WP(95), borderRadius: 10, alignSelf: 'center', alignItems: 'center', justifyContent: 'center' }}
-                onLoginFinished={
-                  (error, result) => {
-                    if (error) {
-                      Alert.alert("login has error: " + result.error);
-                    } else if (result.isCancelled) {
-                      Alert.alert("login is cancelled.");
-                    } else {
-
-                      AccessToken.getCurrentAccessToken().then(
-                        (data) => {
-                          let accessToken = data.accessToken
-                          Alert.alert(accessToken.toString())
-                          console.log(data, "helllllllo i am your data");
-                          const responseInfoCallback = (error, result) => {
-                            if (error) {
-                              console.log(error)
-                              Alert.alert('Error fetching data: ' + error.toString());
-                            } else {
-                              console.log(result)
-                              Alert.alert('Success fetching data: ' + result.toString());
-                            }
-                          }
-
-                          const infoRequest = new GraphRequest(
-                            '/me',
-                            {
-                              accessToken: accessToken,
-                              parameters: {
-                                fields: {
-                                  string: 'email,name,first_name,middle_name,last_name'
-                                }
-                              }
-                            },
-                            responseInfoCallback
-                          );
-
-                          // Start the graph request.
-                          new GraphRequestManager().addRequest(infoRequest).start()
-                        }
-                      )
-                    }
-                  }
-                }
-                onLogoutFinished={() => Alert.alert("logout.")} /> */}
               {Platform.OS === 'ios' &&
                 <TouchableOpacity
-                  style={[styles.guestbtn, { backgroundColor: theme.colors.tabs }]}
+                  style={[styles.guestbtn, { backgroundColor: "#ffff" }]}
                 >
                   <Image
                     style={styles.guestIcons}
@@ -583,7 +491,7 @@ const Signin = ({ navigation }) => {
               <Text
                 style={{
                   ...smalltext,
-                  color: theme.colors.text,
+                  color: theme?.colors?.text,
                   fontSize: RF(12),
                   fontFamily: 'Raleway-Bold',
                 }}>

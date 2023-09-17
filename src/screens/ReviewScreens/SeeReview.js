@@ -74,7 +74,7 @@ const Review = ({ navigation, route }) => {
                 <View
                     style={{ marginLeft: '2%' }}>
                     <Text
-                        style={{ ...Heading, color: theme.colors.text }}>{item.user_id?.name}</Text>
+                        style={{ ...Heading, color: theme?.colors?.text }}>{item.user_id?.name}</Text>
                     <View
                         style={{ flexDirection: 'row', marginTop: 5 }}>
                         <Image
@@ -83,7 +83,7 @@ const Review = ({ navigation, route }) => {
                             source={clock}>
                         </Image>
                         <Text
-                            style={{ ...smalltext, marginLeft: '2%', color: theme.colors.text }}>{formatDate(item?.timestamp)}
+                            style={{ ...smalltext, marginLeft: '2%', color: theme?.colors?.text }}>{formatDate(item?.timestamp)}
 
                         </Text>
                     </View>
@@ -93,7 +93,7 @@ const Review = ({ navigation, route }) => {
             </View>
             <Text
                 numberOfLines={2}
-                style={{ ...text, color: theme.colors.text, marginTop: 5 }}>{item?.feedback_text}
+                style={{ ...text, color: theme?.colors?.text, marginTop: 5 }}>{item?.feedback_text}
 
             </Text>
 
@@ -101,25 +101,25 @@ const Review = ({ navigation, route }) => {
     )
     return (
         <SafeAreaView
-            style={[styles.V1, { backgroundColor: theme.colors.topbar }]}>
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+            style={[styles.V1, { backgroundColor: theme?.colors?.topbar }]}>
+            <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
 
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
-                        style={[styles.backButton, { tintColor: theme.colors.icon }]}
+                        style={[styles.backButton, { tintColor: theme?.colors?.icon }]}
                         resizeMode="contain"
                         source={backErrow}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Heading, color: theme.colors.text }}>Reviews Listing</Text>
+                <Text style={{ ...Heading, color: theme?.colors?.text }}>Reviews Listing</Text>
             </View>
             <View
-                style={[styles.V5, { backgroundColor: theme.colors.background }]}>
+                style={[styles.V5, { backgroundColor: theme?.colors?.background }]}>
                 <View
                     style={styles.V3}>
                     {data.length == 0 ? null : <Text
-                        style={{ ...Heading, fontWeight: '600', color: theme.colors.text }}>{data?.length} total feedbacks</Text>}
+                        style={{ ...Heading, fontWeight: '600', color: theme?.colors?.text }}>{data?.length} total feedbacks</Text>}
                     <FlatList
                         renderItem={FLV}
                         data={data}>

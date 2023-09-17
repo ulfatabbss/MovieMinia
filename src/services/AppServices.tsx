@@ -58,6 +58,14 @@ const DeleteAccountApi = (id: any) => {
 const SendOTP = (obj: any) => {
   return HTTP_APP.post(endPoints.sendOTP, obj);
 };
+const ConforOtp = (obj: any) => {
+  return HTTP_APP.post(endPoints.conformOtp, obj);
+};
+const UserPasswordUpdate = (obj: any) => {
+  console.log(obj);
+
+  return HTTP_APP.post(endPoints.updateUserPassword, obj);
+};
 export {
   GetMovies,
   GetUpcomming,
@@ -74,4 +82,6 @@ export {
   DeleteAccountApi,
   SendOTP,
   checkUserExist,
+  ConforOtp,
+  UserPasswordUpdate,
 };

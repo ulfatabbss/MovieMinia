@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image, ScrollView, Alert, SafeAreaView } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { container, FlexDirection, smalltext } from '../../utillis/styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
@@ -10,21 +10,25 @@ import NavHeader from '../../components/NavHeader';
 import OTPTextInput from 'react-native-otp-textinput';
 import HeadingTitle from '../../components/HeadingTitle';
 import Button from '../../components/Button';
-import { SendOTP } from '../../services/AppServices';
+import { ConforOtp, DeleteAccountApi, SendOTP } from '../../services/AppServices';
 import { Black, Secondary } from '../../utillis/theme';
 import { Primary, black } from '../../utillis/colors';
-import { backErrow } from '../../assets';
+import { setGuest, setIsFacebook, setIsGoogle, setIsLogin } from '../../redux/reducers/userReducers';
+import Loader from '../../components/Loader';
 
 const OTPverification = ({ navigation, route }) => {
     const [timer, setTimer] = useState(30);
-    const { value } = route.params || {};
+    const { value, type } = route.params || {};
     let otpInput = useRef(null);
-    const { myTheme } = useSelector(state => state.root.user) || {};
+    const dispatch = useDispatch();
+    const [OTP, setOtp] = useState('')
+    const { myTheme, user } = useSelector(state => state.root.user) || {};
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         if (timer <= 0) {
             // Timer has reached zero, navigate or take appropriate action here
-            console.log('Timer has reached zero');
             // You can navigate to the next screen here if needed
         } else {
             const interval = setInterval(() => {
@@ -37,33 +41,65 @@ const OTPverification = ({ navigation, route }) => {
         }
     }, [timer]);
     const handleVerification = async () => {
-        console.log(value, 'gggggggggggggggg');
         const obj = {
             email: value,
         };
         if (obj) {
-            console.log('true');
             const result = await SendOTP(obj);
-            console.log(result.data.status, "agyaaa otp")
-            //   if (result.data.status === true) {
-
-            //   } else {
-            //     Alert.alert(result?.data?.message);
-            //   }
         }
     };
     const resetTimer = () => {
         handleVerification();
+        if (otpInput.current) {
+            otpInput.current.clear();
+        }
         setTimer(30); // Reset the timer to 30 seconds
     };
-    const handleCodeFilled = otp => {
-        console.log('OTP Entered:', otp);
-        // You can perform any actions with the entered OTP here
+    const handleCodeFilled = async (otp) => {
+        setOtp(otp)
     };
+    const HandleOtp = async () => {
+        setIsLoading(true)
+        otpObj = {
+            email: value,
+            otp: OTP
+        }
+        const result = await ConforOtp(otpObj)
+        if (result.data.status === true) {
+            if (type == 'update') {
+                navigation.navigate('UpdatePassword', { value: value })
+            } else {
+                const id = user?._id
+                const result = await DeleteAccountApi(id)
+                if (result.data.status == true) {
+                    await dispatch(setIsLogin(false))
+                    await navigation.replace("Signin")
+                    Alert.alert('Account Delete Successfully...!')
+                }
+                else {
+                    setModalVisible(false)
+                    Alert.alert('something went wronggggg!')
+                }
+            }
+            if (otpInput.current) {
+                otpInput.current.clear();
+            }
+        } else {
+            Alert.alert(result?.data?.message);
+            if (otpInput.current) {
+                otpInput.current.clear();
+            }
+        }
+        setIsLoading(false)
+    }
+
+    if (isLoading) {
+        return <Loader />;
+    }
     return (
-        <SafeAreaView style={[container, { backgroundColor: theme.colors.background }]}>
+        <SafeAreaView style={[container, { backgroundColor: theme?.colors?.background }]}>
             <NavHeader navigation={navigation} title={'OTP Verification'} />
-            <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+            <View style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
                 <Image
                     style={{ height: RF(300), width: '100%' }}
                     source={require('../../assets/appIcons/otp.png')}
@@ -76,7 +112,7 @@ const OTPverification = ({ navigation, route }) => {
                 <OTPTextInput
                     tintColor={Primary}
                     textInputStyle={{
-                        backgroundColor: theme.colors.tabs,
+                        backgroundColor: theme?.colors?.tabs,
                         borderRadius: 10,
                         height: RF(54),
                         width: RF(54),
@@ -86,7 +122,7 @@ const OTPverification = ({ navigation, route }) => {
                             handleCodeFilled(text); // Handle OTP input completion
                         }
                     }}
-                    ref={e => (otpInput = e)}></OTPTextInput>
+                    ref={otpInput}></OTPTextInput>
 
                 <View style={[FlexDirection, { marginBottom: RF(30) }]}>
                     <Text
@@ -95,7 +131,7 @@ const OTPverification = ({ navigation, route }) => {
                         style={{
                             ...smalltext,
                             fontSize: RF(14),
-                            color: timer == 0 ? 'black' : 'lightgray',
+                            color: Secondary,
                             fontFamily: 'Raleway-Regular',
                         }}>
                         Re-send OTP
@@ -106,6 +142,7 @@ const OTPverification = ({ navigation, route }) => {
                                 ...smalltext,
                                 fontSize: RF(14),
                                 fontFamily: 'Raleway-Regular',
+                                color: theme?.colors?.text
                             }}>
                             Time:
                         </Text>
@@ -123,7 +160,7 @@ const OTPverification = ({ navigation, route }) => {
                 </View>
                 <Button
                     title={'Confirm'}
-                    screen={() => navigation.navigate('UpdatePassword')}
+                    screen={() => HandleOtp()}
                 />
             </View>
         </SafeAreaView>

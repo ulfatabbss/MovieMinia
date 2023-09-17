@@ -15,7 +15,7 @@ import HeadingText from '../../components/CustomText';
 
 const Settings = ({ navigation }) => {
     const { myTheme, user, isGuest, google, facebook } = useSelector((state) => state.root.user);
-    const theme = useTheme(myTheme === 'lightTheme' ? lightTheme : darkTheme);
+    const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     const [logOutModalVisible, setIsLogOutModalVisible] = useState(false)
     const dispatch = useDispatch()
     const handleLogout = () => {
@@ -26,13 +26,13 @@ const Settings = ({ navigation }) => {
     }
     const renderSettingItem = (icon, label, onPress) => (
         <TouchableOpacity style={styles.settingItem} onPress={onPress}>
-            <Image style={{ ...styles.settingIcon, tintColor: theme.colors.icon }} resizeMode="contain" source={icon} />
-            <Text style={{ ...Heading, color: theme.colors.text, fontSize: 16 }}>{label}</Text>
+            <Image style={{ ...styles.settingIcon, tintColor: theme?.colors?.icon }} resizeMode="contain" source={icon} />
+            <Text style={{ ...Heading, color: theme?.colors?.text, fontSize: 16 }}>{label}</Text>
         </TouchableOpacity>
     );
     return (
-        <SafeAreaView style={{ ...styles.container, backgroundColor: theme.colors.topbar }}>
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+        <SafeAreaView style={{ ...styles.container, backgroundColor: theme?.colors?.topbar }}>
+            <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
             {logOutModalVisible ? <View style={styles.modal_FadeView} /> : null}
             <Modal animationType="slide" transparent={true} visible={logOutModalVisible}><View style={styles.modalContainer}>
                 <View style={styles.modalCard}>
@@ -74,16 +74,16 @@ const Settings = ({ navigation }) => {
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
-                        style={[styles.backButton, { tintColor: theme.colors.icon }]}
+                        style={[styles.backButton, { tintColor: theme?.colors?.icon }]}
                         resizeMode="contain"
                         source={backErrow}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Heading, color: theme.colors.text }}>Settings</Text>
+                <Text style={{ ...Heading, color: theme?.colors?.text }}>Settings</Text>
             </View>
-            <View style={{ ...styles.content, backgroundColor: theme.colors.background }}>
+            <View style={{ ...styles.content, backgroundColor: theme?.colors?.background }}>
                 <View style={styles.settingsList}>
-                    {renderSettingItem(passSettings, 'Password Settings', () => navigation.navigate('PasswordSettings'))}
+                    {!google && !facebook && renderSettingItem(passSettings, 'Password Settings', () => navigation.navigate('PasswordSettings'))}
                     {renderSettingItem(terms, 'Terms & Conditions', () => navigation.navigate('Terms'))}
                     {renderSettingItem(policy, 'Privacy Policy', () => navigation.navigate('Policy'))}
                     {renderSettingItem(faq, 'FAQs', () => navigation.navigate('Faq'))}

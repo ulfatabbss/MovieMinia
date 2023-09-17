@@ -4,16 +4,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setGuest, setIsFacebook, setIsGoogle, setIsLogin, setTheme } from '../redux/reducers/userReducers';
 import { HP, RF, WP } from '../utillis/theme/Responsive';
 import { useTheme } from 'react-native-paper';
-import { store } from '../redux/store';
 import { Primary, white } from '../utillis/colors';
 import { Secondary, White } from '../utillis/theme';
 import { caution } from '../assets';
 import HeadingText from './CustomText';
 const CustomDrawerContent = ({ navigation }) => {
   const dispatch = useDispatch();
-  const { myTheme, user, isGuest, google, facebook } = useSelector((state) => state.root.user);
-  const [textColor, setTextColor] = useState(myTheme == 'darkTheme' ? 'white' : 'black')
+  const { myTheme, user, isGuest, isGoogle, isFacebook } = useSelector((state) => state.root.user);
   const theme = useTheme(myTheme == 'darkTheme' ? 'lightTheme' : 'darkTheme');
+  const [textColor, setTextColor] = useState(myTheme == 'darkTheme' ? 'white' : 'black')
   const [logOutModalVisible, setIsLogOutModalVisible] = useState(false)
   const toggleTheme = async () => {
     const newTheme = myTheme == 'darkTheme' ? 'lightTheme' : 'darkTheme';
@@ -27,12 +26,12 @@ const CustomDrawerContent = ({ navigation }) => {
     dispatch(setIsLogin(false))
   }
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.tabs, borderTopRightRadius: 30, borderBottomRightRadius: 30 }}>
+    <View style={{ flex: 1, backgroundColor: theme?.colors?.tabs, borderTopRightRadius: 30, borderBottomRightRadius: 30 }}>
       <View style={{ flex: 1 }}>
         {logOutModalVisible ? <View style={styles.modal_FadeView} /> : null}
         <Modal animationType="slide" transparent={true} visible={logOutModalVisible}><View style={styles.modalContainer}>
           <View style={styles.modalCard}>
-            <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
+            <Image style={{ height: RF(90), width: RF(90) }} source={caution ? caution : null} />
             <HeadingText title={'Come back Soon!'} bold size={20} top={5} />
             <HeadingText
               title={
@@ -54,7 +53,7 @@ const CustomDrawerContent = ({ navigation }) => {
                   color={White}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.signUp_Button]}
+              <TouchableOpacity style={{ ...styles.button, ...styles.signUp_Button }}
                 onPress={() => setIsLogOutModalVisible(!logOutModalVisible)}>
                 <HeadingText
                   title={'Cancel'}
@@ -67,18 +66,18 @@ const CustomDrawerContent = ({ navigation }) => {
           </View>
         </View>
         </Modal>
-        <TouchableOpacity style={styles.profileContainer} disabled={isGuest || google || facebook} onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity style={styles.profileContainer} disabled={isGuest || isGoogle || isFacebook} onPress={() => navigation.navigate('Profile')}>
           <View style={styles.profileImageWrapper}>
             <Image
               style={styles.profileImage}
               source={{ uri: isGuest ? "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg?size=626&ext=jpg&uid=R28842868&ga=GA1.2.332396238.1691144532&semt=ais" : user?.profilePicture }}
             />
-            <Text style={{ ...styles.profileName, color: textColor }}>{isGuest ? 'Guest User' : user.name}</Text>
+            <Text style={{ ...styles.profileName, color: textColor }}>{isGuest ? 'Guest User' : user?.name}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={toggleTheme} style={styles.othercontainer}>
+        <TouchableOpacity onPress={() => toggleTheme()} style={styles.othercontainer}>
           <Image
-            style={{ ...styles.logoutImage }}
+            style={styles.logoutImage}
             source={require('../assets/them.png')}
           />
           <Text style={{ ...styles.otherText, color: textColor }}>Switch Theme</Text>
@@ -95,7 +94,6 @@ const CustomDrawerContent = ({ navigation }) => {
         }
 
       </View>
-      {/* Other content */}
       <TouchableOpacity style={styles.bottomContainer} onPress={() => setIsLogOutModalVisible(true)}>
         <Image resizeMode='contain' style={{ ...styles.logoutImage, tintColor: textColor }} source={require('../assets/logout.png')} />
         <Text style={{ ...styles.logoutText, color: textColor }}>Logout</Text>

@@ -116,7 +116,7 @@ const SearchMovie = ({ navigation }) => {
                     colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)']}>
                     <Text
                         style={{
-                            color: theme.colors.text,
+                            color: theme?.colors?.text,
                             fontFamily: 'Raleway-Bold',
                             marginBottom: 8,
                             fontSize: 17,
@@ -133,26 +133,26 @@ const SearchMovie = ({ navigation }) => {
         </TouchableOpacity>
     );
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={myTheme == 'lightTheme' ? 'dark-content' : 'light-content'} />
+        <ScrollView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
+            <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={myTheme == 'lightTheme' ? 'dark-content' : 'light-content'} />
 
-            <View style={{ ...TopBar, backgroundColor: theme.colors.topbar }}>
+            <View style={{ ...TopBar, backgroundColor: theme?.colors?.topbar }}>
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
                     <Image
                         resizeMode="contain"
-                        style={{ ...SmallIcons, tintColor: theme.colors.icon }}
+                        style={{ ...SmallIcons, tintColor: theme?.colors?.icon }}
                         source={backErrow} />
                 </TouchableOpacity>
 
-                <View style={{ ...styles.InputView, backgroundColor: theme.colors.background }}>
+                <View style={{ ...styles.InputView, backgroundColor: theme?.colors?.background }}>
                     <Image
-                        style={{ ...SmallIcons, tintColor: theme.colors.icon }}
+                        style={{ ...SmallIcons, tintColor: theme?.colors?.icon }}
                         source={searchIcon}></Image>
                     <TextInput
                         value={search}
                         onChangeText={text => searchFilter(text)}
                         placeholder="Search Movies"
-                        placeholderTextColor={theme.colors.text}
+                        placeholderTextColor={theme?.colors?.text}
                         color="gray"
                         style={{ width: '90%' }} />
                 </View>
@@ -160,7 +160,7 @@ const SearchMovie = ({ navigation }) => {
             <View style={{ flex: 1, padding: 10 }}>
                 {isRecent ? (
                     <View style={{ flex: 1 }}>
-                        <Text style={{ color: theme.colors.text }}>Recent Searches</Text>
+                        <Text style={{ color: theme?.colors?.text }}>Recent Searches</Text>
                         <FlatList numColumns={3}
                             data={recentSearches}
                             renderItem={recentListView}></FlatList>
@@ -169,7 +169,7 @@ const SearchMovie = ({ navigation }) => {
                     <View style={{ flex: 1 }}>
                         <Text
                             style={{
-                                color: theme.colors.text,
+                                color: theme?.colors?.text,
                                 fontFamily: 'Raleway-Medium',
                                 fontSize: 14,
                             }}>
@@ -197,7 +197,7 @@ const SearchMovie = ({ navigation }) => {
                                 </Text>
                                 <Text
                                     style={{
-                                        color: theme.colors.text,
+                                        color: theme?.colors?.text,
                                         fontFamily: 'Raleway-Regular',
                                         fontSize: 16,
                                         textAlign: 'center',

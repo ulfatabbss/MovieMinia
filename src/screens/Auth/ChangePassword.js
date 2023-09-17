@@ -37,7 +37,7 @@ const ChangePassword = ({ navigation }) => {
             if (obj) {
                 const result = await SendOTP(obj)
                 if (result.data.status === true) {
-                    navigation.navigate("OTPverification", { value: values.email });
+                    navigation.navigate("OTPverification", { value: values.email, type: 'update' });
                 } else {
                     Alert.alert(
                         result?.data?.message
@@ -45,13 +45,19 @@ const ChangePassword = ({ navigation }) => {
                 }
             }
             setIsLoading(false)
-        } catch {
-            Alert.alert('⚠️ Check your internet connection and try again .....!');
+        } catch (error) {
+            if (error.message === 'Network Error') {
+                Alert.alert('⚠️ Check your internet connection and try again .....!');
+            } else {
+                Alert.alert('⚠️ An error occurred. Please try again later.');
+            }
         }
     };
     if (isLoading) {
         return <Loader />;
     }
+
+
     return (
         <Formik
             initialValues={initialValues}
@@ -62,19 +68,19 @@ const ChangePassword = ({ navigation }) => {
                 handleVerification(values);
             }}>
             {({ values, errors, touched, handleChange, handleSubmit }) => (
-                <View style={[container, { backgroundColor: theme.colors.background }]}>
+                <View style={[container, { backgroundColor: theme?.colors?.background }]}>
                     <NavHeader navigation={navigation} title={'Email conformation'} />
                     <HeadingTitle
                         // title1={'RESET PASSWORD'}
                         titile2={'Please enter your email to request a password reset!'}
                     />
                     <View
-                        style={[styles.inputView, { backgroundColor: theme.colors.tabs }]}>
+                        style={[styles.inputView, { backgroundColor: theme?.colors?.tabs }]}>
                         <Image
                             style={{
                                 height: RF(20),
                                 width: RF(20),
-                                tintColor: theme.colors.icon,
+                                tintColor: theme?.colors?.icon,
                             }}
                             source={Message}
                         />
@@ -86,7 +92,7 @@ const ChangePassword = ({ navigation }) => {
                             autoCapitalize={'none'}
                             style={[
                                 styles.emailInput,
-                                { backgroundColor: theme.colors.tabs, color: theme.colors.text },
+                                { backgroundColor: theme?.colors?.tabs, color: theme?.colors?.text },
                             ]}
                         />
                     </View>
@@ -121,15 +127,15 @@ const styles = StyleSheet.create({
         height: '100%',
         fontSize: RF(14),
     },
-    centeredView: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        bottom: 20
-    },
+
     errors: {
         fontSize: 12,
         marginStart: 10,
         color: Primary,
+    }, centeredView: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        bottom: 20
     },
 });

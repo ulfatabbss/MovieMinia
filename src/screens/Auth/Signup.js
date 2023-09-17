@@ -116,14 +116,14 @@ const Signup = ({ navigation }) => {
         <View
           style={[
             styles.container,
-            { backgroundColor: theme.colors.background },
+            { backgroundColor: theme?.colors?.background },
           ]}>
           {logoVisible && <Logo />}
           <View style={{ ...styles.formWrapper, marginTop: logoVisible ? null : "20%" }}>
             <Text
               style={{
                 ...Heading,
-                color: theme.colors.text,
+                color: theme?.colors?.text,
                 fontSize: RF(16),
                 fontFamily: 'Raleway-Bold',
               }}>
@@ -135,14 +135,14 @@ const Signup = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
+                  backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
               <Image
                 style={{
                   height: RF(20),
                   width: RF(20),
-                  tintColor: theme.colors.text,
+                  tintColor: theme?.colors?.text,
                 }}
                 source={user}
               />
@@ -156,8 +156,8 @@ const Signup = ({ navigation }) => {
                   width: '85%',
                   height: '100%',
                   paddingLeft: RF(10),
-                  color: theme.colors.text,
-                  backgroundColor: theme.colors.tabs,
+                  color: theme?.colors?.text,
+                  backgroundColor: theme?.colors?.tabs,
                   fontSize: RF(14),
                 }}
               />
@@ -171,14 +171,14 @@ const Signup = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
+                  backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
               <Image
                 style={{
                   height: RF(20),
                   width: RF(20),
-                  tintColor: theme.colors.text,
+                  tintColor: theme?.colors?.text,
                 }}
                 source={Message}
               />
@@ -192,8 +192,8 @@ const Signup = ({ navigation }) => {
                   width: '85%',
                   paddingLeft: RF(10),
                   height: '100%',
-                  backgroundColor: theme.colors.tabs,
-                  color: theme.colors.text,
+                  backgroundColor: theme?.colors?.tabs,
+                  color: theme?.colors?.text,
                   fontSize: RF(14),
                 }}
               />
@@ -208,14 +208,14 @@ const Signup = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3
+                  backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3
                 },
               ]}>
               <Image
                 style={{
                   height: RF(20),
                   width: RF(20),
-                  tintColor: theme.colors.text,
+                  tintColor: theme?.colors?.text,
                 }}
                 source={lock}
               />
@@ -230,15 +230,15 @@ const Signup = ({ navigation }) => {
                   width: '85%',
                   height: '100%',
                   paddingLeft: RF(10),
-                  color: theme.colors.text,
-                  backgroundColor: theme.colors.tabs,
+                  color: theme?.colors?.text,
+                  backgroundColor: theme?.colors?.tabs,
                   fontSize: RF(14),
                 }}
               />
 
               <TouchableOpacity onPress={TogglePassword}>
                 <Image
-                  style={{ height: 22, width: 22, tintColor: theme.colors.text }}
+                  style={{ height: 22, width: 22, tintColor: theme?.colors?.text }}
                   source={eyeIcon}
                 />
               </TouchableOpacity>
@@ -255,11 +255,11 @@ const Signup = ({ navigation }) => {
                 alignItems: 'center',
               }}>
               <View
-                style={[styles.line, { backgroundColor: theme.colors.text }]}
+                style={[styles.line, { backgroundColor: theme?.colors?.text }]}
               />
-              <Text style={{ color: theme.colors.text }}>Or</Text>
+              <Text style={{ color: theme?.colors?.text }}>Or</Text>
               <View
-                style={[styles.line, { backgroundColor: theme.colors.text }]}
+                style={[styles.line, { backgroundColor: theme?.colors?.text }]}
               />
             </View>
             <View
@@ -269,7 +269,7 @@ const Signup = ({ navigation }) => {
                 justifyContent: 'space-evenly',
               }}>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3 }]}
+                style={[styles.guestbtn, { backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3 }]}
                 onPress={() => guestLogin()}>
                 <Image
                   style={styles.guestIcons}
@@ -278,7 +278,7 @@ const Signup = ({ navigation }) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3 }]}
+                style={[styles.guestbtn, { backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3 }]}
                 onPress={() => guestLogin()}>
                 <Image
                   style={styles.guestIcons}
@@ -288,7 +288,7 @@ const Signup = ({ navigation }) => {
               </TouchableOpacity>
               {Platform.OS === 'ios' &&
                 <TouchableOpacity
-                  style={[styles.guestbtn, { backgroundColor: theme.colors.tabs, elevation: 1, shadowOffset: .3 }]}
+                  style={[styles.guestbtn, { backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3 }]}
                   onPress={() => guestLogin()}>
                   <Image
                     style={styles.guestIcons}
@@ -308,7 +308,7 @@ const Signup = ({ navigation }) => {
               <Text
                 style={{
                   ...smalltext,
-                  color: theme.colors.text,
+                  color: theme?.colors?.text,
                   fontSize: RF(12),
                   fontFamily: 'Raleway-Bold',
                 }}>

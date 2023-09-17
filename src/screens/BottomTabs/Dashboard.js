@@ -38,6 +38,7 @@ import ScreenPreLoader from '../../components/ScreenPreLoader';
 import { useTheme } from 'react-native-paper';
 import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
+import { store } from '../../redux/store';
 
 const Dashboard = ({ navigation }) => {
 
@@ -54,47 +55,39 @@ const Dashboard = ({ navigation }) => {
   const dispatch = useDispatch();
   const apiCalledOnMount = useRef(false);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-  const [skip, setSkip] = useState(0)
   const [refreshInterval, setRefreshInterval] = useState(12 * 60 * 60 * 1000);
-  let limit = 10;
-  let loadMore = true
+
   useEffect(() => {
     const integrate = async () => {
       dispatch(setLoading(true));
       try {
-        const hollywood = await GetMovies("Hollywood")
-        dispatch(setHollywood(hollywood.data.movies))
-        const english = await GetMovies("English")
-        dispatch(setMoviesData(english.data.movies))
-        const hindi = await GetMovies("Hindi")
-        dispatch(setHindiMoviesData(hindi.data.movies))
-        const south = await GetMovies("Tollywood")
-        dispatch(setSouthMoviesData(south.data.movies))
-        const punjabi = await GetMovies("Punjabi")
-        dispatch(...punjabiMoviesData, setPunjabiMoviesData(punjabi.data.movies))
-        // const animatedObjects = data.filter((object) => object.category === 'Animated');
-        // dispatch(setAllMoviesData(data));
-        // dispatch(setMoviesData(data.filter((object) => object.category === 'English')));
-        // dispatch(setHindiMoviesData(data.filter((object) => object.category === 'Hindi')));
-        // dispatch(setPunjabiMoviesData(data.filter((object) => object.category === 'Punjabi')));
-        // dispatch(setHollywood(data.filter((object) => object.category === 'Hollywood')));
-        // dispatch(setCartoonData(animatedObjects));
-        // dispatch(setAnimatedData(data.filter((object) => object.category === 'Animated1')));
-        // dispatch(setAnimated2Data(data.filter((object) => object.category === 'Animated2')));
-        // dispatch(setSouthMoviesData(data.filter((object) => object.category === 'Tollywood')));
-        // dispatch(setSouthMoviesData(data.filter((object) => object.category === 'Lollywood')));
+        const result1 = await GetMovies("Hollywood")
+        // store.dispatch(setHollywood(result1.data.movies))
+        dispatch(setHollywood(result1?.data?.movies))
+        const result2 = await GetMovies("English")
+        dispatch(setMoviesData(result2?.data?.movies))
+        const result3 = await GetMovies("Hindi")
+        dispatch(setHindiMoviesData(result3?.data?.movies))
+        const result4 = await GetMovies("Tollywood")
+        dispatch(setSouthMoviesData(result4?.data?.movies))
+        const result5 = await GetMovies("Punjabi")
+        dispatch(setPunjabiMoviesData(result5?.data?.movies))
         const [
           upcommingResponse,
           sliderResponse] = await Promise.all([
             GetUpcomming(),
             GetSlider(),
           ]);
-        dispatch(setUpcommingMoviesData(upcommingResponse.data));
-        dispatch(setSliderData(sliderResponse.data[0].poster));
-        dispatch(setDramaSlider(sliderResponse.data[1].poster));
-        dispatch(setAnimatedSlider(sliderResponse.data[2].poster));
-      } catch {
-        Alert.alert('⚠️ Check your internet connection and try again .....!');
+        dispatch(setUpcommingMoviesData(upcommingResponse?.data));
+        dispatch(setSliderData(sliderResponse?.data[0].poster));
+        dispatch(setDramaSlider(sliderResponse?.data[1]?.poster));
+        dispatch(setAnimatedSlider(sliderResponse?.data[2]?.poster));
+      } catch (error) {
+        if (error.message === 'Network Error') {
+          Alert.alert('⚠️ Check your internet connection and try again .....!');
+        } else {
+          Alert.alert('⚠️ An error occurred. Please try again later.');
+        }
       } finally {
         dispatch(setLoading(false));
       }
@@ -119,10 +112,10 @@ const Dashboard = ({ navigation }) => {
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={[styles.container, { backgroundColor: theme?.colors?.background }]}
     >
       <StatusBar
-        backgroundColor={theme.colors.background}
+        backgroundColor={theme?.colors?.background}
         barStyle={myTheme === 'lightTheme' ? 'dark-content' : 'light-content'}
       />
       {Platform.OS === 'ios' && (
@@ -133,7 +126,7 @@ const Dashboard = ({ navigation }) => {
             position: 'absolute',
             top: 0,
             left: 0,
-            backgroundColor: theme.colors.background,
+            backgroundColor: theme?.colors?.background,
           }}
         />
       )}

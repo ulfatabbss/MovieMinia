@@ -29,43 +29,40 @@ const TvShowes = ({ navigation }) => {
   const apiCalledOnMount = useRef(false);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
   const [refreshInterval, setRefreshInterval] = useState(12 * 60 * 60 * 1000);
+  const [prevValue, setPrevValue] = useState(value);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        dispatch(setLoading(true));
-        if (value == 'season') {
-          const pakistani = await GetDrama("Urdu");
-          dispatch(setDramaData(pakistani?.data?.dramas))
-          const indian = await GetDrama("Indian")
-          dispatch(setIndianDrama(indian?.data?.dramas))
-          const turkish = await GetDrama("Turkish")
-          dispatch(setTurkishDrama(turkish?.data?.dramas))
-        }
-        else {
-          const hindiSeasons = await GetDrama("HindiSeason")
-          dispatch(setHindiSeasons(hindiSeasons?.data?.dramas))
-          const hollywooodSeasons = await GetDrama("Season")
-          dispatch(setHollywoodseasons(hollywooodSeasons?.data?.dramas))
-        }
+        dispatch(setLoading(true))
+        // Fetch season data
+        const pakistani = await GetDrama("Urdu");
+        dispatch(setDramaData(pakistani?.data?.dramas));
+        const indian = await GetDrama("Indian");
+        dispatch(setIndianDrama(indian?.data?.dramas));
+        const turkish = await GetDrama("Turkish");
+        dispatch(setTurkishDrama(turkish?.data?.dramas));
+
+        const hindiSeasons1 = await GetDrama("HindiSeason");
+        dispatch(setHindiSeasons(hindiSeasons1?.data?.dramas));
+        const hollywooodSeasons1 = await GetDrama("Season");
+        dispatch(setHollywoodseasons(hollywooodSeasons1?.data?.dramas));
         dispatch(setLoading(false));
       } catch (error) {
         console.log(error, 'errors');
         dispatch(setLoading(false));
       }
     };
-    if (!apiCalledOnMount.current) {
-      fetchData();
-      apiCalledOnMount.current = true;
-    }
-    // Set up an interval to call the API every 12 hours
+
+    // Fetch data initially and set up an interval
+    fetchData();
     const intervalId = setInterval(fetchData, refreshInterval);
 
     // Cleanup the interval when the component unmounts
     return () => {
       clearInterval(intervalId);
     };
-  }, [dispatch, refreshInterval]);
+  }, [dispatch, refreshInterval, prevValue]);
 
   if (loading) {
     return (
@@ -73,8 +70,8 @@ const TvShowes = ({ navigation }) => {
     );
   }
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <StatusBar backgroundColor={theme.colors.background} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme?.colors?.background }]}>
+      <StatusBar backgroundColor={theme?.colors?.background} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 60 }}>
         <Header navigation={navigation} />
         <Carousel images={dramaSlider} />

@@ -12,8 +12,8 @@ const Profile = ({ navigation }) => {
     const theme = useTheme(myTheme == 'darkTheme' ? darkTheme : lightTheme);
     return (
         <SafeAreaView
-            style={{ ...styles.V1, backgroundColor: theme.colors.topbar }}>
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+            style={{ ...styles.V1, backgroundColor: theme?.colors?.topbar }}>
+            <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
 
             <View
                 style={styles.V2}>
@@ -21,20 +21,20 @@ const Profile = ({ navigation }) => {
 
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image
-                            style={{ ...styles.img1, tintColor: theme.colors.icon }}
+                            style={{ ...styles.img1, tintColor: theme?.colors?.icon }}
                             resizeMode='contain'
                             source={backErrow}></Image>
 
                     </TouchableOpacity>
                     <Text
-                        style={[heading.h4, { marginLeft: '5%', color: theme.colors.text }]}>My Profile
+                        style={[heading.h4, { marginLeft: '5%', color: theme?.colors?.text }]}>My Profile
 
                     </Text>
 
                 </View>
                 <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
                     <Image
-                        style={{ ...styles.img2, tintColor: theme.colors.icon }}
+                        style={{ ...styles.img2, tintColor: theme?.colors?.icon }}
                         resizeMode='contain'
                         source={require('../../assets/edit.png')}></Image>
                 </TouchableOpacity>
@@ -53,13 +53,13 @@ const Profile = ({ navigation }) => {
 
             </View>
             <Text
-                style={[heading.h4, { alignSelf: 'center', marginTop: '5%', color: theme.colors.text }]}>{user?.name}</Text>
+                style={[heading.h4, { alignSelf: 'center', marginTop: '5%', color: theme?.colors?.text }]}>{user?.name}</Text>
             <View
-                style={[styles.V4, { backgroundColor: theme.colors.background }]}>
+                style={[styles.V4, { backgroundColor: theme?.colors?.background }]}>
                 <Text
-                    style={[heading.h5, { marginTop: '5%', marginLeft: '5%', color: theme.colors.text }]}>Email</Text>
+                    style={[heading.h5, { marginTop: '5%', marginLeft: '5%', color: theme?.colors?.text }]}>Email</Text>
                 <Text
-                    style={[heading.h5, { marginTop: '2%', marginLeft: '5%', fontWeight: '600', color: theme.colors.text }]}>{user?.email}</Text>
+                    style={[heading.h5, { marginTop: '2%', marginLeft: '5%', fontWeight: '600', color: theme?.colors?.text }]}>{user?.email}</Text>
 
 
 

@@ -14,6 +14,8 @@ const endPoints = {
   deleteAccount: 'deleteAccount/',
   sendOTP: 'sendOtp',
   checkUserExist: 'check-user-exist',
+  conformOtp: 'conformed-otp',
+  updateUserPassword: 'updatePassword',
 };
 
 export {endPoints};

@@ -29,25 +29,25 @@ const AddReview = ({ navigation }) => {
     };
     return (
         <SafeAreaView
-            style={[styles.V1, { backgroundColor: theme.colors.topbar }]}>
-            <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+            style={[styles.V1, { backgroundColor: theme?.colors?.topbar }]}>
+            <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
 
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image
-                        style={[styles.backButton, { tintColor: theme.colors.icon }]}
+                        style={[styles.backButton, { tintColor: theme?.colors?.icon }]}
                         resizeMode="contain"
                         source={backErrow}
                     />
                 </TouchableOpacity>
-                <Text style={{ ...Heading, color: theme.colors.text }}>Add Review</Text>
+                <Text style={{ ...Heading, color: theme?.colors?.text }}>Add Review</Text>
             </View>
             <View
-                style={[styles.V5, { backgroundColor: theme.colors.background }]}>
+                style={[styles.V5, { backgroundColor: theme?.colors?.background }]}>
                 <View
-                    style={[styles.V3, { backgroundColor: theme.colors.tabs, elevation: 5, shadowOpacity: 0.5, shadowOffset: .5 }]}>
+                    style={[styles.V3, { backgroundColor: theme?.colors?.tabs, elevation: 5, shadowOpacity: 0.5, shadowOffset: .5 }]}>
                     <TextInput
-                        style={{ font: 18, fontWeight: '500', color: theme.colors.text }} placeholder='Describe your Experience!' placeholderTextColor={'gray'} onChangeText={(text) => setFeedback(text)} value={feedback}>
+                        style={{ font: 18, fontWeight: '500', color: theme?.colors?.text }} placeholder='Describe your Experience!' placeholderTextColor={'gray'} onChangeText={(text) => setFeedback(text)} value={feedback}>
                     </TextInput>
                 </View>
             </View>

@@ -42,11 +42,11 @@ const Cartoons = ({ navigation }) => {
         const newPopular = await GetDrama("popularAnimSeason")
         dispatch(setPopularAnimSeason(newPopular?.data?.dramas))
         const NEW = await GetMovies("Animated")
-        dispatch(setCartoonData(NEW.data.movies))
+        dispatch(setCartoonData(NEW?.data?.movies))
         const Popular = await GetMovies("Animated1")
-        dispatch(setAnimatedData(Popular.data.movies))
+        dispatch(setAnimatedData(Popular?.data?.movies))
         const Treanding = await GetMovies("Animated2")
-        dispatch(setAnimated2Data(Treanding.data.movies))
+        dispatch(setAnimated2Data(Treanding?.data?.movies))
         dispatch(setLoading(false));
       } catch (error) {
         console.log(error, 'errors');
@@ -64,7 +64,7 @@ const Cartoons = ({ navigation }) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [dispatch, refreshInterval]);
+  }, [refreshInterval]);
   if (loading) {
     return <ScreenPreLoader />;
   }
@@ -78,12 +78,12 @@ const Cartoons = ({ navigation }) => {
             position: 'absolute',
             top: 0,
             left: 0,
-            backgroundColor: theme.colors.background, // Use the active theme's background color
+            backgroundColor: theme?.colors?.background, // Use the active theme's background color
           }}
         />
       )}
-      <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <StatusBar backgroundColor={theme.colors.background} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+      <SafeAreaView style={[styles.container, { backgroundColor: theme?.colors?.background }]}>
+        <StatusBar backgroundColor={theme?.colors?.background} barStyle={myTheme == 'lightTheme' ? 'dark-content' : 'light-content'} />
         <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 60 }}>
           <Header navigation={navigation} />
           <Carousel images={animatedSlider} />

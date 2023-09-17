@@ -80,7 +80,7 @@ const smalltext: any = {
   fontFamily: 'Raleway-Medium',
 };
 const text: any = {
-  color: '#313131',
+  // color: '#313131',
   fontSize: RF(13),
   fontFamily: 'Raleway-Regular',
 };

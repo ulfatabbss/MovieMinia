@@ -9,15 +9,13 @@ import {
   TextInput,
   StatusBar,
   SafeAreaView,
-  TouchableOpacity, Modal, Pressable, Dimensions
+  TouchableOpacity, Modal, Dimensions, Alert
 } from 'react-native';
 import EmptyImage from '../../assets/emptyplaylist.png';
 import PlayImage from '../../assets/play.png';
 import TrashImage from '../../assets/dell.png';
-import { DellfromPlaylist, GetPlaylist } from '../../services/AppServices';
+import { GetPlaylist } from '../../services/AppServices';
 import { useFocusEffect } from '@react-navigation/native';
-import { useToast } from 'react-native-toast-notifications';
-import Loader from '../../components/Loader';
 import { Heading, SmallIcons, smalltext, text } from '../../utillis/styles';
 import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
@@ -27,9 +25,8 @@ import PlaylistSkelton from '../../components/ShimmerPlaceHolder/PlaylistSkelton
 import { HP, RF, WP } from '../../utillis/theme/Responsive';
 
 const Playlist = ({ navigation }) => {
-  const { myTheme, user, isGuest } = useSelector((state) => state.root.user);
+  const { myTheme, user, isGuest, isFacebook, isGoogle } = useSelector((state) => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-  const Toast = useToast();
   const [myplaylist, setMyplaylist] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -38,6 +35,7 @@ const Playlist = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      console.log(isGuest, isFacebook, isGoogle, "these are my bolean values");
       HandlePlaylist();
     }, [])
   );
@@ -46,7 +44,7 @@ const Playlist = ({ navigation }) => {
     if (!isGuest) {
       try {
         const obj = {
-          userId: user._id,
+          userId: user?._id,
         };
         const response = await GetPlaylist(obj);
         setMyplaylist(response.data);
@@ -54,7 +52,6 @@ const Playlist = ({ navigation }) => {
         console.error('Error fetching playlist:', error);
       }
     }
-
     setIsLoading(false);
   };
 
@@ -70,7 +67,7 @@ const Playlist = ({ navigation }) => {
     myHeaders.append('Content-Type', 'application/json');
 
     var raw = JSON.stringify({
-      userId: user._id,
+      userId: user?._id,
     });
 
     var requestOptions = {
@@ -81,7 +78,7 @@ const Playlist = ({ navigation }) => {
     };
 
     await fetch(
-      `https://backend.movieminia.com/moveminia/playlists/${myplaylist[0]._id}/movies/${selectedItem._id}`,
+      `https://backend.movieminia.com/moveminia/playlists/${myplaylist[0]?._id}/movies/${selectedItem?._id}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -91,20 +88,14 @@ const Playlist = ({ navigation }) => {
         setIsModalVisible(false);
       })
       .catch((error) => {
-        Toast.show(error.message, {
-          type: 'error',
-          placement: 'top',
-          duration: 3000,
-          offset: 30,
-          animationType: 'zoom-in',
-        });
+        Alert.alert(error)
       });
 
     setIsLoading(false);
   };
 
-  const filteredData = myplaylist[0]?.movies.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredData = myplaylist[0]?.movies?.filter((item) =>
+    item?.title?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const searchFilter = (text) => {
@@ -115,7 +106,7 @@ const Playlist = ({ navigation }) => {
     <View
       style={{
         ...styles.playlistItemContainer,
-        backgroundColor: theme.colors.tabs,
+        backgroundColor: theme?.colors?.tabs,
         elevation: 2,
         shadowOffset: { width: 3, height: 3 },
         marginVertical: 5,
@@ -128,28 +119,28 @@ const Playlist = ({ navigation }) => {
         source={{ uri: item?.poster[0]?.image }}
       />
       <View style={styles.playlistItemInfo}>
-        <Text numberOfLines={1} style={{ ...smalltext, color: theme.colors.text }}>
+        <Text numberOfLines={1} style={{ ...smalltext, color: theme?.colors?.text }}>
           {item?.title}
         </Text>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme.colors.text }}>Director:</Text>
-          <Text numberOfLines={1} style={{ ...text, color: theme.colors.text }}>
+          <Text style={{ ...text, color: theme?.colors?.text }}>Director:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
             {item?.director}
           </Text>
         </View>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme.colors.text }}>Release year:</Text>
-          <Text style={{ ...text, color: theme.colors.text }}>{item?.releaseYear}</Text>
+          <Text style={{ ...text, color: theme?.colors?.text }}>Release year:</Text>
+          <Text style={{ ...text, color: theme?.colors?.text }}>{item?.releaseYear}</Text>
         </View>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme.colors.text }}>Category:</Text>
-          <Text numberOfLines={1} style={{ ...text, color: theme.colors.text }}>
+          <Text style={{ ...text, color: theme?.colors?.text }}>Category:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
             {item?.category}
           </Text>
         </View>
       </View>
       <View style={styles.playlistItemActions}>
-        <TouchableOpacity style={styles.playlistItemAction} onPress={() => navigation.navigate('Player1', { url: item.url })}>
+        <TouchableOpacity style={styles.playlistItemAction} onPress={() => navigation.navigate('Player1', { url: item?.url })}>
           <Image style={styles.actionIcon} resizeMode="contain" source={PlayImage} />
         </TouchableOpacity>
         <TouchableOpacity
@@ -167,17 +158,16 @@ const Playlist = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ ...styles.container, backgroundColor: theme.colors.background }}>
-      <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
-      <View style={{ ...styles.headerContainer, backgroundColor: theme.colors.topbar }}>
-        <Text style={{ ...styles.headerText, color: theme.colors.text }}>My Playlist</Text>
+    <SafeAreaView style={{ ...styles.container, backgroundColor: theme?.colors?.background }}>
+      <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={myTheme == 'lightTheme' ? 'dark-content' : 'light-content'} />
+      <View style={{ ...styles.headerContainer, backgroundColor: theme?.colors?.topbar }}>
+        <Text style={{ ...styles.headerText, color: theme?.colors?.text }}>My Playlist</Text>
       </View>
       <Modal
         animationType="fade"
         transparent={true}
         visible={isModalVisible}
         onRequestClose={() => {
-          // Alert.alert('Modal has been closed.');
           setIsModalVisible(!isModalVisible);
         }}>
         <View style={styles.centeredView}>
@@ -194,43 +184,40 @@ const Playlist = ({ navigation }) => {
                 borderColor: '#fff',
                 justifyContent: 'space-between',
               }}>
-              <Pressable
-                style={[
-                  styles.button,
-                  { backgroundColor: 'green', borderTopRightRadius: 10 },
-                ]}
+              <TouchableOpacity
+                style={{ ...styles.button, backgroundColor: 'green', borderTopRightRadius: 10 }}
                 onPress={() => setIsModalVisible(!isModalVisible)}>
                 <Text style={styles.textStyle}>No</Text>
-              </Pressable>
-              <Pressable
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
                   styles.button,
                   { backgroundColor: 'red', borderTopLeftRadius: 10 },
                 ]}
-                onPress={handleDeleteConfirm}>
+                onPress={() => handleDeleteConfirm()}>
                 <Text style={styles.textStyle}>Yes</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
-      <View style={{ ...styles.contentContainer, backgroundColor: theme.colors.background }}>
-        <View style={{ ...styles.InputView, backgroundColor: theme.colors.tabs, elevation: 2, shadowOffset: { width: 3, height: 3 } }}>
+      <View style={{ ...styles.contentContainer, backgroundColor: theme?.colors?.background }}>
+        <View style={{ ...styles.InputView, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: { width: 3, height: 3 } }}>
           <Image
-            style={{ ...SmallIcons, tintColor: theme.colors.icon }}
+            style={{ ...SmallIcons, tintColor: theme?.colors?.icon }}
             source={searchIcon}
           />
           <TextInput
             value={searchQuery}
             onChangeText={searchFilter}
             placeholder="Search Movies"
-            placeholderTextColor={theme.colors.text}
+            placeholderTextColor={theme?.colors?.text}
             color="gray"
             style={{ width: '90%' }}
           />
         </View>
         <View style={{ ...styles.playlistContainer, paddingBottom: "36%" }}>
-          <Text style={{ ...Heading, color: theme.colors.text, marginHorizontal: WP(2) }}>
+          <Text style={{ ...Heading, color: theme?.colors?.text, marginHorizontal: WP(2) }}>
             {myplaylist[0]?.movies?.length == 0 || isGuest ? 'Playlist Not Found' : `${myplaylist[0]?.movies?.length} Playlists Found`}
           </Text>
           {myplaylist[0]?.movies?.length == 0 || isGuest ?

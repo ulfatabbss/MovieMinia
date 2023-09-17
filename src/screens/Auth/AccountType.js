@@ -12,10 +12,11 @@ import { setGuest, setIsLogin } from '../../redux/reducers/userReducers';
 import ScreenPreLoader from '../../components/ScreenPreLoader';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
+import { Primary } from '../../utillis/colors';
 const AccountType = ({ navigation }) => {
     const { myTheme } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-    const [selectCard, setSelectCard] = useState('guest');
+    const [selectCard, setSelectCard] = useState('user');
     const [isLoading, setIsLoading] = useState(false);
     const guestLogin = async () => {
         setIsLoading(true);
@@ -29,9 +30,9 @@ const AccountType = ({ navigation }) => {
     }
     return (
         <View
-            style={{ ...styles.container, backgroundColor: theme.colors.background }}>
+            style={{ ...styles.container, backgroundColor: theme?.colors?.background }}>
             <StatusBar
-                backgroundColor={theme.colors.background}
+                backgroundColor={theme?.colors?.background}
                 barStyle={myTheme === 'lightTheme' ? 'dark-content' : 'light-content'}
             />
             <View
@@ -51,16 +52,16 @@ const AccountType = ({ navigation }) => {
                             width: RF(100),
                             borderRadius: 100,
                             marginBottom: RF(10),
-                            backgroundColor: theme.colors.tabs,
+                            backgroundColor: theme?.colors?.tabs,
                             alignSelf: 'center',
-                            tintColor: theme.colors.logo,
+                            tintColor: theme?.colors?.logo,
                         }}
                         source={applogo}
                     />
                     <Text
                         style={{
                             ...Heading,
-                            color: theme.colors.text,
+                            color: theme?.colors?.text,
                             fontSize: RF(20),
                             fontFamily: 'Raleway-Bold',
                         }}>
@@ -73,15 +74,17 @@ const AccountType = ({ navigation }) => {
                         style={[
                             styles.selectCard,
                             {
-                                borderColor: selectCard == 'guest' ? theme.colors.logo : '#fff',
-                                backgroundColor: theme.colors.tabs,
+                                borderColor: selectCard == 'guest' ? Primary : null,
+                                borderWidth: selectCard == 'guest' ? 2 : null,
+                                backgroundColor: theme?.colors?.tabs,
+                                elevation: 2
                             },
                         ]}>
                         <Image style={{ height: RF(80), width: RF(80) }} source={guest} />
                         <Text
                             style={{
                                 ...Heading,
-                                color: theme.colors.text,
+                                color: theme?.colors?.text,
                                 fontSize: RF(20),
                                 textAlign: 'center',
                                 marginTop: RF(10),
@@ -94,15 +97,16 @@ const AccountType = ({ navigation }) => {
                         style={[
                             styles.selectCard,
                             {
-                                borderColor: selectCard == 'user' ? theme.colors.logo : '#fff',
-                                backgroundColor: theme.colors.tabs,
+                                borderColor: selectCard == 'user' ? Primary : null,
+                                borderWidth: selectCard == 'user' ? 2 : null,
+                                backgroundColor: theme?.colors?.tabs, elevation: 2
                             },
                         ]}>
                         <Image style={{ height: RF(80), width: RF(80) }} source={user} />
                         <Text
                             style={{
                                 ...Heading,
-                                color: theme.colors.text,
+                                color: theme?.colors?.text,
                                 fontSize: 20,
                                 textAlign: 'center',
                                 marginTop: RF(10),
@@ -140,7 +144,6 @@ const styles = StyleSheet.create({
         height: RF(230),
         width: '45%',
         marginTop: RF(40),
-        borderWidth: 1,
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',

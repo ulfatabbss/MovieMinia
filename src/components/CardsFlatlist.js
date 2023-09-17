@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, VirtualizedList } from 'react-native';
 import React from 'react';
 import MainCard from './MainCard';
 import { smalltext, Heading } from '../utillis/styles';
@@ -18,13 +18,13 @@ const CardsFlatlist = ({ navigation, heading, data, type }) => {
     const sortedData = [...dataArray].sort((a, b) => b.releaseYear.localeCompare(a.releaseYear)).slice(0, 10);
 
     return (
-        <View style={{ ...styles.container, backgroundColor: theme.colors.background }}>
+        <View style={{ ...styles.container, backgroundColor: theme?.colors?.background }}>
             <View
                 style={{
                     ...styles.headingContainer,
                 }}
             >
-                <Text style={{ ...Heading, color: theme.colors.text }}>{heading}</Text>
+                <Text style={{ ...Heading, color: theme?.colors?.text }}>{heading}</Text>
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate('ExpandMovies', {
@@ -39,7 +39,7 @@ const CardsFlatlist = ({ navigation, heading, data, type }) => {
                         marginTop: 5,
                         marginRight: 10,
                     }}>
-                    <Text style={{ ...smalltext, color: theme.colors.text }}>View All</Text>
+                    <Text style={{ ...smalltext, color: theme?.colors?.text }}>View All</Text>
                 </TouchableOpacity>
             </View>
             <FlatList

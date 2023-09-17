@@ -74,11 +74,11 @@ const PlaylistSkelton = () => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar
-                backgroundColor={theme.colors.topbar}
+                backgroundColor={theme?.colors?.topbar}
                 barStyle={theme.dark ? 'light-content' : 'dark-content'}
             />
-            <View style={{ ...styles.headerContainer, backgroundColor: theme.colors.topbar }}>
-                <Text style={{ ...styles.headerText, color: theme.colors.text }}>My Playlist</Text>
+            <View style={{ ...styles.headerContainer, backgroundColor: theme?.colors?.topbar }}>
+                <Text style={{ ...styles.headerText, color: theme?.colors?.text }}>My Playlist</Text>
             </View>
             <View style={styles.contentContainer}>
                 <ShimmerPlaceholder

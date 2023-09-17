@@ -3,8 +3,8 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState: any = {
   user: null,
   isFirstTime: null,
-  facebook: false,
-  google: false,
+  isFacebook: false,
+  isGoogle: false,
   isLogin: null,
   popularMoviesData: [],
   hindiMoviesData: [],
@@ -34,7 +34,7 @@ const initialState: any = {
   newAnimSeason: [],
 };
 
-export const userReducer = createSlice({
+export const userReducer: any = createSlice({
   name: 'user',
   initialState,
   reducers: {
@@ -126,10 +126,10 @@ export const userReducer = createSlice({
       state.newAnimSeason = action.payload;
     },
     setIsGoogle: (state, action) => {
-      state.google = action.payload;
+      state.isGoogle = action.payload;
     },
     setIsFacebook: (state, action) => {
-      state.facebook = action.payload;
+      state.isFacebook = action.payload;
     },
   },
 });

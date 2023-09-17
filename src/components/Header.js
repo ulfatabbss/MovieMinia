@@ -6,13 +6,10 @@ import {
   Image,
   TouchableOpacity,
   Modal,
-  Pressable,
 } from 'react-native';
 import { setIsLogin } from '../redux/reducers/userReducers';
-import { store } from '../redux/store';
-import { DrawerActions } from '@react-navigation/native';
 import { useTheme } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import lightTheme from '../utillis/theme/lightTheme';
 import darkTheme from '../utillis/theme/darkTheme';
 import { searchIcon } from '../assets';
@@ -20,45 +17,46 @@ const Header = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const {
     myTheme
-  } = useSelector(state => state.root.user);
-  const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
+  } = useSelector((state) => state.root.user);
+  const dispatch = useDispatch();
+  const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
   const handleLogout = () => {
-    store.dispatch(setIsLogin(false));
+    dispatch(setIsLogin(false));
     toggleModal();
   };
   const openDrawer = () => {
-    navigation.dispatch(DrawerActions.openDrawer());
+    navigation.openDrawer();
   };
   return (
-    <View style={{ ...styles.header, backgroundColor: theme.colors.background }}>
-      <Modal animationType="fade" transparent={true} visible={isModalVisible} onRequestClose={toggleModal}>
+    <View style={{ ...styles.header, backgroundColor: theme?.colors?.background }}>
+      <Modal animationType="fade" transparent={true} visible={isModalVisible} onRequestClose={() => toggleModal()}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Do you want to logout?</Text>
             <View style={styles.buttonContainer}>
-              <Pressable
+              <TouchableOpacity
                 style={[styles.button, styles.noButton]}
-                onPress={toggleModal}>
+                onPress={() => toggleModal()}>
                 <Text style={styles.textStyle}>No</Text>
-              </Pressable>
-              <Pressable
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[styles.button, styles.yesButton]}
-                onPress={handleLogout}>
+                onPress={() => handleLogout()}>
                 <Text style={styles.textStyle}>Yes</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
-      <TouchableOpacity onPress={openDrawer}>
+      <TouchableOpacity onPress={() => openDrawer()}>
         <Image
           resizeMode="contain"
-          style={[styles.logo, { tintColor: theme.colors.icon }]}
+          style={[styles.logo, { tintColor: theme?.colors?.icon }]}
           source={require('../assets/hamebarger.png')}
         />
       </TouchableOpacity>
@@ -66,17 +64,10 @@ const Header = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('SearchMovie')}>
           <Image
             resizeMode="contain"
-            style={[styles.logoutIcon, { tintColor: theme.colors.icon }]}
+            style={{ ...styles.logoutIcon, tintColor: theme?.colors?.icon }}
             source={searchIcon}
           />
         </TouchableOpacity>
-        {/* <TouchableOpacity onPress={() => navigation.navigate("Notification")}>
-          <Image
-            resizeMode="contain"
-            style={styles.logoutIcon}
-            source={myTheme == 'lightTheme' ? require('../assets/HeaderIcon/dark.png') : require('../assets/HeaderIcon/whiteBell.png')}
-          />
-        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -94,7 +85,7 @@ const styles = StyleSheet.create({
   logo: {
     height: 25,
     width: 25,
-    tintColor: '#313131', // Use tintColor for coloring images
+    tintColor: '#313131',
   },
   logoutIcon: {
     width: 25,

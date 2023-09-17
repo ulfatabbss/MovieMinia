@@ -15,7 +15,7 @@ const HeadingTitle = ({ title1, titile2 }) => {
                 style={{
                     ...Heading,
                     marginTop: RF(10),
-                    color: theme.colors.text,
+                    color: theme?.colors?.text,
                     fontSize: RF(16),
                     fontFamily: 'Raleway-Bold',
                 }}>
@@ -25,7 +25,7 @@ const HeadingTitle = ({ title1, titile2 }) => {
                 style={{
                     ...Heading,
                     marginTop: RF(5),
-                    color: theme.colors.text,
+                    color: theme?.colors?.text,
                     fontSize: RF(14),
                     fontFamily: 'Raleway-Regular',
                 }}>

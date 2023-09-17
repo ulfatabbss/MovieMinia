@@ -112,8 +112,8 @@ const MovieDetailPage = ({ navigation, route }) => {
     return (
       <>
         <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center', marginTop: 10 }}>
-          <Text style={{ ...Heading, color: theme.colors.text, fontSize: 20, width: "70%" }}>{item.title}</Text>
-          {/* <HeadingText title={item.title} size={20} semi_bold color={theme.colors.text} /> */}
+          <Text style={{ ...Heading, color: theme?.colors?.text, fontSize: 20, width: "70%" }}>{item.title}</Text>
+          {/* <HeadingText title={item.title} size={20} semi_bold color={theme?.colors?.text} /> */}
           <TouchableOpacity style={{ ...styles.playframe, backgroundColor: Primary_Light }} disabled={playlistAdded || isGuest}
             onPress={() => {
               HandlePlaylist()
@@ -123,15 +123,15 @@ const MovieDetailPage = ({ navigation, route }) => {
         </View>
         <View style={[FlexDirection, Extra.marginTop]}>
           <View style={{ flexDirection: 'row' }}>
-            <HeadingText title={'Category :'} regular size={16} R_Margin={10} color={theme.colors.text} />
-            <HeadingText title={'Hollywood'} regular size={16} color={theme.colors.text} />
+            <HeadingText title={'Category :'} regular size={16} R_Margin={10} color={theme?.colors?.text} />
+            <HeadingText title={'Hollywood'} regular size={16} color={theme?.colors?.text} />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Image
               style={{ height: RF(18), width: RF(18), marginRight: RF(10) }}
               source={timer}
             />
-            <HeadingText title={item.duration} medium size={16} color={theme.colors.text} />
+            <HeadingText title={item.duration} medium size={16} color={theme?.colors?.text} />
           </View>
         </View>
       </>
@@ -175,7 +175,7 @@ const MovieDetailPage = ({ navigation, route }) => {
           resizeMode={'contain'}
           source={{ uri: item?.image }}
         />
-        <HeadingText title={item?.name} semi_bold size={16} lines={1} color={theme.colors.text} />
+        <HeadingText title={item?.name} semi_bold size={16} lines={1} color={theme?.colors?.text} />
       </View>
     );
   };
@@ -196,7 +196,7 @@ const MovieDetailPage = ({ navigation, route }) => {
             resizeMode={'contain'}
           />
           <View style={{ marginLeft: 10 }}>
-            <HeadingText title={feedbackData[0]?.user_id?.name} medium size={14} color={theme.colors.text} />
+            <HeadingText title={feedbackData[0]?.user_id?.name} medium size={14} color={theme?.colors?.text} />
             <View
               style={{
                 flexDirection: 'row',
@@ -212,13 +212,13 @@ const MovieDetailPage = ({ navigation, route }) => {
                 medium
                 size={11}
                 regular
-                color={theme.colors.text}
+                color={theme?.colors?.text}
                 top={-5}
               />
             </View>
           </View>
         </View>
-        <HeadingText color={theme.colors.text}
+        <HeadingText color={theme?.colors?.text}
           title={
             feedbackData[0]?.feedback_text
           }
@@ -236,7 +236,7 @@ const MovieDetailPage = ({ navigation, route }) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
       <StatusBar
         translucent
         backgroundColor="transparent"
@@ -295,22 +295,22 @@ const MovieDetailPage = ({ navigation, route }) => {
         }}
         resizeMode={'stretch'}
       >
-        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopLeft, borderLeftColor: theme.colors.background }} />
-        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopRight, borderLeftColor: theme.colors.background }} />
+        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopLeft, borderLeftColor: theme?.colors?.background }} />
+        <View style={{ ...styles.chevronTriangle, ...styles.chevronTopRight, borderLeftColor: theme?.colors?.background }} />
       </ImageBackground>
       <Play_Button setModalVisible={setModalVisible} />
       {/* name, url, data, type */}
       <ScrollView
-        style={{ ...styles.detail_Container, backgroundColor: theme.colors.background }}
+        style={{ ...styles.detail_Container, backgroundColor: theme?.colors?.background }}
         showsVerticalScrollIndicator={false}>
         <Movies_Info_Pattern />
         <HeadingText
           title={item.overView}
           light
           size={14}
-          top={20} color={theme.colors.text}
+          top={20} color={theme?.colors?.text}
         />
-        <HeadingText title={'Screenshots'} size={16} top={20} color={theme.colors.text} />
+        <HeadingText title={'Screenshots'} size={16} top={20} color={theme?.colors?.text} />
         <FlatList
           data={item?.poster}
           renderItem={renderShots}
@@ -318,7 +318,7 @@ const MovieDetailPage = ({ navigation, route }) => {
           showsHorizontalScrollIndicator={false}
         />
         <View style={{ paddingBottom: 40 }}>
-          <HeadingText title={'Cast'} size={16} semi_bold top={20} color={theme.colors.text} />
+          <HeadingText title={'Cast'} size={16} semi_bold top={20} color={theme?.colors?.text} />
           <FlatList
             data={item.cast}
             renderItem={renderCast}
@@ -326,9 +326,9 @@ const MovieDetailPage = ({ navigation, route }) => {
             showsHorizontalScrollIndicator={false}
           />
           <View style={FlexDirection}>
-            <HeadingText title={'Reviews'} size={16} semi_bold top={20} color={theme.colors.text} />
+            <HeadingText title={'Reviews'} size={16} semi_bold top={20} color={theme?.colors?.text} />
             <TouchableOpacity onPress={() => navigation.navigate('Review', { data: feedbackData })}>
-              <HeadingText title={'View All'} size={16} medium top={20} color={theme.colors.text} />
+              <HeadingText title={'View All'} size={16} medium top={20} color={theme?.colors?.text} />
             </TouchableOpacity>
           </View>
           <Reviews_Section />

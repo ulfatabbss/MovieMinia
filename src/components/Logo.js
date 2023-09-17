@@ -33,9 +33,9 @@ const Logo = () => {
                         width: '100%',
                         borderRadius: 100,
                         borderColor: 'red',
-                        backgroundColor: theme.colors.tabs,
+                        backgroundColor: theme?.colors?.tabs,
                         alignSelf: 'center',
-                        tintColor: theme.colors.logo,
+                        tintColor: theme?.colors?.logo,
                     }}
                     source={applogo}
                 />

@@ -27,23 +27,24 @@ import ChangePassword from '../screens/Auth/ChangePassword';
 import { WP } from '../utillis/theme/Responsive';
 import DeleteAccount from '../screens/Settings/DeleteAccount';
 import UpdatePassword from '../screens/Auth/UpdatePassword';
+import Policy from '../screens/Settings/Policy';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
-const MyDrawer = () => {
+const MyDrawer = ({ navigation }) => {
   const {
     myTheme
-  } = useSelector(state => state.root.user);
+  } = useSelector((state) => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
   return (
     <Drawer.Navigator screenOptions={{
       headerShown: false,
       drawerStyle: {
-        backgroundColor: theme.colors.rightBar,
+        backgroundColor: theme?.colors?.rightBar,
         width: WP(60),
         borderTopRightRadius: 30, borderBottomRightRadius: 30
       },
     }}
-      drawerContent={props => <CustomDrawerContent {...props} />}>
+      drawerContent={() => <CustomDrawerContent navigation={navigation} />}>
       <Drawer.Screen name="Tabs" component={Tabs} />
     </Drawer.Navigator>
   );
@@ -51,36 +52,28 @@ const MyDrawer = () => {
 
 const MainStack = () => {
   return (
-    <>
-      <StatusBar barStyle="light-content" backgroundColor="#000" />
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="MyDrawer" component={MyDrawer} />
-        <Stack.Screen name="Player" component={Player} />
-        <Stack.Screen name="MovieDiscription" component={MovieDiscription} />
-        <Stack.Screen name="ExpandMovies" component={ExpandMovies} />
-        <Stack.Screen name="Player1" component={Player1} />
-        <Stack.Screen name="SearchMovie" component={SearchMovie} />
-        <Stack.Screen name="Notification" component={Notification} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="AddReview" component={AddReview} />
-        <Stack.Screen name="Review" component={Review} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="EditProfile" component={EditProfile} />
-        <Stack.Screen name="Terms" component={Terms} />
-        <Stack.Screen name="Faq" component={Faq} />
-        <Stack.Screen name="PasswordSettings" component={PasswordSettings} />
-        <Stack.Screen name="OTPverification" component={OTPverification} />
-        <Stack.Screen name="ChangePassword" component={ChangePassword} />
-        <Stack.Screen name="DeleteAccount" component={DeleteAccount} />
-        <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
-
-
-
-
-
-
-      </Stack.Navigator>
-    </>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MyDrawer" component={MyDrawer} />
+      <Stack.Screen name="Player" component={Player} />
+      <Stack.Screen name="MovieDiscription" component={MovieDiscription} />
+      <Stack.Screen name="ExpandMovies" component={ExpandMovies} />
+      <Stack.Screen name="Player1" component={Player1} />
+      <Stack.Screen name="SearchMovie" component={SearchMovie} />
+      <Stack.Screen name="Notification" component={Notification} />
+      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="AddReview" component={AddReview} />
+      <Stack.Screen name="Review" component={Review} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="Terms" component={Terms} />
+      <Stack.Screen name="Faq" component={Faq} />
+      <Stack.Screen name="Policy" component={Policy} />
+      <Stack.Screen name="PasswordSettings" component={PasswordSettings} />
+      <Stack.Screen name="OTPverification" component={OTPverification} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="DeleteAccount" component={DeleteAccount} />
+      <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
+    </Stack.Navigator>
   );
 };
 

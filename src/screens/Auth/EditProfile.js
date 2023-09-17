@@ -84,20 +84,20 @@ const EditProfile = ({ navigation }) => {
     };
     return (
         <SafeAreaView
-            style={[styles.V1, { backgroundColor: theme.colors.topbar }]}>
+            style={[styles.V1, { backgroundColor: theme?.colors?.topbar }]}>
             <View
                 style={styles.V2}>
                 <View style={{ flexDirection: 'row' }}>
 
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image
-                            style={[styles.img1, { tintColor: theme.colors.icon }]}
+                            style={[styles.img1, { tintColor: theme?.colors?.icon }]}
                             resizeMode='contain'
                             source={backErrow}></Image>
 
                     </TouchableOpacity>
                     <Text
-                        style={[heading.h4, { marginLeft: '5%', color: theme.colors.text }]}>EditProfile
+                        style={[heading.h4, { marginLeft: '5%', color: theme?.colors?.text }]}>EditProfile
 
                     </Text>
 
@@ -114,10 +114,10 @@ const EditProfile = ({ navigation }) => {
 
             </View>
             <View
-                style={[styles.V5, { backgroundColor: theme.colors.background }]}>
+                style={[styles.V5, { backgroundColor: theme?.colors?.background }]}>
                 <TouchableOpacity onPress={() => ImagePicker()}>
                     <Image
-                        style={{ height: 17, width: 17, tintColor: theme.colors.icon }}
+                        style={{ height: 17, width: 17, tintColor: theme?.colors?.icon }}
                         resizeMode='contain'
                         source={require('../../assets/cam.png')}>
 
@@ -127,7 +127,7 @@ const EditProfile = ({ navigation }) => {
             </View>
 
             <View
-                style={{ flex: 1, backgroundColor: theme.colors.background, paddingTop: 20 }}>
+                style={{ flex: 1, backgroundColor: theme?.colors?.background, paddingTop: 20 }}>
                 <Formik
                     initialValues={{
                         name: user?.name,
@@ -139,10 +139,10 @@ const EditProfile = ({ navigation }) => {
                     }}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                        <View style={[styles.V4, { backgroundColor: theme.colors.background }]}>
-                            <View style={[styles.V7, { backgroundColor: theme.colors.tabs, elevation: 5 }]}>
+                        <View style={[styles.V4, { backgroundColor: theme?.colors?.background }]}>
+                            <View style={[styles.V7, { backgroundColor: theme?.colors?.tabs, elevation: 5 }]}>
                                 <TextInput
-                                    style={[heading.h6, { marginLeft: '5%', color: theme.colors.text }]}
+                                    style={[heading.h6, { marginLeft: '5%', color: theme?.colors?.text }]}
                                     placeholderTextColor={'gray'}
                                     placeholder='First Name'
                                     onChangeText={handleChange('name')}
@@ -155,9 +155,9 @@ const EditProfile = ({ navigation }) => {
                                 <Text style={styles.error}>{errors.name}</Text>
                             )}
 
-                            <View style={[styles.V7, { backgroundColor: theme.colors.tabs, elevation: 5 }]}>
+                            <View style={[styles.V7, { backgroundColor: theme?.colors?.tabs, elevation: 5 }]}>
                                 <TextInput
-                                    style={[heading.h6, { marginLeft: '5%', color: theme.colors.text }]}
+                                    style={[heading.h6, { marginLeft: '5%', color: theme?.colors?.text }]}
                                     placeholderTextColor={'gray'}
                                     placeholder='Email'
                                     onChangeText={handleChange('email')}

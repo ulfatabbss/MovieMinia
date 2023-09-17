@@ -13,16 +13,16 @@ const NavHeader = ({ navigation, title }) => {
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     return (
         <View
-            style={{ ...styles.V2, backgroundColor: theme.colors.topbar }}>
+            style={{ ...styles.V2, backgroundColor: theme?.colors?.topbar }}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image
-                    style={[styles.img1, { tintColor: theme.colors.icon }]}
+                    style={[styles.img1, { tintColor: theme?.colors?.icon }]}
                     resizeMode='contain'
                     source={backErrow}></Image>
 
             </TouchableOpacity>
             <Text
-                style={[h4, { marginLeft: '5%', color: theme.colors.text }]}>{title}
+                style={[h4, { marginLeft: '5%', color: theme?.colors?.text }]}>{title}
 
             </Text>
         </View>

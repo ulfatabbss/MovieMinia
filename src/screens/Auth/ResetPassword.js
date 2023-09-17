@@ -14,18 +14,18 @@ const PasswordSettings = ({ navigation }) => {
 
     return (
         <SafeAreaView
-            style={[styles.V1, { backgroundColor: theme.colors.topbar }]}>
+            style={[styles.V1, { backgroundColor: theme?.colors?.topbar }]}>
             <NavHeader navigation={navigation} title={'Password Settings'} />
             <View
-                style={[styles.V5, { backgroundColor: theme.colors.background }]}>
+                style={[styles.V5, { backgroundColor: theme?.colors?.background }]}>
                 <View
-                    style={[styles.V6, { backgroundColor: theme.colors.tabs }]}>
+                    style={[styles.V6, { backgroundColor: theme?.colors?.tabs }]}>
                     <TextInput
-                        style={[heading.h6, { marginLeft: '5%', color: theme.colors.text }]} placeholderTextColor={theme.colors.text}
+                        style={[heading.h6, { marginLeft: '5%', color: theme?.colors?.text }]} placeholderTextColor={theme?.colors?.text}
                         placeholder='*********'></TextInput>
                     <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
                         <Image
-                            style={[styles.img2, { tintColor: theme.colors.icon }]}
+                            style={[styles.img2, { tintColor: theme?.colors?.icon }]}
                             resizeMode='contain'
                             source={require('../../assets/edit.png')}>
 

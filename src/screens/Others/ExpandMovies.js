@@ -78,33 +78,33 @@ const ExpandMovies = ({ route, navigation }) => {
     }
   }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <StatusBar backgroundColor={theme.colors.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
+      <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       <View style={{
         height: 60,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center', gap: 20,
-        paddingHorizontal: 20, backgroundColor: theme.colors.topbar
+        paddingHorizontal: 20, backgroundColor: theme?.colors?.topbar
       }}>
         <TouchableOpacity onPress={() => { navigation.goBack() }}>
           <Image
             resizeMode="contain"
-            style={{ ...SmallIcons, tintColor: theme.colors.icon }}
+            style={{ ...SmallIcons, tintColor: theme?.colors?.icon }}
             source={backErrow} />
         </TouchableOpacity>
 
-        <Text style={{ ...Heading, color: theme.colors.text, textTransform: 'capitalize' }}>{type == 'show' ? "Seasons" : type}</Text>
+        <Text style={{ ...Heading, color: theme?.colors?.text, textTransform: 'capitalize' }}>{type == 'show' ? "Seasons" : type}</Text>
       </View>
-      <View style={{ ...styles.InputView, backgroundColor: theme.colors.tabs, elevation: 2, shadowOffset: 3 }}>
+      <View style={{ ...styles.InputView, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: 3 }}>
         <Image
-          style={{ ...SmallIcons, tintColor: theme.colors.icon }}
+          style={{ ...SmallIcons, tintColor: theme?.colors?.icon }}
           source={searchIcon}></Image>
         <TextInput
           value={search}
           onChangeText={text => searchFilter(text)}
           placeholder="Search Movies"
-          placeholderTextColor={theme.colors.text}
+          placeholderTextColor={theme?.colors?.text}
           color="gray"
           style={{ width: '90%' }} />
       </View>
@@ -118,7 +118,7 @@ const ExpandMovies = ({ route, navigation }) => {
             return <ExpandCard item={item} data={type === 'show' ? item : movie} navigation={navigation} type={type} />
           }}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => loading && <ActivityIndicator size="small" color={theme.colors.primary} />}
+          ListFooterComponent={() => loading && <ActivityIndicator size="small" color={theme?.colors?.primary} />}
         />
       </View>
     </SafeAreaView>

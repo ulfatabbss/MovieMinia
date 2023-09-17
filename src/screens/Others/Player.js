@@ -62,30 +62,30 @@ const Player = ({ navigation, route }) => {
   //   console.log(url);
   // })
   const PlaylistItem = ({ item }) => (
-    <View style={{ ...styles.playlistItemContainer, backgroundColor: theme.colors.tabs, elevation: 2, shadowOffset: 3, gap: 5, padding: 5 }}>
+    <View style={{ ...styles.playlistItemContainer, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: 3, gap: 5, padding: 5 }}>
       <Image style={styles.playlistItemImage} resizeMode="contain" source={{
         uri:
           type == 'Movies' ? item.poster[0].image : data?.poster[0].image
       }} />
       <View style={styles.playlistItemInfo}>
-        <Text numberOfLines={1} style={{ ...smalltext, color: theme.colors.text }}>
+        <Text numberOfLines={1} style={{ ...smalltext, color: theme?.colors?.text }}>
           {type == 'Movies' ? item.title : data?.title}
         </Text>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme.colors.text }}>Director:</Text>
-          <Text numberOfLines={1} style={{ ...text, color: theme.colors.text }}>
+          <Text style={{ ...text, color: theme?.colors?.text }}>Director:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
 
             {type == 'Movies' ? item.director : data?.director}
           </Text>
         </View>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme.colors.text }}>Release year:</Text>
-          <Text style={{ ...text, color: theme.colors.text }}>
+          <Text style={{ ...text, color: theme?.colors?.text }}>Release year:</Text>
+          <Text style={{ ...text, color: theme?.colors?.text }}>
             {type == 'Movies' ? item.releaseYear : data?.releaseYear}</Text>
         </View>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme.colors.text }}>Category:</Text>
-          <Text numberOfLines={1} style={{ ...text, color: theme.colors.text }}>
+          <Text style={{ ...text, color: theme?.colors?.text }}>Category:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
 
             {type == 'Movies' ? item.category : data?.category}
           </Text>
@@ -138,7 +138,7 @@ const Player = ({ navigation, route }) => {
     );
   }
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
       <StatusBar backgroundColor="#333333" />
       {/* <Header2 navigation={navigation} text={currentName} /> */}
       <View
@@ -174,7 +174,7 @@ const Player = ({ navigation, route }) => {
 
       </View>
 
-      <Text style={{ ...Heading, color: theme.colors.text, margin: 10, }}>
+      <Text style={{ ...Heading, color: theme?.colors?.text, margin: 10, }}>
         Related Videos
       </Text>
       <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>

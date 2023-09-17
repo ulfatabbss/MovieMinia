@@ -29,7 +29,7 @@ const Tabs = () => {
       style={{
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: theme.colors.tabs,
+        backgroundColor: theme?.colors?.tabs,
         width: HP(10),
         height: HP(10)
       }}
@@ -37,7 +37,7 @@ const Tabs = () => {
       <Image
         style={{
           height: focused ? HP(4) : HP(3),
-          tintColor: focused ? theme.colors.primary : theme.colors.bottomicon,
+          tintColor: focused ? theme?.colors?.primary : theme?.colors?.bottomicon,
         }}
         source={source}
         resizeMode="contain"
@@ -45,12 +45,10 @@ const Tabs = () => {
 
       <Text
         style={{
-          color: focused ? theme.colors.primary : theme.colors.bottomicon,
+          color: focused ? theme?.colors?.primary : theme?.colors?.bottomicon,
           textAlign: 'center',
           fontFamily: 'Raleway-Medium',
-          fontSize: RF(10),
-          // fontStyle: 'normal',
-          // fontWeight: '400',
+          fontSize: RF(10)
         }}
       >
         {text}
@@ -63,7 +61,7 @@ const Tabs = () => {
       style={{
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: theme.colors.tabs,
+        backgroundColor: theme?.colors?.tabs,
         width: 70,
         height: 60
       }}
@@ -83,7 +81,7 @@ const Tabs = () => {
     </View>
   )
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.tabs }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme?.colors?.tabs }}>
       {Platform.OS === 'ios' && (
         <View
           style={{
@@ -92,11 +90,11 @@ const Tabs = () => {
             position: 'absolute',
             top: 0,
             left: 0,
-            backgroundColor: theme.colors.tabs,
+            backgroundColor: theme?.colors?.tabs,
           }}
         />
       )}
-      <StatusBar backgroundColor={theme.colors.tabs}
+      <StatusBar backgroundColor={theme?.colors?.tabs}
         barStyle="dark-content" />
       <Tab.Navigator
         screenOptions={{
@@ -111,7 +109,7 @@ const Tabs = () => {
             position: 'absolute',
             bottom: 0,
             overflow: 'hidden',
-            backgroundColor: theme.colors.tabs,
+            backgroundColor: theme?.colors?.tabs,
             boxShadow: 'rgba(0, 0, 0, 0.5)',
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
