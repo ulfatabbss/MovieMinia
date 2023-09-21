@@ -42,6 +42,7 @@ const checkUserExist = (obj: any) => {
   return HTTP_APP.post(endPoints.checkUserExist, obj);
 };
 const AddFeedback = (obj: any) => {
+  console.log(obj);
   return HTTP_APP.post(endPoints.addFeedBack, obj);
 };
 const GetFeedback = () => {
@@ -66,6 +67,9 @@ const UserPasswordUpdate = (obj: any) => {
 
   return HTTP_APP.post(endPoints.updateUserPassword, obj);
 };
+const GetAllMovies = () => {
+  return HTTP_APP.get(endPoints.get_All_Movies);
+};
 export {
   GetMovies,
   GetUpcomming,
@@ -84,4 +88,5 @@ export {
   checkUserExist,
   ConforOtp,
   UserPasswordUpdate,
+  GetAllMovies,
 };

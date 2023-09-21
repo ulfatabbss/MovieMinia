@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import heading from '../../utillis/fonts'
 import Color from '../../utillis/fonts'
@@ -13,6 +13,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { setUser } from '../../redux/reducers/userReducers';
 import { store } from '../../redux/store';
+import Loader from '../../components/Loader';
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -22,7 +23,7 @@ const EditProfile = ({ navigation }) => {
     const { myTheme, user, isGuest } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     const [selectimage, setSelectimage] = useState(user.profilePicture)
-
+    const [loding, setLoading] = useState(false)
     const ImagePicker = () => {
         let options = {
             storageOptions: {
@@ -33,7 +34,7 @@ const EditProfile = ({ navigation }) => {
         launchImageLibrary(options, response => {
             if (response?.assets && response.assets.length > 0) {
                 const selectedImageUri = response.assets[0].uri;
-                console.log('Selected Image URI:', selectedImageUri); // Add this line
+                // console.log('Selected Image URI:', selectedImageUri); // Add this line
                 setSelectimage(selectedImageUri);
             } else {
                 console.error("Image selection canceled or failed.");
@@ -43,6 +44,7 @@ const EditProfile = ({ navigation }) => {
 
 
     const Intigration = async (values) => {
+        setLoading(true)
         try {
             // Create a new FormData object and append the profilePicture
             let data = new FormData();
@@ -69,19 +71,25 @@ const EditProfile = ({ navigation }) => {
 
             // Send the Axios request
             const response = await axios(config);
-
-            if (response.status === 200) {
-                console.log('Profile updated successfully1:', response.data.data);
-                store.dispatch(setUser(response.data, data));
-                // Handle success here
+            if (response.data.status === true) {
+                Alert.alert('Profile updated successfully.....!')
+                store.dispatch(setUser(response.data.data));
+                navigation.goBack()
             } else {
-                console.error('Error updating profile2:', response.data);
-                // Handle error here
+                Alert.alert(response.data)
             }
         } catch (error) {
-            console.error('Error updating profile3:', error);
+            if (error.message === 'Network Error') {
+                Alert.alert('⚠️ Check your internet connection and try again .....!');
+            } else {
+                Alert.alert('⚠️ An error occurred. Please try again later.');
+            }
         }
+        setLoading(false)
     };
+    if (loding) {
+        return <Loader />
+    }
     return (
         <SafeAreaView
             style={[styles.V1, { backgroundColor: theme?.colors?.topbar }]}>

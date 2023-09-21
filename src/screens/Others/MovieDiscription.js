@@ -9,15 +9,15 @@ import {
   ScrollView,
   Modal,
   Text,
+  Alert,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { caution, clock, hide, play, playFrame, timer } from '../../assets';
+import React, { useCallback, useState } from 'react';
+import { backErrow, caution, clock, disabledPlaylist, play, playFrame, timer } from '../../assets';
 import HeadingText from '../../components/CustomText';
 import { RF } from '../../utillis/theme/Responsive';
 import {
-  Gray400,
+  Gray200,
   Primary,
-  Primary_Light,
   Secondary,
   White,
 } from '../../utillis/theme';
@@ -29,7 +29,6 @@ import darkTheme from '../../utillis/theme/darkTheme';
 import { Addtoplaylist, GetFeedback, GetPlaylist } from '../../services/AppServices';
 import { store } from '../../redux/store';
 import { setGuest, setIsLogin } from '../../redux/reducers/userReducers';
-import { useToast } from "react-native-toast-notifications";
 import Loader from '../../components/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -46,47 +45,46 @@ const MovieDetailPage = ({ navigation, route }) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, options);
   };
-  const Toast = useToast();
   const [playlistAdded, setPlaylistAdded] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
-  const [ischeck, setIsCheck] = useState(false)
+
 
   useFocusEffect(
     React.useCallback(() => {
-      {
-        !isGuest &&
-          CheckPlaylist();
+      const newCheck = async () => {
+        {
+          !isGuest && await CheckPlaylist();
+        }
+        await fetchData();
+      };
 
-      }
+      newCheck();
     }, [])
   );
   const HandlePlaylist = async () => {
     setIsLoading(true);
-    setIsCheck(true);
     const obj = {
-      movieIds: [item._id],
-      userId: user._id
+      movieIds: [item?._id],
+      userId: user?._id
     }
     try {
-      const check = await Addtoplaylist(obj)
-      console.log(check, "ghdjhjwekdnkdn");
+      await Addtoplaylist(obj)
       setPlaylistAdded(true);
     } catch (error) {
-      console.log(error);
+      Alert.alert(error)
     } finally {
       setIsLoading(false);
-      setIsCheck(false)
     }
   };
   const CheckPlaylist = async () => {
     setIsLoading(true);
     const obj = {
-      userId: user._id
+      userId: user?._id
     };
     await GetPlaylist(obj)
       .then(({ data }) => {
         const movies = data[0]?.movies || [];
-        const isMovieInPlaylist = movies.some((movie) => movie._id === item._id);
+        const isMovieInPlaylist = movies?.some((movie) => movie?._id === item?._id);
         setPlaylistAdded(isMovieInPlaylist);
       })
       .catch(err => {
@@ -94,32 +92,48 @@ const MovieDetailPage = ({ navigation, route }) => {
       });
     setIsLoading(false);
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const FeedBackResponse = await GetFeedback()
-        // console.log(
-        // FeedBackResponse.data.data);
-        setFeedbackData(FeedBackResponse.data.data);
-      } catch (error) {
-        console.log(error, 'errors');
-      }
-    };
 
-    fetchData();
-  }, []);
+  const fetchData = async () => {
+    try {
+      const FeedBackResponse = await GetFeedback()
+      setFeedbackData(FeedBackResponse?.data?.data);
+    } catch (error) {
+      if (error.message === 'Network Error') {
+        Alert.alert('⚠️ Check your internet connection and try again .....!');
+      } else {
+        Alert.alert('⚠️ An error occurred. Please try again later.');
+      }
+    }
+  };
+
+  const handlePlayButtonPress = () => {
+    if (isGuest) {
+      setModalVisible(true);
+    } else {
+      navigation.navigate('Player', {
+        name: item.title,
+        url: type === 'show' ? item.episods[0].url : type === 'Movies' ? item.url : item.url,
+        data: data,
+        type: type,
+      });
+    }
+  };
+
+
   const Movies_Info_Pattern = () => {
     return (
       <>
         <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center', marginTop: 10 }}>
           <Text style={{ ...Heading, color: theme?.colors?.text, fontSize: 20, width: "70%" }}>{item.title}</Text>
-          {/* <HeadingText title={item.title} size={20} semi_bold color={theme?.colors?.text} /> */}
-          <TouchableOpacity style={{ ...styles.playframe, backgroundColor: Primary_Light }} disabled={playlistAdded || isGuest}
+          {type == 'Movies' && <TouchableOpacity style={{ ...styles.playframe, backgroundColor: Gray200 }} disabled={playlistAdded || isGuest}
             onPress={() => {
               HandlePlaylist()
             }}>
-            <Image style={{ height: RF(21), width: RF(21) }} source={playlistAdded ? hide : playFrame} />
-          </TouchableOpacity>
+            <Image style={{
+              height: RF(20),
+              width: RF(20),
+            }} source={isGuest || playlistAdded ? disabledPlaylist : playFrame} />
+          </TouchableOpacity>}
         </View>
         <View style={[FlexDirection, Extra.marginTop]}>
           <View style={{ flexDirection: 'row' }}>
@@ -137,11 +151,11 @@ const MovieDetailPage = ({ navigation, route }) => {
       </>
     );
   };
-  const Play_Button = ({ setModalVisible }) => {
+  const Play_Button = () => {
     return (
       <View style={styles.playButton}>
-        <TouchableOpacity onPress={() => !isGuest ? navigation.navigate('Player', { name: item.title, url: type == 'show' ? item.episods[0].url : item.url, data: data, type: type }) : setModalVisible(true)}>
-          {/* name, url, data, type */}
+        {/* <TouchableOpacity onPress={() => isGuest ? setModalVisible(true) : navigation.navigate('Player', { name: item.title, url: type == 'show' ? item.episods[0].url : item.url, data: data, type: type })}> */}
+        <TouchableOpacity onPress={() => handlePlayButtonPress()}>
           <Image
             style={{ height: RF(40), width: RF(40) }}
             resizeMode={'contain'}
@@ -158,7 +172,7 @@ const MovieDetailPage = ({ navigation, route }) => {
           style={{ height: '100%', width: '100%' }}
           imageStyle={{ borderRadius: RF(20) }}
           resizeMode={'stretch'}
-          source={{ uri: item.image }} />
+          source={{ uri: item?.image }} />
       </View>
     );
   };
@@ -291,15 +305,17 @@ const MovieDetailPage = ({ navigation, route }) => {
       <ImageBackground
         style={{ height: RF(300), width: '100%' }}
         source={{
-          uri: item?.poster[1] ? item.poster[1].image : item?.poster[0]?.image,
+          uri: item?.poster[1] ? item?.poster[1]?.image : item?.poster[0]?.image,
         }}
         resizeMode={'stretch'}
       >
+        <TouchableOpacity style={{ height: RF(30), width: RF(30), paddingVertical: RF(60), marginHorizontal: RF(10) }} onPress={() => navigation.goBack()}>
+          <Image style={{ height: RF(30), width: RF(30), tintColor: '#fff', resizeMode: 'contain' }} source={backErrow} />
+        </TouchableOpacity>
         <View style={{ ...styles.chevronTriangle, ...styles.chevronTopLeft, borderLeftColor: theme?.colors?.background }} />
         <View style={{ ...styles.chevronTriangle, ...styles.chevronTopRight, borderLeftColor: theme?.colors?.background }} />
       </ImageBackground>
-      <Play_Button setModalVisible={setModalVisible} />
-      {/* name, url, data, type */}
+      <Play_Button />
       <ScrollView
         style={{ ...styles.detail_Container, backgroundColor: theme?.colors?.background }}
         showsVerticalScrollIndicator={false}>
@@ -335,7 +351,7 @@ const MovieDetailPage = ({ navigation, route }) => {
           <TouchableOpacity disabled={isGuest} onPress={() => navigation.navigate('AddReview')}>
             <HeadingText
               title={'+ Add Feedback'}
-              color={Secondary}
+              color={isGuest ? Gray200 : Secondary}
               size={16}
               semi_bold
               self
@@ -397,8 +413,8 @@ const styles = StyleSheet.create({
   },
 
   playframe: {
-    height: RF(35),
-    width: RF(35),
+    height: RF(30),
+    width: RF(30),
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',

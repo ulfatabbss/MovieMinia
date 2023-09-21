@@ -35,7 +35,6 @@ const Playlist = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(isGuest, isFacebook, isGoogle, "these are my bolean values");
       HandlePlaylist();
     }, [])
   );
@@ -47,20 +46,18 @@ const Playlist = ({ navigation }) => {
           userId: user?._id,
         };
         const response = await GetPlaylist(obj);
-        setMyplaylist(response.data);
+        console.log(myplaylist[0]?.movies);
+        setMyplaylist(response?.data);
       } catch (error) {
         console.error('Error fetching playlist:', error);
       }
     }
     setIsLoading(false);
   };
-
   const toggleModal = (item) => {
     setSelectedItem(item);
     setIsModalVisible(!isModalVisible);
-
   };
-
   const handleDeleteConfirm = async () => {
     setIsLoading(true);
     var myHeaders = new Headers();
@@ -218,14 +215,14 @@ const Playlist = ({ navigation }) => {
         </View>
         <View style={{ ...styles.playlistContainer, paddingBottom: "36%" }}>
           <Text style={{ ...Heading, color: theme?.colors?.text, marginHorizontal: WP(2) }}>
-            {myplaylist[0]?.movies?.length == 0 || isGuest ? 'Playlist Not Found' : `${myplaylist[0]?.movies?.length} Playlists Found`}
+            {!isGuest || !myplaylist[0]?.movies?.length == 0 ? null : `${myplaylist[0]?.movies?.length} Playlists Found`}
           </Text>
-          {myplaylist[0]?.movies?.length == 0 || isGuest ?
+          {isGuest || myplaylist[0]?.movies?.length == 0 || myplaylist?.length == 0 ?
             <Image style={styles.emptyImage} resizeMode="contain" source={EmptyImage} /> : null
           }
           {
-            !myplaylist[0]?.movies?.length == 0 && !isGuest &&
-            <FlatList renderItem={PlaylistItem} data={filteredData} />
+            !myplaylist[0]?.movies.length == 0 || !isGuest ?
+              <FlatList renderItem={PlaylistItem} data={filteredData} /> : null
           }
         </View>
       </View>
@@ -311,8 +308,8 @@ const styles = StyleSheet.create({
     width: 30,
   },
   emptyImage: {
-    height: '100%', resizeMode: 'contain',
-    width: Dimensions.get('window').width,
+    height: '90%', resizeMode: 'contain',
+    width: Dimensions.get('window').width - 20,
   },
   centeredView: {
     flex: 1,

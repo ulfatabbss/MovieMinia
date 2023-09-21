@@ -5,7 +5,7 @@ import { FlexDirection, Heading } from '../../utillis/styles';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 
-import { applogo, guest, user } from '../../assets';
+import { applogo, blackThemeLogo, guest, user } from '../../assets';
 import Button from '../../components/Button';
 import { store } from '../../redux/store';
 import { setGuest, setIsLogin } from '../../redux/reducers/userReducers';
@@ -56,7 +56,7 @@ const AccountType = ({ navigation }) => {
                             alignSelf: 'center',
                             tintColor: theme?.colors?.logo,
                         }}
-                        source={applogo}
+                        source={myTheme === 'lightTheme' ? applogo : blackThemeLogo}
                     />
                     <Text
                         style={{
@@ -74,7 +74,7 @@ const AccountType = ({ navigation }) => {
                         style={[
                             styles.selectCard,
                             {
-                                borderColor: selectCard == 'guest' ? Primary : null,
+                                borderColor: selectCard == 'guest' ? myTheme === 'lightTheme' ? Primary : '#fff' : null,
                                 borderWidth: selectCard == 'guest' ? 2 : null,
                                 backgroundColor: theme?.colors?.tabs,
                                 elevation: 2
@@ -97,8 +97,8 @@ const AccountType = ({ navigation }) => {
                         style={[
                             styles.selectCard,
                             {
-                                borderColor: selectCard == 'user' ? Primary : null,
-                                borderWidth: selectCard == 'user' ? 2 : null,
+                                borderColor: selectCard == 'user' ? myTheme === 'lightTheme' ? Primary : '#fff' : null,
+                                borderWidth: selectCard == 'user' ? 1 : null,
                                 backgroundColor: theme?.colors?.tabs, elevation: 2
                             },
                         ]}>

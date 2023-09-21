@@ -37,7 +37,7 @@ const Tabs = () => {
       <Image
         style={{
           height: focused ? HP(4) : HP(3),
-          tintColor: focused ? theme?.colors?.primary : theme?.colors?.bottomicon,
+          tintColor: focused ? myTheme == 'lightTheme' ? theme?.colors?.primary : "white" : theme?.colors?.bottomicon,
         }}
         source={source}
         resizeMode="contain"
@@ -45,7 +45,7 @@ const Tabs = () => {
 
       <Text
         style={{
-          color: focused ? theme?.colors?.primary : theme?.colors?.bottomicon,
+          color: focused ? myTheme == 'lightTheme' ? theme?.colors?.primary : "white" : theme?.colors?.bottomicon,
           textAlign: 'center',
           fontFamily: 'Raleway-Medium',
           fontSize: RF(10)

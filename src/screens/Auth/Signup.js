@@ -19,7 +19,7 @@ import { applogo, hide, lock, Message, show, user } from '../../assets';
 
 import { SignUpValidationSchema } from '../../utillis/validationSchema';
 import { store } from '../../redux/store';
-import { setIsLogin } from '../../redux/reducers/userReducers';
+import { setIsLogin, setUser } from '../../redux/reducers/userReducers';
 import { Register } from '../../services/AppServices';
 import Loader from '../../components/Loader';
 import { useDispatch, useSelector } from 'react-redux';
@@ -79,7 +79,7 @@ const Signup = ({ navigation }) => {
     Register(obj)
       .then(async ({ data }) => {
         if (data.status == true) {
-          console.log(data);
+          dispatch(setUser(data?.data))
           dispatch(setIsLogin(true));
         } else {
           Alert.alert('⚠️ Credentials incorrect, please try again .....!');
@@ -269,8 +269,8 @@ const Signup = ({ navigation }) => {
                 justifyContent: 'space-evenly',
               }}>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3 }]}
-                onPress={() => guestLogin()}>
+                style={[styles.guestbtn, { elevation: 1, shadowOffset: .3 }]}
+              >
                 <Image
                   style={styles.guestIcons}
                   resizeMode={'contain'}
@@ -278,18 +278,17 @@ const Signup = ({ navigation }) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.guestbtn, { backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3 }]}
-                onPress={() => guestLogin()}>
+                style={[styles.guestbtn, { elevation: 1, shadowOffset: .3 }]}
+              >
                 <Image
-                  style={styles.guestIcons}
+                  style={{ height: '100%', width: '100%' }}
                   resizeMode={'contain'}
                   source={require('../../assets/Auth/facebook.png')}
                 />
               </TouchableOpacity>
               {Platform.OS === 'ios' &&
                 <TouchableOpacity
-                  style={[styles.guestbtn, { backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3 }]}
-                  onPress={() => guestLogin()}>
+                  style={[styles.guestbtn, { elevation: 1, shadowOffset: .3 }]}>
                   <Image
                     style={styles.guestIcons}
                     source={require('../../assets/Auth/apple.png')}
@@ -387,6 +386,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
+    backgroundColor: "#ffff"
   },
   line: {
     height: 1,

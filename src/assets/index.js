@@ -21,6 +21,8 @@ const passSettings = require('../assets/SettingIcons/passsetting.png');
 const policy = require('../assets/SettingIcons/policy.png');
 const backErrow = require('../assets/appIcons/arrow.png');
 const searchIcon = require('../assets/search.png')
+const disabledPlaylist = require('../assets/appIcons/disablePlaylist.png')
+const blackThemeLogo = require('../assets/appIcons/blackthemlogo.png')
 export {
     play,
     lock,
@@ -37,5 +39,5 @@ export {
     arrow,
     user,
     guest,
-    applogo, dellUser, faq, terms, passSettings, policy, backErrow, searchIcon
+    applogo, dellUser, faq, terms, passSettings, policy, backErrow, searchIcon, disabledPlaylist, blackThemeLogo
 };

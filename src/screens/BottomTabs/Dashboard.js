@@ -9,7 +9,7 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 import {
   setLoading,
@@ -39,6 +39,7 @@ import { useTheme } from 'react-native-paper';
 import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
 import { store } from '../../redux/store';
+import SectionPreLoader from '../../components/ShimmerPlaceHolder/SectionPreLoader';
 
 const Dashboard = ({ navigation }) => {
 
@@ -50,8 +51,15 @@ const Dashboard = ({ navigation }) => {
     sliderData,
     hollywood,
     myTheme,
-    loading, south, popularAnimSeason
+    loading, south
   } = useSelector((state) => state.root.user);
+  const [list1, setList1] = useState(false)
+  const [list2, setList2] = useState(false)
+  const [list3, setList3] = useState(false)
+  const [list4, setList4] = useState(false)
+  const [list5, setList5] = useState(false)
+  const [list6, setList6] = useState(false)
+
   const dispatch = useDispatch();
   const apiCalledOnMount = useRef(false);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
@@ -59,29 +67,37 @@ const Dashboard = ({ navigation }) => {
 
   useEffect(() => {
     const integrate = async () => {
-      dispatch(setLoading(true));
       try {
-        const result1 = await GetMovies("Hollywood")
-        // store.dispatch(setHollywood(result1.data.movies))
-        dispatch(setHollywood(result1?.data?.movies))
-        const result2 = await GetMovies("English")
-        dispatch(setMoviesData(result2?.data?.movies))
-        const result3 = await GetMovies("Hindi")
-        dispatch(setHindiMoviesData(result3?.data?.movies))
-        const result4 = await GetMovies("Tollywood")
-        dispatch(setSouthMoviesData(result4?.data?.movies))
-        const result5 = await GetMovies("Punjabi")
-        dispatch(setPunjabiMoviesData(result5?.data?.movies))
-        const [
-          upcommingResponse,
-          sliderResponse] = await Promise.all([
-            GetUpcomming(),
-            GetSlider(),
-          ]);
-        dispatch(setUpcommingMoviesData(upcommingResponse?.data));
+        dispatch(setLoading(true));
+        setList1(true)
+        setList2(true)
+        setList3(true)
+        setList4(true)
+        setList5(true)
+        setList6(true)
+        const sliderResponse = await GetSlider()
         dispatch(setSliderData(sliderResponse?.data[0].poster));
         dispatch(setDramaSlider(sliderResponse?.data[1]?.poster));
         dispatch(setAnimatedSlider(sliderResponse?.data[2]?.poster));
+        dispatch(setLoading(false));
+        const upCommingMovies = await GetUpcomming()
+        dispatch(setUpcommingMoviesData(upCommingMovies?.data));
+        setList1(false)
+        const result1 = await GetMovies("Hollywood")
+        dispatch(setHollywood(result1?.data?.movies))
+        setList2(false)
+        const result2 = await GetMovies("English")
+        dispatch(setMoviesData(result2?.data?.movies))
+        setList3(false)
+        const result3 = await GetMovies("Hindi")
+        dispatch(setHindiMoviesData(result3?.data?.movies))
+        setList4(false)
+        const result4 = await GetMovies("Tollywood")
+        dispatch(setSouthMoviesData(result4?.data?.movies))
+        setList5(false)
+        const result5 = await GetMovies("Punjabi")
+        dispatch(setPunjabiMoviesData(result5?.data?.movies))
+        setList6(false)
       } catch (error) {
         if (error.message === 'Network Error') {
           Alert.alert('⚠️ Check your internet connection and try again .....!');
@@ -106,10 +122,9 @@ const Dashboard = ({ navigation }) => {
     };
   }, [dispatch, refreshInterval]);
 
-  if (loading) {
-    return <ScreenPreLoader />;
-  }
-
+  // if (loading) {
+  //   return <ScreenPreLoader />;
+  // }
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme?.colors?.background }]}
@@ -131,32 +146,92 @@ const Dashboard = ({ navigation }) => {
         />
       )}
       <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 60 }}>
-        <Header navigation={navigation} />
-        <Carousel images={sliderData} />
-        <CardsFlatlist navigation={navigation} heading={'Movies Trailer'} data={upcommingMoviesData} type={'Movies'} />
-        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
-        </View>
-        <CardsFlatlist navigation={navigation} heading={'Hollywood'} data={hollywood} type={'Movies'} />
-        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
-        </View>
-        <CardsFlatlist navigation={navigation} heading={'Hindi Dubbed'} data={popularMoviesData} type={'Movies'} />
-        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
-        </View>
-        <CardsFlatlist navigation={navigation} heading={'Bollywood'} data={hindiMoviesData} type={'Movies'} />
-        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
-        </View>
-        <CardsFlatlist navigation={navigation} heading={'South Indian'} data={south} type={'Movies'} />
-        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
-        </View>
-        <CardsFlatlist navigation={navigation} heading={'Punjabi'} data={punjabiMoviesData} type={'Movies'} />
-        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-          <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
-        </View>
+        {
+          loading ?
+            <>
+              <ScreenPreLoader />
+              <SectionPreLoader />
+            </> :
+            <>
+              <Header navigation={navigation} />
+              <Carousel images={sliderData} />
+            </>}
+        {list1 ?
+          <>
+            <SectionPreLoader />
+          </>
+          :
+          <CardsFlatlist navigation={navigation} heading={'Movies Trailer'} data={upcommingMoviesData} type={'Movies'} />
+        }
+        {list2 ?
+          <>
+            <SectionPreLoader />
+          </>
+          :
+          <>
+            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+              <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
+            </View>
+            <CardsFlatlist navigation={navigation} heading={'Hollywood'} data={hollywood} type={'Movies'} />
+          </>
+        }
+        {list3 ?
+          <>
+            <SectionPreLoader />
+            <SectionPreLoader />
+          </>
+          :
+          <>
+            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+              <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
+            </View>
+            <CardsFlatlist navigation={navigation} heading={'Hindi Dubbed'} data={popularMoviesData} type={'Movies'} />
+
+          </>
+        }
+        {list4 ?
+          <>
+            <SectionPreLoader />
+            <SectionPreLoader />
+
+          </>
+          :
+          <>
+            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+              <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
+            </View>
+            <CardsFlatlist navigation={navigation} heading={'Bollywood'} data={hindiMoviesData} type={'Movies'} />
+
+          </>
+        }
+        {list5 ?
+          <>
+            <SectionPreLoader />
+            <SectionPreLoader />
+          </>
+          :
+          <>
+            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+              <BannerAd size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
+            </View>
+            <CardsFlatlist navigation={navigation} heading={'South Indian'} data={south} type={'Movies'} />
+          </>
+        }
+        {list6 ?
+          <>
+            <SectionPreLoader />
+          </>
+          :
+          <>
+            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+              <BannerAd size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
+            </View>
+            <CardsFlatlist navigation={navigation} heading={'Punjabi'} data={punjabiMoviesData} type={'Movies'} />
+            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+              <BannerAd size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
+            </View>
+          </>
+        }
       </ScrollView>
     </SafeAreaView>
   );

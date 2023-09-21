@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity, Modal } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { setGuest, setIsFacebook, setIsGoogle, setIsLogin, setTheme } from '../redux/reducers/userReducers';
+import { setGuest, setIsFacebook, setIsGoogle, setIsLogin, setTheme, setUser } from '../redux/reducers/userReducers';
 import { HP, RF, WP } from '../utillis/theme/Responsive';
 import { useTheme } from 'react-native-paper';
 import { Primary, white } from '../utillis/colors';
 import { Secondary, White } from '../utillis/theme';
 import { caution } from '../assets';
 import HeadingText from './CustomText';
+import { Heading, smalltext, text } from '../utillis/styles'
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+
 const CustomDrawerContent = ({ navigation }) => {
   const dispatch = useDispatch();
   const { myTheme, user, isGuest, isGoogle, isFacebook } = useSelector((state) => state.root.user);
@@ -19,11 +22,17 @@ const CustomDrawerContent = ({ navigation }) => {
     dispatch(setTheme(newTheme));
     setTextColor(newTheme == 'darkTheme' ? 'white' : 'black')
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await GoogleSignin.signOut();
+      dispatch(setIsGoogle(false))
+    } catch (error) {
+      console.error(error);
+    }
     dispatch(setGuest(false))
-    dispatch(setIsGoogle(false))
     dispatch(setIsFacebook(false))
     dispatch(setIsLogin(false))
+    dispatch(setUser(null))
   }
   return (
     <View style={{ flex: 1, backgroundColor: theme?.colors?.tabs, borderTopRightRadius: 30, borderBottomRightRadius: 30 }}>
@@ -32,16 +41,8 @@ const CustomDrawerContent = ({ navigation }) => {
         <Modal animationType="slide" transparent={true} visible={logOutModalVisible}><View style={styles.modalContainer}>
           <View style={styles.modalCard}>
             <Image style={{ height: RF(90), width: RF(90) }} source={caution ? caution : null} />
-            <HeadingText title={'Come back Soon!'} bold size={20} top={5} />
-            <HeadingText
-              title={
-                'Are you Sure You Want to Logout?'
-              }
-              regular
-              size={16}
-              top={10}
-              alignCenter
-            />
+            <Text style={{ ...Heading, marginVertical: 10, color: 'black' }}>Come back Soon!</Text>
+            <Text style={{ ...text, fontSize: RF(14), color: 'black' }}>Are you Sure You Want to Logout</Text>
             <View style={styles.button_View}>
               <TouchableOpacity
                 style={styles.button}
@@ -49,7 +50,7 @@ const CustomDrawerContent = ({ navigation }) => {
                 <HeadingText
                   title={'Yes'}
                   semi_bold
-                  size={16}
+                  size={RF(16)}
                   color={White}
                 />
               </TouchableOpacity>
@@ -72,7 +73,7 @@ const CustomDrawerContent = ({ navigation }) => {
               style={styles.profileImage}
               source={{ uri: isGuest ? "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg?size=626&ext=jpg&uid=R28842868&ga=GA1.2.332396238.1691144532&semt=ais" : user?.profilePicture }}
             />
-            <Text style={{ ...styles.profileName, color: textColor }}>{isGuest ? 'Guest User' : user?.name}</Text>
+            <Text numberOfLines={1} style={{ ...styles.profileName, color: textColor }}>{isGuest ? 'Guest User' : user?.name}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => toggleTheme()} style={styles.othercontainer}>
@@ -126,10 +127,9 @@ const styles = StyleSheet.create({
   profileName: {
     color: '#313131',
     fontFamily: 'Raleway-Bold',
-    marginLeft: 10,
-    width: WP(40),
-    fontSize: RF(16), textTransform: 'uppercase'
-
+    marginLeft: 5,
+    width: WP(35),
+    fontSize: RF(14), textTransform: 'uppercase'
   },
   logoutImage: {
     height: HP(3),
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: RF(20),
   },
   modalCard: {
     height: RF(300),
@@ -177,13 +177,14 @@ const styles = StyleSheet.create({
     backgroundColor: White,
     padding: 20,
     alignItems: 'center',
+    justifyContent: 'center'
   },
   button_View: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
     alignItems: 'center',
-    marginTop: RF(40),
+    marginTop: RF(35),
   },
   button: {
     height: RF(40),

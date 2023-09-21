@@ -28,6 +28,7 @@ import { WP } from '../utillis/theme/Responsive';
 import DeleteAccount from '../screens/Settings/DeleteAccount';
 import UpdatePassword from '../screens/Auth/UpdatePassword';
 import Policy from '../screens/Settings/Policy';
+import RewardedAdsScreen from '../screens/Ads/Rewarded';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const MyDrawer = ({ navigation }) => {
@@ -73,6 +74,8 @@ const MainStack = () => {
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="DeleteAccount" component={DeleteAccount} />
       <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
+      <Stack.Screen name="RewardedAdsScreen" component={RewardedAdsScreen} />
+
     </Stack.Navigator>
   );
 };

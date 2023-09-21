@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, StatusBar } from 'react-native'
+import { Image, SafeAreaView, Text, TouchableOpacity, View, StyleSheet, TextInput, StatusBar, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Primary } from '../../utillis/colors'
 import heading from '../../utillis/fonts'
@@ -6,27 +6,40 @@ import { useSelector } from 'react-redux'
 import { useTheme } from 'react-native-paper'
 import lightTheme from '../../utillis/theme/lightTheme'
 import darkTheme from '../../utillis/theme/darkTheme'
-import { Heading } from '../../utillis/styles'
+import { Heading, text } from '../../utillis/styles'
 import { backErrow, guest } from '../../assets'
 import { AddFeedback } from '../../services/AppServices'
+import Loader from '../../components/Loader'
 const AddReview = ({ navigation }) => {
 
     const { myTheme, user, isGuest } = useSelector((state) => state.root.user);
     const theme = useTheme(myTheme === 'lightTheme' ? lightTheme : darkTheme);
+    const [loading, setLoading] = useState(false)
     const [feedback, setFeedback] = useState('')
     const fetchData = async () => {
+        setLoading(true)
         try {
             const obj = {
                 user_id: user._id,
                 feedback_text: feedback
             }
             const check = await AddFeedback(obj)
-            console.log(check.data);
+            if (check?.data?.status == true) {
+                Alert.alert("Feedback Added successfully ...!")
+                navigation.goBack()
+            } else {
+                Alert.alert("Some thing went worng ...!")
+            }
         } catch (error) {
+            Alert.alert(error)
             console.log(error, 'errors');
 
         }
+        setLoading(false)
     };
+    if (loading) {
+        return <Loader />
+    }
     return (
         <SafeAreaView
             style={[styles.V1, { backgroundColor: theme?.colors?.topbar }]}>
@@ -47,7 +60,7 @@ const AddReview = ({ navigation }) => {
                 <View
                     style={[styles.V3, { backgroundColor: theme?.colors?.tabs, elevation: 5, shadowOpacity: 0.5, shadowOffset: .5 }]}>
                     <TextInput
-                        style={{ font: 18, fontWeight: '500', color: theme?.colors?.text }} placeholder='Describe your Experience!' placeholderTextColor={'gray'} onChangeText={(text) => setFeedback(text)} value={feedback}>
+                        style={{ ...text, fontSize: 14, color: theme?.colors?.text }} placeholder='Describe your Experience!' placeholderTextColor={'gray'} onChangeText={(text) => setFeedback(text)} value={feedback}>
                     </TextInput>
                 </View>
             </View>
@@ -110,10 +123,10 @@ const styles = StyleSheet.create({
         borderRadius: 20, padding: 20
     },
     V8: {
-        height: 48,
+        height: 50,
         width: '90%',
         alignSelf: 'center',
-        borderRadius: 20,
+        borderRadius: 100,
         backgroundColor: '#720808',
         position: 'absolute',
         bottom: 30,

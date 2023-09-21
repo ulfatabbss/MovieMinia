@@ -4,16 +4,15 @@ import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
-import lightTheme from '../utillis/theme/lightTheme';
-import darkTheme from '../utillis/theme/darkTheme';
+import lightTheme from '../../utillis/theme/lightTheme';
+import darkTheme from '../../utillis/theme/darkTheme';
 
 // Utility function to create a shimmer component
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 const shimmerColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
 const shimmerColors1 = ['#0000', 'rgba(255, 255, 255, 0.1)', '#0000'];
 
-
-const ScreenPreLoader = () => {
+const SectionPreLoader = () => {
     const { myTheme } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     const [change, setChange] = useState(myTheme == 'lightTheme' ? shimmerColors : shimmerColors1)
@@ -36,22 +35,48 @@ const ScreenPreLoader = () => {
             />
         );
     };
+    const renderShimmerCards = (count, height, styleName) => {
+        const cardStyles = [styles[styleName], { height: height }];
 
+        return (
+            <View style={{ flexDirection: 'row', width: '100%', gap: 10 }}>
+                {[...Array(count)].map((_, index) => (
+                    <ShimmerPlaceholder
+                        key={index}
+                        duration={2000}
+                        shimmerColors={change}
+                        style={cardStyles}
+                    />
+                ))}
+            </View>
+        );
+    };
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <ShimmerPlaceholder duration={2000}
-                    shimmerColors={change} style={styles.logo} />
+            {/* <View style={styles.header}>
+                <ShimmerPlaceholder style={styles.logo} />
                 <View style={styles.iconContainer}>
-                    <ShimmerPlaceholder duration={2000}
-                        shimmerColors={change} style={styles.logoutIcon} />
+                    <ShimmerPlaceholder style={styles.logoutIcon} />
                 </View>
-            </View>
+            </View> */}
+            {/* 
+            {renderShimmerSection(172)} */}
+            {renderShimmerSection(30)}
+            {renderShimmerCards(3, 150, 'card')}
 
-            {renderShimmerSection(172)}
+            {/* {renderShimmerSection(30)}
+            {renderShimmerCards(3, 150, 'card')} */}
+
+            {/* {renderShimmerSection(30)}
+            {renderShimmerCards(3, 150, 'card')} */}
         </View>
     );
 };
+
+// Render a shimmer section with given height
+
+
+// Render shimmer card sections with given count and height
 
 
 const styles = StyleSheet.create({
@@ -98,4 +123,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ScreenPreLoader;
+export default SectionPreLoader;

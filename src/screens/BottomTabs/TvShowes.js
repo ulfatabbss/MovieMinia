@@ -20,6 +20,7 @@ import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import ScreenPreLoader from '../../components/ScreenPreLoader';
+import SectionPreLoader from '../../components/ShimmerPlaceHolder/SectionPreLoader';
 const TvShowes = ({ navigation }) => {
   const [value, setValue] = useState("season")
   const { dramaData, dramaSlider, indianDrama, turkishDrama, hollywoodseasons, hindiSeasons, myTheme, loading } = useSelector(
@@ -30,24 +31,28 @@ const TvShowes = ({ navigation }) => {
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
   const [refreshInterval, setRefreshInterval] = useState(12 * 60 * 60 * 1000);
   const [prevValue, setPrevValue] = useState(value);
-
+  const [loadHindiSeasons, setloadHindiSeasons] = useState(false)
+  const [loadTv, setLoadTv] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch(setLoading(true))
+        const hollywooodSeasons1 = await GetDrama("Season");
+        dispatch(setHollywoodseasons(hollywooodSeasons1?.data?.dramas));
+        dispatch(setLoading(false));
+        setloadHindiSeasons(true)
+        const hindiSeasons1 = await GetDrama("HindiSeason");
+        dispatch(setHindiSeasons(hindiSeasons1?.data?.dramas));
+        setloadHindiSeasons(false)
         // Fetch season data
+
+
         const pakistani = await GetDrama("Urdu");
         dispatch(setDramaData(pakistani?.data?.dramas));
         const indian = await GetDrama("Indian");
         dispatch(setIndianDrama(indian?.data?.dramas));
         const turkish = await GetDrama("Turkish");
         dispatch(setTurkishDrama(turkish?.data?.dramas));
-
-        const hindiSeasons1 = await GetDrama("HindiSeason");
-        dispatch(setHindiSeasons(hindiSeasons1?.data?.dramas));
-        const hollywooodSeasons1 = await GetDrama("Season");
-        dispatch(setHollywoodseasons(hollywooodSeasons1?.data?.dramas));
-        dispatch(setLoading(false));
       } catch (error) {
         console.log(error, 'errors');
         dispatch(setLoading(false));
@@ -63,19 +68,12 @@ const TvShowes = ({ navigation }) => {
       clearInterval(intervalId);
     };
   }, [dispatch, refreshInterval, prevValue]);
-
-  if (loading) {
-    return (
-      <ScreenPreLoader />
-    );
-  }
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme?.colors?.background }]}>
       <StatusBar backgroundColor={theme?.colors?.background} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
       <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 60 }}>
         <Header navigation={navigation} />
         <Carousel images={dramaSlider} />
-
         <View style={{ height: 40, width: "96%", alignSelf: 'center', marginVertical: 10, flexDirection: 'row', backgroundColor: '#E1E4E8', borderRadius: 50 }}>
           <TouchableOpacity onPress={() => setValue('season')} style={{ width: "50%", backgroundColor: value == 'season' ? '#720808' : '#E1E4E8', borderRadius: 50, alignItems: 'center', justifyContent: 'center' }}>
             <Text style={{ color: value == 'season' ? '#fff' : '#313131', fontFamily: value == 'season' ? 'Raleway-Bold' : 'Raleway-Regular' }}>Seasons</Text>
@@ -84,16 +82,27 @@ const TvShowes = ({ navigation }) => {
             <Text style={{ color: value == 'tv' ? '#fff' : '#313131', fontFamily: value == 'tv' ? 'Raleway-Bold' : 'Raleway-Regular' }}>T.V Serials</Text>
           </TouchableOpacity>
         </View>
-        {value === 'season' && (
+        {loading && value === 'season' ?
+          <>
+            <SectionPreLoader />
+            <SectionPreLoader />
+          </>
+          :
           <>
             <CardsFlatlist navigation={navigation} heading={'Hollywood Seasons'} data={hollywoodseasons} type={"show"} />
-            <CardsFlatlist navigation={navigation} heading={'Bollywood Seasons'} data={hindiSeasons} type={"show"} />
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
-            </View>
-          </>
-        )}
+            {loadHindiSeasons ?
+              <SectionPreLoader />
+              :
+              <>
+                <CardsFlatlist navigation={navigation} heading={'Bollywood Seasons'} data={hindiSeasons} type={"show"} />
+                <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
+                  <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
+                </View>
 
+              </>
+            }
+          </>
+        }
         {value === 'tv' && (
           <>
             <CardsFlatlist navigation={navigation} heading={'Pakistani'} data={dramaData} type={"show"} />
@@ -104,6 +113,7 @@ const TvShowes = ({ navigation }) => {
             <CardsFlatlist navigation={navigation} heading={'Indian'} data={indianDrama} type={"show"} />
           </>
         )}
+
       </ScrollView>
     </SafeAreaView>
   );

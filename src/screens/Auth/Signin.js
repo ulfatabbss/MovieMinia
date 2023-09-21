@@ -101,147 +101,145 @@ const Signin = ({ navigation }) => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    GoogleSignin.configure()
-
-  }, [])
   const GoogleLogin = async () => {
-    setIsLoading(true);
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      // console.log(userInfo.user, "userinfooooooooooo")
-      const userExists = await checkIfUserExists(userInfo.user.email);
+      setIsLoading(true);
+      await checkGooglePlayServices();
+      const userInfo = await signInWithGoogle();
+      const userExists = await checkIfUserExists(userInfo?.user?.email);
       if (userExists) {
-        // User exists, log them in
-        const loginObj = {
-          email: userInfo.user.email,
-          password: userInfo.user.id, // You may need to provide a default password
-        };
-        const response = await Login(loginObj);
-        if (response.data.status == true) {
-          dispatch(setUser(response.data.user));
-          dispatch(setIsGoogle(true))
-          // console.log(response.data);
-          dispatch(setIsLogin(true));
-        } else {
-          Alert.alert('⚠️ Login credentials incorrect, please try again .....!');
-        }
+        await handleGoogleLogin(userInfo);
       } else {
-        // User doesn't exist, register them
-        console.log("Signup");
-        const registerObj = {
-          name: userInfo.user.name,
-          email: userInfo.user.email,
-          password: userInfo.user.id, // You may need to provide a default password
-        };
-        Register(registerObj)
-          .then(async ({ data }) => {
-            if (data.status == true) {
-              console.log(data);
-              // dispatch(setIsLogin(true));
-            } else {
-              Alert.alert('⚠️ Credentials incorrect, please try again .....!');
-            }
-          })
-          .catch(error => {
-            if (error.message === 'Network Error') {
-              Alert.alert('⚠️ Check your internet connection and try again .....!');
-            } else {
-              Alert.alert('⚠️ An error occurred. Please try again later.');
-            }
-          })
+        await handleRegister(userInfo);
       }
     } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log(error)
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log(error)
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log(error)
-        // play services not available or outdated
-      } else {
-        console.log(error)
-        // some other error happened
-      }
+      Alert.alert('⚠️ An error occurred: ' + error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const checkGooglePlayServices = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+    } catch (error) {
+      Alert.alert('Google Play services are not available');
+      throw new Error('Google Play services are not available');
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      return await GoogleSignin.signIn();
+    } catch (error) {
+      Alert.alert('Failed to sign in with Google')
+      throw new Error('Failed to sign in with Google');
+    }
+  };
+
+  const handleGoogleLogin = async (userInfo) => {
+    try {
+      const loginObj = {
+        email: userInfo?.user?.email,
+        password: userInfo?.user?.id,
+      };
+      const response = await Login(loginObj);
+      if (response?.data?.status == true) {
+        dispatch(setUser(response?.data?.user));
+        dispatch(setIsGoogle(true));
+        dispatch(setIsLogin(true));
+      } else {
+        Alert.alert('⚠️ Login credentials incorrect, please try again ...!');
+      }
+    } catch (error) {
+      Alert.alert(`'Failed to handle login: '  ${error.message}`)
+      throw new Error('Failed to handle login: ' + error.message);
+    }
+  };
+
+  const handleRegister = async (userInfo) => {
+    try {
+      const registerObj = {
+        name: userInfo?.user?.name,
+        email: userInfo?.user?.email,
+        password: userInfo?.user?.id,
+        profilePicture: userInfo?.user?.photo,
+      };
+      const { data } = await Register(registerObj);
+      if (data.status == true) {
+        dispatch(setUser(data?.data));
+        dispatch(setIsLogin(true));
+        dispatch(setIsGoogle(true));
+      } else {
+        Alert.alert('⚠️ Credentials incorrect, please try again ...!');
+      }
+    } catch (error) {
+      if (error.message === 'Network Error') {
+        Alert.alert('⚠️ Check your internet connection and try again ...!');
+      } else {
+        Alert.alert(`'Failed to handle registration: ' ${error.message}`)
+        throw new Error('Failed to handle registration: ' + error.message);
+      }
+    }
+  };
+
+
   const checkIfUserExists = async (email) => {
     try {
-      // Perform an API call or database query to check if the user exists
-      // Return true if the user exists, false otherwise
       const obj = {
         email: email
       }
       const response = await checkUserExist(obj);
-      return response.data.status;
+      return response?.data?.status;
     } catch (error) {
-      // Handle any errors that occur during the check
-      console.error('Error checking user existence:', error);
-      return false; // Assuming the user doesn't exist in case of an error
+      Alert.alert(`'Error checking user existence:', ${error}`)
+      return false;
     }
   };
 
   const onFacebookButtonPress = async () => {
     setIsLoading(true);
     try {
-      // Attempt login with permissions
       const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-
       if (result.isCancelled) {
+        Alert.alert('Cancelled the login process')
         throw 'User cancelled the login process';
       }
-
-      // Once signed in, get the user's AccessToken
       const data = await AccessToken.getCurrentAccessToken();
-
       if (!data) {
         throw 'Something went wrong obtaining access token';
       }
-
-      // Fetch user profile data
       const responseInfoCallback = async (error, result) => {
         if (error) {
+          Alert.alert(error)
           console.log('Error fetching user data:', error);
           throw 'Error fetching user data';
         } else {
-          // You can access user profile data in result
-          // console.log('User data:', result);
-          const userExists = await checkIfUserExists(result.email);
+          const userExists = await checkIfUserExists(result?.email);
           if (userExists) {
-            // User exists, log them in
             const loginObj = {
-              email: result.email,
-              password: result.id, // You may need to provide a default password
+              email: result?.email,
+              password: result?.id,
             };
             const response = await Login(loginObj);
             if (response.data.status == true) {
-              // console.log(response.data.user);
-              dispatch(setUser(response.data.user));
+              dispatch(setUser(response?.data?.user));
               dispatch(setIsFacebook(true))
-              // console.log(response.data);
               dispatch(setIsLogin(true));
             } else {
               Alert.alert('⚠️ Login credentials incorrect, please try again .....!');
             }
           } else {
-            // User doesn't exist, register them
             console.log("Signup");
             const registerObj = {
               name: result.name,
               email: result.email,
-              password: result.id, // You may need to provide a default password
+              password: result.id,
             };
             Register(registerObj)
               .then(async ({ data }) => {
                 if (data.status == true) {
-                  // console.log(data);
+                  console.log(data, "this is my facebook data");
                   // dispatch(setIsLogin(true));
                 } else {
                   Alert.alert('⚠️ Credentials incorrect, please try again .....!');

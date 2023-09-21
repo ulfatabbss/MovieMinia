@@ -11,6 +11,7 @@ import { LogBox } from 'react-native';
 import mobileAds from 'react-native-google-mobile-ads';
 import { useTheme } from 'react-native-paper'; // Import useTheme
 import lightTheme from './src/utillis/theme/lightTheme';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
 const App = () => {
@@ -22,12 +23,18 @@ const App = () => {
     }, 3000);
   }, []);
 
+  // Configure the Google Sign-In client ID
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '300565158181-6r9mvusrh44a72jor1hkofdcbdof1d23.apps.googleusercontent.com', // Replace with your Web Client ID
+      androidClientId: '300565158181-utbl6omqm9479pfrq1no43uvbd78pt00.apps.googleusercontent.com',
+      offlineAccess: false, // Set to true if you need offline access
+
+    }
+    )
+  }, [])
   mobileAds()
     .initialize()
-    .then(adapterStatuses => {
-      console.log("Initialization complete!");
-    });
-
   if (isLoading) {
     return (
       <Splash />

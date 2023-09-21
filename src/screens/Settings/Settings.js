@@ -12,17 +12,25 @@ import { DeleteAccountApi } from '../../services/AppServices';
 import { Primary, Secondary, White } from '../../utillis/theme';
 import { RF } from '../../utillis/theme/Responsive';
 import HeadingText from '../../components/CustomText';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const Settings = ({ navigation }) => {
-    const { myTheme, user, isGuest, google, facebook } = useSelector((state) => state.root.user);
+    const { myTheme, user, isGuest, isGoogle, isFacebook } = useSelector((state) => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
     const [logOutModalVisible, setIsLogOutModalVisible] = useState(false)
     const dispatch = useDispatch()
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            await GoogleSignin.signOut();
+            console.log("hellllllo");
+            dispatch(setIsGoogle(false))
+        } catch (error) {
+            console.error(error);
+        }
         dispatch(setGuest(false))
-        dispatch(setIsGoogle(false))
         dispatch(setIsFacebook(false))
         dispatch(setIsLogin(false))
+
     }
     const renderSettingItem = (icon, label, onPress) => (
         <TouchableOpacity style={styles.settingItem} onPress={onPress}>
@@ -83,7 +91,7 @@ const Settings = ({ navigation }) => {
             </View>
             <View style={{ ...styles.content, backgroundColor: theme?.colors?.background }}>
                 <View style={styles.settingsList}>
-                    {!google && !facebook && renderSettingItem(passSettings, 'Password Settings', () => navigation.navigate('PasswordSettings'))}
+                    {!isGoogle && !isFacebook && renderSettingItem(passSettings, 'Password Settings', () => navigation.navigate('PasswordSettings'))}
                     {renderSettingItem(terms, 'Terms & Conditions', () => navigation.navigate('Terms'))}
                     {renderSettingItem(policy, 'Privacy Policy', () => navigation.navigate('Policy'))}
                     {renderSettingItem(faq, 'FAQs', () => navigation.navigate('Faq'))}

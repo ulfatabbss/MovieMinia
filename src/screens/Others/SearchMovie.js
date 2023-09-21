@@ -19,9 +19,9 @@ import {
 } from '../../utillis/theme';
 import { SmallIcons, TopBar } from '../../utillis/styles';
 import LinearGradient from 'react-native-linear-gradient';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { LogBox } from 'react-native';
-import { setRecentSearches } from '../../redux/reducers/userReducers';
+import { setGetAllMoviesData, setLoading, setRecentSearches } from '../../redux/reducers/userReducers';
 import { store } from '../../redux/store';
 import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
@@ -29,17 +29,20 @@ import darkTheme from '../../utillis/theme/darkTheme';
 import ExpandCard from '../../components/ExpnadCard';
 import { backErrow, searchIcon } from '../../assets';
 import { RF } from '../../utillis/theme/Responsive';
+import { GetAllMovies } from '../../services/AppServices';
+import Loader from '../../components/Loader';
 LogBox.ignoreLogs(['Warning: ...']);
 const SearchMovie = ({ navigation }) => {
     const {
-        allMovies, recentSearches, myTheme
+        getAllMoviesData, recentSearches, myTheme, loading
     } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
     const [search, setSearch] = useState('');
     const [masterData, setMasterData] = useState([]);
-    const [movie, setMovie] = useState(allMovies);
+    const [movie, setMovie] = useState(getAllMoviesData);
     const [isDataAvailable, setIsDataAvailable] = useState(false);
     const [isRecent, setIsRecent] = useState(true);
+    const dispatch = useDispatch()
     const searchFilter = text => {
         if (text) {
             const newData = masterData.filter(item => {
@@ -63,16 +66,13 @@ const SearchMovie = ({ navigation }) => {
 
     const recentSearchButtons = (item) => {
         searchFilter(item);
-
-
     }
     const ClickMovie = async (item) => {
         if (item && item.title) {
-            if (!recentSearches.includes(item.title)) { // Use includes instead of include
-                const updatedRecentSearches = [...recentSearches, item.title];
+            if (!recentSearches.includes(item?.title)) {
+                const updatedRecentSearches = [...recentSearches, item?.title];
                 store.dispatch(setRecentSearches(updatedRecentSearches));
             }
-
             setIsRecent(true);
             setSearch("");
             navigation.navigate('MovieDiscription', {
@@ -86,13 +86,25 @@ const SearchMovie = ({ navigation }) => {
     };
 
     useEffect(() => {
-        if (movie && movie.length < 1) {
-            setIsDataAvailable(true);
-        } else {
-            setIsDataAvailable(false);
+        console.log(recentSearches);
+        const integrate = async () => {
+            dispatch(setLoading(true));
+            try {
+                const getMovies = await GetAllMovies()
+                dispatch(setGetAllMoviesData(getMovies?.data));
+                setMasterData(getAllMoviesData);
+            } catch (error) {
+                if (error.message === 'Network Error') {
+                    Alert.alert('⚠️ Check your internet connection and try again .....!');
+                } else {
+                    Alert.alert('⚠️ An error occurred. Please try again later.');
+                }
+            } finally {
+                dispatch(setLoading(false));
+            }
         }
-        setMasterData(allMovies);
-    }, [movie]);
+        integrate();
+    }, []);
 
     const SearchView = ({ item }) => (
         <TouchableOpacity
@@ -132,6 +144,9 @@ const SearchMovie = ({ navigation }) => {
             <Text style={{ color: Black, fontSize: 13, fontFamily: 'Raleway-Medium' }}>{item}</Text>
         </TouchableOpacity>
     );
+    if (loading) {
+        return <Loader />
+    }
     return (
         <ScrollView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
             <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={myTheme == 'lightTheme' ? 'dark-content' : 'light-content'} />
@@ -210,7 +225,8 @@ const SearchMovie = ({ navigation }) => {
                             <View style={{ alignSelf: 'center', marginTop: 10 }}>
                                 <FlatList
                                     numColumns={2}
-                                    renderItem={({ item }) => <ExpandCard item={item} data={movie} navigation={navigation} type={"Movies"} />}
+                                    renderItem={(item) => SearchView(item)}
+                                    // renderItem={({ item }) => <ExpandCard item={item} data={movie} navigation={navigation} type={"Movies"} />}
                                     data={movie} />
                             </View>
                         )}

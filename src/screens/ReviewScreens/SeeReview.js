@@ -9,47 +9,7 @@ import darkTheme from '../../utillis/theme/darkTheme'
 import { backErrow, clock } from '../../assets'
 import { Heading, smalltext, text } from '../../utillis/styles'
 import { GetFeedback } from '../../services/AppServices'
-// const data = [
-//     {
-
-//         date: '13 Sep 2004',
-//         img: { uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynwv-5qtogtOwJbIjaPFJUmHpzhxgqIAug&usqp=CAU' },
-//         name: 'Ronald Richards',
-//         feed: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
-//     },
-//     {
-
-//         date: '13 Sep 2004',
-//         img: { uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynwv-5qtogtOwJbIjaPFJUmHpzhxgqIAug&usqp=CAU' },
-
-//         name: 'Ronald Richards',
-//         feed: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
-//     },
-//     {
-
-//         date: '13 Sep 2004',
-//         img: { uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynwv-5qtogtOwJbIjaPFJUmHpzhxgqIAug&usqp=CAU' },
-
-//         name: 'Ronald Richards',
-//         feed: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
-//     },
-//     {
-
-//         date: '13 Sep 2004',
-//         img: { uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynwv-5qtogtOwJbIjaPFJUmHpzhxgqIAug&usqp=CAU' },
-
-//         name: 'Ronald Richards',
-//         feed: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
-//     },
-//     {
-
-//         date: '13 Sep 2004',
-//         img: { uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynwv-5qtogtOwJbIjaPFJUmHpzhxgqIAug&usqp=CAU' },
-
-//         name: 'Ronald Richards',
-//         feed: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque malesuada eget vitae amet...'
-//     }
-// ]
+import { RF } from '../../utillis/theme/Responsive'
 const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(dateString);
@@ -59,7 +19,27 @@ const Review = ({ navigation, route }) => {
     const { data } = route.params;
     const { myTheme } = useSelector((state) => state.root.user);
     const theme = useTheme(myTheme === 'lightTheme' ? lightTheme : darkTheme);
+    const [feedback, setfeedback] = useState('')
+    const sortByTimestampAscending = () => {
+        // Use the JavaScript sort method to sort the array in ascending order
+        data.sort((a, b) => {
+            const timestampA = new Date(a.timestamp).getTime();
+            const timestampB = new Date(b.timestamp).getTime();
 
+            // Compare the timestamps to determine the order
+            return timestampB - timestampA;
+        });
+
+        // Return the sorted feedback data
+        return data
+
+    };
+    useEffect(() => {
+        const result = sortByTimestampAscending()
+        // console.log(result);
+        setfeedback(result)
+
+    }, [])
     const FLV = ({ item }) => (
 
         <View
@@ -69,12 +49,12 @@ const Review = ({ navigation, route }) => {
                 <Image
                     style={{ height: 50, width: 50, borderRadius: 90, }}
                     resizeMode='contain'
-                    source={{ uri: item?.user_id?.profilePicture }}>
+                    source={{ uri: item?.user_id?.profilePicture ? item?.user_id?.profilePicture : 'https://cdn-icons-png.flaticon.com/128/149/149071.png' }}>
                 </Image>
                 <View
                     style={{ marginLeft: '2%' }}>
                     <Text
-                        style={{ ...Heading, color: theme?.colors?.text }}>{item.user_id?.name}</Text>
+                        style={{ ...Heading, color: theme?.colors?.text }}>{item?.user_id?.name}</Text>
                     <View
                         style={{ flexDirection: 'row', marginTop: 5 }}>
                         <Image
@@ -115,14 +95,14 @@ const Review = ({ navigation, route }) => {
                 <Text style={{ ...Heading, color: theme?.colors?.text }}>Reviews Listing</Text>
             </View>
             <View
-                style={[styles.V5, { backgroundColor: theme?.colors?.background }]}>
+                style={[styles.V5, { backgroundColor: theme?.colors?.background, paddingBottom: RF(110) }]}>
                 <View
                     style={styles.V3}>
                     {data.length == 0 ? null : <Text
                         style={{ ...Heading, fontWeight: '600', color: theme?.colors?.text }}>{data?.length} total feedbacks</Text>}
                     <FlatList
                         renderItem={FLV}
-                        data={data}>
+                        data={feedback}>
 
                     </FlatList>
 

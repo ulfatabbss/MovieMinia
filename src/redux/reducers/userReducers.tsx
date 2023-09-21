@@ -32,6 +32,7 @@ const initialState: any = {
   trendAnimSeason: [],
   popularAnimSeason: [],
   newAnimSeason: [],
+  getAllMoviesData: [],
 };
 
 export const userReducer: any = createSlice({
@@ -131,6 +132,9 @@ export const userReducer: any = createSlice({
     setIsFacebook: (state, action) => {
       state.isFacebook = action.payload;
     },
+    setGetAllMoviesData: (state, action) => {
+      state.getAllMoviesData = action.payload;
+    },
   },
 });
 
@@ -166,6 +170,7 @@ export const {
   setIsFirstTime,
   setIsGoogle,
   setIsFacebook,
+  setGetAllMoviesData,
 } = userReducer.actions;
 
 export default userReducer.reducer;

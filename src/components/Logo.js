@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
-import { applogo } from '../assets';
+import { applogo, blackThemeLogo } from '../assets';
 import { RF } from '../utillis/theme/Responsive';
 import lightTheme from '../utillis/theme/lightTheme';
 import darkTheme from '../utillis/theme/darkTheme';
@@ -23,8 +23,8 @@ const Logo = () => {
                 style={{
                     height: RF(100),
                     width: RF(100),
-                    borderRadius: 100,
-                    backgroundColor: '#fff',
+                    // borderRadius: 100,
+                    // backgroundColor: '#fff',
                     elevation: 1,
                 }}>
                 <Image
@@ -32,12 +32,12 @@ const Logo = () => {
                         height: '100%',
                         width: '100%',
                         borderRadius: 100,
-                        borderColor: 'red',
-                        backgroundColor: theme?.colors?.tabs,
+                        // borderColor: 'red',
+                        // backgroundColor: theme?.colors?.tabs,
                         alignSelf: 'center',
-                        tintColor: theme?.colors?.logo,
+                        // tintColor: theme?.colors?.logo,
                     }}
-                    source={applogo}
+                    source={myTheme === 'lightTheme' ? applogo : blackThemeLogo}
                 />
             </View>
         </View>

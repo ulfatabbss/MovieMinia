@@ -16,6 +16,7 @@ const endPoints = {
   checkUserExist: 'check-user-exist',
   conformOtp: 'conformed-otp',
   updateUserPassword: 'updatePassword',
+  get_All_Movies: 'get_all_movies',
 };
 
 export {endPoints};
