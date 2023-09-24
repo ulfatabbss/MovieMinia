@@ -15,16 +15,13 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk-next';
 import { LoginValidationSchema } from '../../utillis/validationSchema';
 import { Formik } from 'formik';
 import { Primary } from '../../utillis/colors';
-import { store } from '../../redux/store';
 import { setIsFacebook, setIsGoogle, setIsLogin, setUser } from '../../redux/reducers/userReducers';
 import { Login, Register, checkUserExist } from '../../services/AppServices';
 import Loader from '../../components/Loader';
-import { useToast } from 'react-native-toast-notifications';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import darkTheme from '../../utillis/theme/darkTheme';
@@ -123,7 +120,7 @@ const Signin = ({ navigation }) => {
     try {
       await GoogleSignin.hasPlayServices();
     } catch (error) {
-      Alert.alert('Google Play services are not available');
+      // Alert.alert('Google Play services are not available');
       throw new Error('Google Play services are not available');
     }
   };
@@ -132,7 +129,7 @@ const Signin = ({ navigation }) => {
     try {
       return await GoogleSignin.signIn();
     } catch (error) {
-      Alert.alert('Failed to sign in with Google')
+      // Alert.alert('Failed to sign in with Google')
       throw new Error('Failed to sign in with Google');
     }
   };
@@ -399,6 +396,7 @@ const Signin = ({ navigation }) => {
                 alignItems: 'center',
               }}>
               <CheckBox
+                tintColors={'gray'}
                 boxType="circle"
                 onFillColor={theme?.colors?.text}
                 value={toggleCheckBox}
@@ -451,22 +449,28 @@ const Signin = ({ navigation }) => {
               }}>
 
               <TouchableOpacity onPress={() => GoogleLogin()}
-                style={[styles.guestbtn, { backgroundColor: "#ffff" }]}>
+                style={[styles.guestbtn, { backgroundColor: "#fff", overflow: 'hidden' }]}>
                 <Image
                   style={styles.guestIcons}
-                  resizeMode={'contain'}
+                  // resizeMode={'contain'}
                   source={require('../../assets/Auth/google.png')}
                 />
-
+                <Text
+                  style={{
+                    ...smalltext,
+                    color: Secondary,
+                    fontSize: RF(14), textAlign: 'center', width: '80%',
+                    fontFamily: 'Raleway-Bold',
+                  }}>Sign in with Google</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => onFacebookButtonPress()}
+              {/* <TouchableOpacity onPress={() => onFacebookButtonPress()}
                 style={[styles.guestbtn, { backgroundColor: "#ffff" }]}>
                 <Image
                   style={styles.guestIcons}
                   resizeMode={'contain'}
                   source={require('../../assets/Auth/facebook.png')}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {Platform.OS === 'ios' &&
                 <TouchableOpacity
                   style={[styles.guestbtn, { backgroundColor: "#ffff" }]}
@@ -563,11 +567,11 @@ const styles = StyleSheet.create({
     color: Primary,
   },
   guestbtn: {
-    height: RF(35),
-    width: '30%',
+    height: RF(40),
+    width: '95%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20, elevation: 1, shadowOffset: .3
+    borderRadius: 100, elevation: 1, shadowOffset: .3, flexDirection: 'row'
   },
   line: {
     height: 1,
@@ -575,5 +579,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginVertical: 20, // Adjust this value to change the space above and below the line
   },
-  guestIcons: { height: '100%', width: '100%' },
+  guestIcons: { height: '100%', width: '10%' },
 });

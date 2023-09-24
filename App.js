@@ -12,8 +12,10 @@ import mobileAds from 'react-native-google-mobile-ads';
 import { useTheme } from 'react-native-paper'; // Import useTheme
 import lightTheme from './src/utillis/theme/lightTheme';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { AppOpenAd, InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize, AdEventType, RewardedAdEventType } from 'react-native-google-mobile-ads';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
+
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme(lightTheme); // Get the active theme

@@ -70,6 +70,11 @@ const UserPasswordUpdate = (obj: any) => {
 const GetAllMovies = () => {
   return HTTP_APP.get(endPoints.get_All_Movies);
 };
+const SearchMovies_Db = (obj: any) => {
+  // console.log(`${endPoints.searchMovies}${obj}`);
+
+  return HTTP_APP.post(`${endPoints.searchMovies}${obj}`);
+};
 export {
   GetMovies,
   GetUpcomming,
@@ -89,4 +94,5 @@ export {
   ConforOtp,
   UserPasswordUpdate,
   GetAllMovies,
+  SearchMovies_Db,
 };

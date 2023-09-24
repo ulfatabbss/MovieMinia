@@ -16,11 +16,10 @@ import React, { useEffect, useState } from 'react';
 import { Primary } from '../../utillis/colors';
 import { Formik } from 'formik';
 import { applogo, hide, lock, Message, show, user } from '../../assets';
-
 import { SignUpValidationSchema } from '../../utillis/validationSchema';
-import { store } from '../../redux/store';
 import { setIsLogin, setUser } from '../../redux/reducers/userReducers';
 import { Register } from '../../services/AppServices';
+import { LoginManager, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk-next';
 import Loader from '../../components/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
@@ -31,20 +30,20 @@ import { Heading, smalltext } from '../../utillis/styles';
 import Button from '../../components/Button';
 import { RF } from '../../utillis/theme/Responsive';
 import { Secondary } from '../../utillis/theme';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 const Signup = ({ navigation }) => {
   const { myTheme } = useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
   const dispatch = useDispatch();
   const [eyeIcon, setEyeIcon] = useState(show);
-  const [PasswordVisibility, setPasswordVisibility] = useState(true);
-  const TogglePassword = () => {
-    if (eyeIcon == show) {
-      setEyeIcon(hide);
-      setPasswordVisibility(false);
-    } else if (eyeIcon == hide) {
-      setEyeIcon(show);
-      setPasswordVisibility(true);
-    }
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(true);
+  const togglePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisibility(!confirmPasswordVisibility);
   };
   const [logoVisible, setLogoVisible] = useState(true);
   useEffect(() => {
@@ -63,14 +62,15 @@ const Signup = ({ navigation }) => {
       keyboardDidHideListener.remove();
     };
   }, []);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const initialValues = {
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
   };
   const handlSignUp = values => {
-    setLoading(true);
+    setIsLoading(true);
     const obj = {
       name: values.name,
       email: values.email,
@@ -88,9 +88,188 @@ const Signup = ({ navigation }) => {
       .catch(error => {
         Alert.alert('⚠️ Check your internet connection and try again .....!');
       })
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   };
-  if (loading) {
+  const GoogleLogin = async () => {
+    try {
+      setIsLoading(true);
+      await checkGooglePlayServices();
+      const userInfo = await signInWithGoogle();
+      const userExists = await checkIfUserExists(userInfo?.user?.email);
+      if (userExists) {
+        await handleGoogleLogin(userInfo);
+      } else {
+        await handleRegister(userInfo);
+      }
+    } catch (error) {
+      Alert.alert('⚠️ An error occurred: ' + error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const checkGooglePlayServices = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+    } catch (error) {
+      Alert.alert('Google Play services are not available');
+      throw new Error('Google Play services are not available');
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      return await GoogleSignin.signIn();
+    } catch (error) {
+      Alert.alert('Failed to sign in with Google')
+      throw new Error('Failed to sign in with Google');
+    }
+  };
+
+  const handleGoogleLogin = async (userInfo) => {
+    try {
+      const loginObj = {
+        email: userInfo?.user?.email,
+        password: userInfo?.user?.id,
+      };
+      const response = await Login(loginObj);
+      if (response?.data?.status == true) {
+        dispatch(setUser(response?.data?.user));
+        dispatch(setIsGoogle(true));
+        dispatch(setIsLogin(true));
+      } else {
+        Alert.alert('⚠️ Login credentials incorrect, please try again ...!');
+      }
+    } catch (error) {
+      Alert.alert(`'Failed to handle login: '  ${error.message}`)
+      throw new Error('Failed to handle login: ' + error.message);
+    }
+  };
+
+  const handleRegister = async (userInfo) => {
+    try {
+      const registerObj = {
+        name: userInfo?.user?.name,
+        email: userInfo?.user?.email,
+        password: userInfo?.user?.id,
+        profilePicture: userInfo?.user?.photo,
+      };
+      const { data } = await Register(registerObj);
+      if (data.status == true) {
+        dispatch(setUser(data?.data));
+        dispatch(setIsLogin(true));
+        dispatch(setIsGoogle(true));
+      } else {
+        Alert.alert('⚠️ Credentials incorrect, please try again ...!');
+      }
+    } catch (error) {
+      if (error.message === 'Network Error') {
+        Alert.alert('⚠️ Check your internet connection and try again ...!');
+      } else {
+        Alert.alert(`'Failed to handle registration: ' ${error.message}`)
+        throw new Error('Failed to handle registration: ' + error.message);
+      }
+    }
+  };
+
+
+  const checkIfUserExists = async (email) => {
+    try {
+      const obj = {
+        email: email
+      }
+      const response = await checkUserExist(obj);
+      return response?.data?.status;
+    } catch (error) {
+      Alert.alert(`'Error checking user existence:', ${error}`)
+      return false;
+    }
+  };
+
+  const onFacebookButtonPress = async () => {
+    setIsLoading(true);
+    try {
+      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      if (result.isCancelled) {
+        Alert.alert('Cancelled the login process')
+        throw 'User cancelled the login process';
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data) {
+        throw 'Something went wrong obtaining access token';
+      }
+      const responseInfoCallback = async (error, result) => {
+        if (error) {
+          Alert.alert(error)
+          console.log('Error fetching user data:', error);
+          throw 'Error fetching user data';
+        } else {
+          const userExists = await checkIfUserExists(result?.email);
+          if (userExists) {
+            const loginObj = {
+              email: result?.email,
+              password: result?.id,
+            };
+            const response = await Login(loginObj);
+            if (response.data.status == true) {
+              dispatch(setUser(response?.data?.user));
+              dispatch(setIsFacebook(true))
+              dispatch(setIsLogin(true));
+            } else {
+              Alert.alert('⚠️ Login credentials incorrect, please try again .....!');
+            }
+          } else {
+            console.log("Signup");
+            const registerObj = {
+              name: result.name,
+              email: result.email,
+              password: result.id,
+            };
+            Register(registerObj)
+              .then(async ({ data }) => {
+                if (data.status == true) {
+                  console.log(data, "this is my facebook data");
+                  // dispatch(setIsLogin(true));
+                } else {
+                  Alert.alert('⚠️ Credentials incorrect, please try again .....!');
+                }
+              })
+              .catch(error => {
+                if (error.message === 'Network Error') {
+                  Alert.alert('⚠️ Check your internet connection and try again .....!');
+                } else {
+                  Alert.alert('⚠️ An error occurred. Please try again later.');
+                }
+              })
+          }
+          // You can access user profile picture like this:
+          // const profilePictureUrl = `https://graph.facebook.com/${result.id}/picture?type=large`;
+
+          // Now, you can use the user data as needed in your app
+        }
+      };
+
+      const graphRequest = new GraphRequest(
+        '/me',
+        {
+          parameters: {
+            fields: {
+              string: 'id,email,name,first_name,last_name,picture.type(large)',
+            },
+          },
+        },
+        responseInfoCallback
+      );
+
+      // Start the graph request
+      new GraphRequestManager().addRequest(graphRequest).start();
+    } catch (error) {
+      console.error('Facebook login error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  if (isLoading) {
     return <Loader />;
   }
   return (
@@ -119,7 +298,7 @@ const Signup = ({ navigation }) => {
             { backgroundColor: theme?.colors?.background },
           ]}>
           {logoVisible && <Logo />}
-          <View style={{ ...styles.formWrapper, marginTop: logoVisible ? null : "20%" }}>
+          <View style={{ ...styles.formWrapper, marginTop: logoVisible ? null : "10%" }}>
             <Text
               style={{
                 ...Heading,
@@ -144,7 +323,7 @@ const Signup = ({ navigation }) => {
                   width: RF(20),
                   tintColor: theme?.colors?.text,
                 }}
-                source={user}
+                source={require('../../assets/appIcons/user.png')}
               />
               <TextInput
                 placeholder="Enter Your Name"
@@ -162,7 +341,7 @@ const Signup = ({ navigation }) => {
                 }}
               />
             </View>
-            {errors.name && touched.email && (
+            {errors.name && touched.name && (
               <Text style={styles.errors}>{errors.name}</Text>
             )}
             <View
@@ -208,7 +387,9 @@ const Signup = ({ navigation }) => {
                 {
                   flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: theme?.colors?.tabs, elevation: 1, shadowOffset: .3
+                  backgroundColor: theme?.colors?.tabs,
+                  elevation: 1,
+                  shadowOffset: .3
                 },
               ]}>
               <Image
@@ -225,9 +406,9 @@ const Signup = ({ navigation }) => {
                 value={values.password}
                 autoCapitalize={'none'}
                 onChangeText={handleChange('password')}
-                secureTextEntry={PasswordVisibility}
+                secureTextEntry={passwordVisibility}
                 style={{
-                  width: '85%',
+                  width: '80%', // Adjust the width as needed
                   height: '100%',
                   paddingLeft: RF(10),
                   color: theme?.colors?.text,
@@ -236,17 +417,67 @@ const Signup = ({ navigation }) => {
                 }}
               />
 
-              <TouchableOpacity onPress={TogglePassword}>
+              <TouchableOpacity onPress={togglePasswordVisibility}>
                 <Image
                   style={{ height: 22, width: 22, tintColor: theme?.colors?.text }}
-                  source={eyeIcon}
+                  source={passwordVisibility ? eyeIcon : hide}
                 />
               </TouchableOpacity>
             </View>
             {errors.password && touched.password && (
               <Text style={styles.errors}>{errors.password}</Text>
             )}
-            <Button title={'Sign Up'} screen={() => handleSubmit()} />
+
+            {/* Confirm Password Field */}
+            <View
+              style={[
+                styles.inputTxt,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  backgroundColor: theme?.colors?.tabs,
+                  elevation: 1,
+                  shadowOffset: .3
+                },
+              ]}>
+              <Image
+                style={{
+                  height: RF(20),
+                  width: RF(20),
+                  tintColor: theme?.colors?.text,
+                }}
+                source={lock}
+              />
+              <TextInput
+                placeholder="Confirm Your Password"
+                placeholderTextColor="grey"
+                value={values.confirmPassword}
+                autoCapitalize={'none'}
+                onChangeText={handleChange('confirmPassword')}
+                secureTextEntry={confirmPasswordVisibility}
+                style={{
+                  width: '80%', // Adjust the width as needed
+                  height: '100%',
+                  paddingLeft: RF(10),
+                  color: theme?.colors?.text,
+                  backgroundColor: theme?.colors?.tabs,
+                  fontSize: RF(14),
+                }}
+              />
+
+              <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
+                <Image
+                  style={{ height: RF(20), width: RF(20), tintColor: theme?.colors?.text }}
+                  source={confirmPasswordVisibility ? eyeIcon : hide}
+                />
+              </TouchableOpacity>
+            </View>
+            {errors.confirmPassword && touched.confirmPassword && (
+              <Text style={styles.errors}>{errors.confirmPassword}</Text>
+            )}
+            <View style={{ marginTop: RF(10) }}>
+              <Button title={'Sign Up'} screen={() => handleSubmit()} />
+            </View>
             <View
               style={{
                 flexDirection: 'row',
@@ -268,16 +499,23 @@ const Signup = ({ navigation }) => {
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
               }}>
-              <TouchableOpacity
-                style={[styles.guestbtn, { elevation: 1, shadowOffset: .3 }]}
-              >
+              <TouchableOpacity onPress={() => GoogleLogin()}
+                style={[styles.guestbtn, { backgroundColor: "#fff", overflow: 'hidden' }]}>
                 <Image
                   style={styles.guestIcons}
-                  resizeMode={'contain'}
+                  // resizeMode={'contain'}
                   source={require('../../assets/Auth/google.png')}
                 />
+                <Text
+                  style={{
+                    ...smalltext,
+                    color: Secondary,
+                    fontSize: RF(14), textAlign: 'center', width: '80%',
+                    fontFamily: 'Raleway-Bold',
+                  }}>Sign in with Google</Text>
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
+                onPress={() => onFacebookButtonPress()}
                 style={[styles.guestbtn, { elevation: 1, shadowOffset: .3 }]}
               >
                 <Image
@@ -285,7 +523,7 @@ const Signup = ({ navigation }) => {
                   resizeMode={'contain'}
                   source={require('../../assets/Auth/facebook.png')}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {Platform.OS === 'ios' &&
                 <TouchableOpacity
                   style={[styles.guestbtn, { elevation: 1, shadowOffset: .3 }]}>
@@ -343,8 +581,8 @@ const styles = StyleSheet.create({
   },
   formWrapper: {
     width: '100%',
-    height: RF(400),
-    justifyContent: 'space-between',
+    // height: RF(400),
+    // justifyContent: 'space-between',
   },
   normalTxt: {
     fontSize: 30,
@@ -358,7 +596,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 50,
     backgroundColor: '#333333',
-    color: '#fff',
+    color: '#fff', marginVertical: 5
   },
   signinBtn: {
     height: RF(50),
@@ -381,12 +619,11 @@ const styles = StyleSheet.create({
     color: Primary,
   },
   guestbtn: {
-    height: RF(35),
-    width: '30%',
+    height: RF(40),
+    width: '95%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: "#ffff"
+    borderRadius: 100, elevation: 1, shadowOffset: .3, flexDirection: 'row'
   },
   line: {
     height: 1,
@@ -394,5 +631,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginVertical: 20, // Adjust this value to change the space above and below the line
   },
-  guestIcons: { height: '100%', width: '100%' },
+  guestIcons: { height: '100%', width: '10%' },
 });

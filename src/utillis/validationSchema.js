@@ -1,20 +1,15 @@
-import * as Yup from 'yup';
+const Yup = require('yup');
 
-export const LoginValidationSchema: Yup.SchemaOf<{
-  email: string;
-  password: string;
-}> = Yup.object().shape({
+// Login Validation Schema
+const LoginValidationSchema = Yup.object().shape({
   email: Yup.string()
     .required('Email is required')
     .email('Please provide valid email'),
   password: Yup.string().required('Password is required'),
 });
 
-export const SignUpValidationSchema: Yup.SchemaOf<{
-  name: string;
-  email: string;
-  password: string;
-}> = Yup.object().shape({
+// SignUp Validation Schema
+const SignUpValidationSchema = Yup.object().shape({
   name: Yup.string().required('Please enter your name'),
   email: Yup.string()
     .email('Invalid email')
@@ -26,22 +21,24 @@ export const SignUpValidationSchema: Yup.SchemaOf<{
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
       'Must contain min 8 characters uppercase, lowercase, number, and special symbol',
     ),
+  confirmPassword: Yup.string()
+    .required('Please confirm your password.')
+    .oneOf([Yup.ref('password')], 'Passwords do not match'),
 });
-export const otpVerification: Yup.SchemaOf<{
-  email: string;
-}> = Yup.object().shape({
+
+// OTP Verification Schema
+const otpVerification = Yup.object().shape({
   email: Yup.string()
     .required('Email is required')
     .email('Please provide valid email'),
 });
-export const changePassword: Yup.SchemaOf<{
-  password: string;
-  confirmPassword: string;
-}> = Yup.object().shape({
+
+// Change Password Schema
+const changePassword = Yup.object().shape({
   password: Yup.string()
     .required('Please enter your password.')
     .min(8, 'Password is too short.')
-    .max(15, 'fwqyskqjsqjwhs')
+    .max(15, 'Password is too long')
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
       'Must contain min 8 characters uppercase, lowercase, number, and special symbol',
@@ -49,5 +46,12 @@ export const changePassword: Yup.SchemaOf<{
   confirmPassword: Yup.string()
     .required('No Confirm Password provided.')
     .label('Confirm Password')
-    .oneOf([Yup.ref('password')], 'Passwords does not match'),
+    .oneOf([Yup.ref('password')], 'Passwords do not match'),
 });
+
+module.exports = {
+  LoginValidationSchema,
+  SignUpValidationSchema,
+  otpVerification,
+  changePassword,
+};

@@ -11,20 +11,35 @@ import {
   Pressable,
   Share,
   StatusBar,
-  Dimensions, ActivityIndicator
+  Dimensions, ActivityIndicator, Image
 } from 'react-native';
-import { Image } from '@rneui/base';
+
 import { WebView } from 'react-native-webview';
-import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { useTheme } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import PlayImage from '../../assets/play.png';
 import { Heading, smalltext, text } from '../../utillis/styles';
+import EmptyImage from '../../assets/emptyplaylist.png';
 import Loader from '../../components/Loader';
+import { RF } from '../../utillis/theme/Responsive';
+import { AppOpenAd, InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize, AdEventType, RewardedAdEventType } from 'react-native-google-mobile-ads';
+import BannersAdd from '../../components/BannersAdd';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
+// const adUnitIds = 'ca-app-pub-1700763198948198/2979565361';
+// const adUnitIds = TestIds.INTERSTITIAL;
+// const interstitial = InterstitialAd.createForAdRequest(adUnitIds, {
+//   requestNonPersonalizedAdsOnly: true,
+//   keywords: ['fashion', 'clothing'],
+// });
+// const adUnitId = TestIds.REWARDED;
+const adUnitId = 'ca-app-pub-1700763198948198/3678682750'
+const rewarded = RewardedAd.createForAdRequest(adUnitId, {
+  requestNonPersonalizedAdsOnly: true,
+  keywords: ['fashion', 'clothing'],
+});
 const Player = ({ route }) => {
   const { url, data, type } = route.params;
   const { myTheme } = useSelector((state) => state.root.user);
@@ -37,6 +52,39 @@ const Player = ({ route }) => {
       setLoading(false);
     }, 2000);
   })
+
+
+  // useEffect(() => {
+  //   const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
+  //     console.log("hejkhasjkdhjksh");
+  //     interstitial.show();
+  //   });
+  //   // Start loading the interstitial straight away
+  //   interstitial.load();
+  //   // Unsubscribe from events on unmount
+  //   return unsubscribe;
+  // }, []);
+  useEffect(() => {
+    const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
+      console.log('Loaded ??')
+      rewarded.show();
+    });
+    const unsubscribeEarned = rewarded.addAdEventListener(
+      RewardedAdEventType.EARNED_REWARD,
+      reward => {
+        console.log('User earned reward of ', reward);
+      },
+    );
+
+    // Start loading the rewarded ad straight away
+    rewarded.load();
+
+    // Unsubscribe from events on unmount
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeEarned();
+    };
+  }, []);
   const PlaylistItem = ({ item }) => (
     <View style={{ ...styles.playlistItemContainer, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: 3, gap: 5, padding: 5 }}>
       <Image style={styles.playlistItemImage} resizeMode="contain" source={{
@@ -58,12 +106,23 @@ const Player = ({ route }) => {
           <Text style={{ ...text, color: theme?.colors?.text }}>
             {type == 'Movies' ? item.releaseYear : data?.releaseYear}</Text>
         </View>
-        <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme?.colors?.text }}>Category:</Text>
-          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
-            {type == 'Movies' ? item?.category : data?.category}
-          </Text>
-        </View>
+        {type == 'Movies' &&
+          <View style={styles.playlistItemDetail}>
+            <Text style={{ ...text, color: theme?.colors?.text }}>Category:</Text>
+            <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
+              {item?.category}
+            </Text>
+          </View>
+        }
+        {type == 'show' &&
+          <View style={styles.playlistItemDetail}>
+            <Text style={{ ...text, color: theme?.colors?.text }}>Episode No:</Text>
+            <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
+              {item?.epi_no}
+            </Text>
+          </View>
+        }
+
       </View>
       <View style={styles.playlistItemActions}>
         <TouchableOpacity style={styles.playlistItemAction} onPress={async () => {
@@ -100,8 +159,6 @@ const Player = ({ route }) => {
           style={styles.mediaPlayer}
           scrollEnabled={false}
           javaScriptEnabled={true}
-        // domStorageEnabled={true}
-        // mixedContentMode="always"
         />
         {visible && (
           <ActivityIndicator
@@ -119,14 +176,16 @@ const Player = ({ route }) => {
       <Text style={{ ...Heading, color: theme?.colors?.text, margin: 10, }}>
         Related Videos
       </Text>
-      <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-        <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
-      </View>
-      <FlatList
-        data={type == 'show' ? data?.episods : data}
-        showsVerticalScrollIndicator={false}
-        renderItem={PlaylistItem}
-      />
+      <BannersAdd id={'ca-app-pub-1700763198948198/2098879910'} />
+
+      {data.length != 0 || data?.episods.length != 0 ?
+        <FlatList
+          data={type == 'show' ? data?.episods : data}
+          showsVerticalScrollIndicator={false}
+          renderItem={PlaylistItem}
+        /> : <Image resizeMode='contain' style={{ height: RF(300), width: RF(300), alignSelf: 'center' }} source={EmptyImage} />
+      }
+
     </SafeAreaView>
   );
 };

@@ -17,6 +17,7 @@ const endPoints = {
   conformOtp: 'conformed-otp',
   updateUserPassword: 'updatePassword',
   get_All_Movies: 'get_all_movies',
+  searchMovies: 'search-movie?searchTerm=',
 };
 
 export {endPoints};

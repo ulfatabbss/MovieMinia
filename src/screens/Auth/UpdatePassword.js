@@ -55,11 +55,11 @@ const UpdatePassword = ({ navigation, route }) => {
         const result = await UserPasswordUpdate(obj)
         if (result.data.status == true) {
             if (isLogin) {
-                console.log("login false");
                 store.dispatch(setIsLogin(false))
+                Alert.alert('Password Updated successfully...!')
             } else {
-                console.log("login");
-                navigation.replace('Signin')
+                navigation.replace('AccountType')
+                Alert.alert('Password Updated successfully...!')
             }
         } else {
             Alert.alert(result?.data?.message);

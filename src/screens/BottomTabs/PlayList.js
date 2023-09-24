@@ -20,9 +20,12 @@ import { Heading, SmallIcons, smalltext, text } from '../../utillis/styles';
 import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
-import { searchIcon } from '../../assets';
+import { caution, searchIcon } from '../../assets';
 import PlaylistSkelton from '../../components/ShimmerPlaceHolder/PlaylistSkelton';
 import { HP, RF, WP } from '../../utillis/theme/Responsive';
+import HeadingText from '../../components/CustomText';
+import { Secondary, White } from '../../utillis/theme';
+import { Primary } from '../../utillis/colors';
 
 const Playlist = ({ navigation }) => {
   const { myTheme, user, isGuest, isFacebook, isGoogle } = useSelector((state) => state.root.user);
@@ -46,7 +49,6 @@ const Playlist = ({ navigation }) => {
           userId: user?._id,
         };
         const response = await GetPlaylist(obj);
-        console.log(myplaylist[0]?.movies);
         setMyplaylist(response?.data);
       } catch (error) {
         console.error('Error fetching playlist:', error);
@@ -106,8 +108,8 @@ const Playlist = ({ navigation }) => {
         backgroundColor: theme?.colors?.tabs,
         elevation: 2,
         shadowOffset: { width: 3, height: 3 },
-        marginVertical: 5,
-        padding: 5,
+        marginVertical: RF(5),
+        padding: RF(5),
       }}
     >
       <Image
@@ -116,22 +118,22 @@ const Playlist = ({ navigation }) => {
         source={{ uri: item?.poster[0]?.image }}
       />
       <View style={styles.playlistItemInfo}>
-        <Text numberOfLines={1} style={{ ...smalltext, color: theme?.colors?.text }}>
+        <Text numberOfLines={1} style={{ ...smalltext, color: theme?.colors?.text, fontSize: RF(14), }}>
           {item?.title}
         </Text>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme?.colors?.text }}>Director:</Text>
-          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
+          <Text style={{ ...text, color: theme?.colors?.text, fontSize: RF(12), }}>Director:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text, fontSize: RF(12), }}>
             {item?.director}
           </Text>
         </View>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme?.colors?.text }}>Release year:</Text>
-          <Text style={{ ...text, color: theme?.colors?.text }}>{item?.releaseYear}</Text>
+          <Text style={{ ...text, color: theme?.colors?.text, fontSize: RF(12), }}>Release year:</Text>
+          <Text style={{ ...text, color: theme?.colors?.text, fontSize: RF(12), }}>{item?.releaseYear}</Text>
         </View>
         <View style={styles.playlistItemDetail}>
-          <Text style={{ ...text, color: theme?.colors?.text }}>Category:</Text>
-          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
+          <Text style={{ ...text, color: theme?.colors?.text, fontSize: RF(12), }}>Category:</Text>
+          <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text, fontSize: RF(12), }}>
             {item?.category}
           </Text>
         </View>
@@ -160,43 +162,43 @@ const Playlist = ({ navigation }) => {
       <View style={{ ...styles.headerContainer, backgroundColor: theme?.colors?.topbar }}>
         <Text style={{ ...styles.headerText, color: theme?.colors?.text }}>My Playlist</Text>
       </View>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => {
-          setIsModalVisible(!isModalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Are you sure to delete movie </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                height: '35%',
-                width: '100%',
-                position: 'absolute',
-                bottom: 0,
-                alignSelf: 'flex-end',
-                borderColor: '#fff',
-                justifyContent: 'space-between',
-              }}>
-              <TouchableOpacity
-                style={{ ...styles.button, backgroundColor: 'green', borderTopRightRadius: 10 }}
-                onPress={() => setIsModalVisible(!isModalVisible)}>
-                <Text style={styles.textStyle}>No</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.button,
-                  { backgroundColor: 'red', borderTopLeftRadius: 10 },
-                ]}
-                onPress={() => handleDeleteConfirm()}>
-                <Text style={styles.textStyle}>Yes</Text>
-              </TouchableOpacity>
-            </View>
+      {isModalVisible ? <View style={styles.modal_FadeView} /> : null}
+      <Modal animationType="slide" transparent={true} visible={isModalVisible}><View style={styles.modalContainer}>
+        <View style={styles.modalCard}>
+          <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
+          <HeadingText title={'Are you sure?'} bold size={20} top={5} />
+          <HeadingText
+            title={
+              'Do you really want to delete this record?'
+            }
+            regular
+            size={16}
+            top={10}
+            alignCenter
+          />
+          <View style={styles.button_View}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleDeleteConfirm()}>
+              <HeadingText
+                title={'Yes'}
+                semi_bold
+                size={16}
+                color={White}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.signUp_Button]}
+              onPress={() => setIsModalVisible(!isModalVisible)}>
+              <HeadingText
+                title={'Cancel'}
+                semi_bold
+                size={16}
+                color={Secondary}
+              />
+            </TouchableOpacity>
           </View>
         </View>
+      </View>
       </Modal>
       <View style={{ ...styles.contentContainer, backgroundColor: theme?.colors?.background }}>
         <View style={{ ...styles.InputView, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: { width: 3, height: 3 } }}>
@@ -214,11 +216,21 @@ const Playlist = ({ navigation }) => {
           />
         </View>
         <View style={{ ...styles.playlistContainer, paddingBottom: "36%" }}>
-          <Text style={{ ...Heading, color: theme?.colors?.text, marginHorizontal: WP(2) }}>
-            {!isGuest || !myplaylist[0]?.movies?.length == 0 ? null : `${myplaylist[0]?.movies?.length} Playlists Found`}
-          </Text>
+          {!isGuest || !myplaylist[0]?.movies?.length == 0 && <Text style={{ ...Heading, color: theme?.colors?.text, marginHorizontal: RF(10), fontSize: RF(14) }}>
+            {`${myplaylist[0]?.movies?.length} Playlists Found`}
+          </Text>}
           {isGuest || myplaylist[0]?.movies?.length == 0 || myplaylist?.length == 0 ?
-            <Image style={styles.emptyImage} resizeMode="contain" source={EmptyImage} /> : null
+            <View style={{ height: '100%', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+              <Image style={styles.emptyImage} resizeMode="contain" source={EmptyImage} />
+              <HeadingText
+                title={'Not Found!'}
+                semi_bold
+                size={16}
+                color={'#EAAE23'}
+              />
+              <Text style={{ ...text, fontSize: RF(14), color: theme?.colors?.text, alignSelf: 'center', textAlign: 'center', paddingHorizontal: 20 }}>Sorry, but your playlist currently doesn't include any movies, TV shows, or sessions.</Text>
+            </View>
+            : null
           }
           {
             !myplaylist[0]?.movies.length == 0 || !isGuest ?
@@ -265,7 +277,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   playlistItemContainer: {
-    height: HP(15),
+    height: RF(120),
     width: WP(95),
     flexDirection: 'row',
     alignItems: 'center',
@@ -273,12 +285,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginHorizontal: WP(1),
     marginVertical: WP(2),
+    paddingHorizontal: RF(5)
   },
   playlistItemImage: {
     height: '100%',
-    width: 94,
-    borderRadius: 10,
-    marginRight: 10
+    width: RF(94),
+    borderRadius: RF(10),
+    marginRight: RF(10)
   },
   playlistItemInfo: {
     width: '40%',
@@ -295,8 +308,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   playlistItemAction: {
-    height: 25,
-    width: 25,
+    height: RF(25),
+    width: RF(25),
     borderRadius: 90,
     backgroundColor: '#F8F8F8',
     alignSelf: 'flex-end',
@@ -304,11 +317,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionIcon: {
-    height: 30,
-    width: 30,
+    height: RF(25),
+    width: RF(25),
   },
   emptyImage: {
-    height: '90%', resizeMode: 'contain',
+    height: '40%', resizeMode: 'contain',
     width: Dimensions.get('window').width - 20,
   },
   centeredView: {
@@ -341,6 +354,46 @@ const styles = StyleSheet.create({
   details_View: {
     height: '100%',
     width: '68%',
+  },
+  modal_FadeView: {
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    zIndex: 500,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalCard: {
+    height: RF(300),
+    width: '100%',
+    borderRadius: RF(30),
+    backgroundColor: White,
+    padding: 20,
+    alignItems: 'center',
+  },
+  button_View: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: RF(40),
+  },
+  button: {
+    height: RF(40),
+    width: '45%',
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Primary,
+  },
+  signUp_Button: {
+    backgroundColor: White,
+    borderColor: Secondary, elevation: 5
   },
 });
 

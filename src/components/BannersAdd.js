@@ -1,13 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
+import { RF } from '../utillis/theme/Responsive'
 
-const BannersAdd = () => {
+const BannersAdd = ({ id }) => {
     return (
-        <View style={{ flex: 1 }}>
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center', borderColor: 'red', borderWidth: 4 }}>
-                <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
-            </View>
+        <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center', marginHorizontal: RF(5), alignSelf: 'center' }}>
+            <BannerAd size={BannerAdSize.BANNER} unitId={id} />
         </View>
     )
 }

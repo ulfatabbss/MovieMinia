@@ -10,7 +10,7 @@ const Button = ({ title, screen }) => {
             onPress={screen}
             style={{
                 width: '100%',
-                height: RF(48),
+                height: RF(50),
                 borderRadius: 60,
                 backgroundColor: Primary,
             }}>

@@ -46,7 +46,7 @@ const OnBoarding1 = ({ navigation }) => {
                         title={value === 3 ? null : 'Skip'}
                         semiBold
                         size={RF(18)}
-                        color={value === 3 ? '#fff' : '#000'}
+                        color={value === 3 ? 'black' : '#fff'}
                     />
                 </TouchableOpacity>
 
@@ -134,7 +134,8 @@ const styles = StyleSheet.create({
     topBar: {
         width: '100%',
         alignItems: 'flex-end',
-        marginTop: RF(50),
+        marginTop: RF(10),
+
     },
     content: {
         width: '100%',

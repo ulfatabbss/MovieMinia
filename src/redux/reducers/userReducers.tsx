@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const initialState: any = {
+const resetState: any = {
   user: null,
   isFirstTime: null,
   isFacebook: false,
@@ -37,7 +37,7 @@ const initialState: any = {
 
 export const userReducer: any = createSlice({
   name: 'user',
-  initialState,
+  initialState: resetState,
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
@@ -135,6 +135,10 @@ export const userReducer: any = createSlice({
     setGetAllMoviesData: (state, action) => {
       state.getAllMoviesData = action.payload;
     },
+    resetUserState: state => {
+      // Reset the state to the resetState
+      return resetState;
+    },
   },
 });
 
@@ -171,6 +175,7 @@ export const {
   setIsGoogle,
   setIsFacebook,
   setGetAllMoviesData,
+  resetUserState,
 } = userReducer.actions;
 
 export default userReducer.reducer;

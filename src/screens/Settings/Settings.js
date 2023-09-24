@@ -6,9 +6,8 @@ import heading from '../../utillis/fonts';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { backErrow, caution, dellUser, faq, passSettings, policy, terms } from '../../assets';
-import { setGuest, setIsFacebook, setIsGoogle, setIsLogin, setLoading, setTheme } from '../../redux/reducers/userReducers';
+import { resetUserState, setGuest, setIsFacebook, setIsGoogle, setIsLogin, setLoading, setTheme } from '../../redux/reducers/userReducers';
 import { Heading } from '../../utillis/styles';
-import { DeleteAccountApi } from '../../services/AppServices';
 import { Primary, Secondary, White } from '../../utillis/theme';
 import { RF } from '../../utillis/theme/Responsive';
 import HeadingText from '../../components/CustomText';
@@ -27,9 +26,8 @@ const Settings = ({ navigation }) => {
         } catch (error) {
             console.error(error);
         }
-        dispatch(setGuest(false))
-        dispatch(setIsFacebook(false))
-        dispatch(setIsLogin(false))
+        dispatch(resetUserState());
+
 
     }
     const renderSettingItem = (icon, label, onPress) => (
@@ -79,6 +77,7 @@ const Settings = ({ navigation }) => {
                 </View>
             </View>
             </Modal>
+
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image

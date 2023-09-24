@@ -21,6 +21,7 @@ import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import ScreenPreLoader from '../../components/ScreenPreLoader';
 import SectionPreLoader from '../../components/ShimmerPlaceHolder/SectionPreLoader';
+import BannersAdd from '../../components/BannersAdd';
 const TvShowes = ({ navigation }) => {
   const [value, setValue] = useState("season")
   const { dramaData, dramaSlider, indianDrama, turkishDrama, hollywoodseasons, hindiSeasons, myTheme, loading } = useSelector(
@@ -31,28 +32,36 @@ const TvShowes = ({ navigation }) => {
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
   const [refreshInterval, setRefreshInterval] = useState(12 * 60 * 60 * 1000);
   const [prevValue, setPrevValue] = useState(value);
-  const [loadHindiSeasons, setloadHindiSeasons] = useState(false)
-  const [loadTv, setLoadTv] = useState(false)
+  const [loadHindi, setloadHindi] = useState(false)
+  const [pakistni, setPakistni] = useState(false)
+  const [indian, setIndian] = useState(false)
+  const [turkish, setTurkish] = useState(false)
   useEffect(() => {
     const fetchData = async () => {
       try {
         dispatch(setLoading(true))
+        setloadHindi(true)
+        setPakistni(true)
+        setIndian(true)
+        setTurkish(true)
+
         const hollywooodSeasons1 = await GetDrama("Season");
         dispatch(setHollywoodseasons(hollywooodSeasons1?.data?.dramas));
         dispatch(setLoading(false));
-        setloadHindiSeasons(true)
         const hindiSeasons1 = await GetDrama("HindiSeason");
         dispatch(setHindiSeasons(hindiSeasons1?.data?.dramas));
-        setloadHindiSeasons(false)
+        setloadHindi(false)
         // Fetch season data
-
-
         const pakistani = await GetDrama("Urdu");
         dispatch(setDramaData(pakistani?.data?.dramas));
+        setPakistni(false)
         const indian = await GetDrama("Indian");
         dispatch(setIndianDrama(indian?.data?.dramas));
+        setIndian(false)
         const turkish = await GetDrama("Turkish");
         dispatch(setTurkishDrama(turkish?.data?.dramas));
+        setTurkish(false)
+
       } catch (error) {
         console.log(error, 'errors');
         dispatch(setLoading(false));
@@ -82,36 +91,68 @@ const TvShowes = ({ navigation }) => {
             <Text style={{ color: value == 'tv' ? '#fff' : '#313131', fontFamily: value == 'tv' ? 'Raleway-Bold' : 'Raleway-Regular' }}>T.V Serials</Text>
           </TouchableOpacity>
         </View>
-        {loading && value === 'season' ?
-          <>
-            <SectionPreLoader />
-            <SectionPreLoader />
-          </>
-          :
-          <>
-            <CardsFlatlist navigation={navigation} heading={'Hollywood Seasons'} data={hollywoodseasons} type={"show"} />
-            {loadHindiSeasons ?
+        {value === 'season' && (
+          loading ? (
+            <>
               <SectionPreLoader />
-              :
-              <>
-                <CardsFlatlist navigation={navigation} heading={'Bollywood Seasons'} data={hindiSeasons} type={"show"} />
-                <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-                  <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
-                </View>
+            </>
+          ) : (
+            <>
+              <CardsFlatlist navigation={navigation} heading={'Hollywood Seasons'} data={hollywoodseasons} type={"show"} />
+              <BannersAdd id={'ca-app-pub-1700763198948198/7724371994'} />
+            </>
+          )
+        )}
 
-              </>
-            }
-          </>
-        }
+        {value === 'season' && (
+          loading && loadHindi ? (
+            <>
+              <SectionPreLoader />
+            </>
+          ) : (
+            <>
+              <CardsFlatlist navigation={navigation} heading={'Bollywood Seasons'} data={hindiSeasons} type={"show"} />
+              <BannersAdd id={'ca-app-pub-1700763198948198/1158963648'} />
+            </>
+          )
+        )}
+
+
         {value === 'tv' && (
-          <>
-            <CardsFlatlist navigation={navigation} heading={'Pakistani'} data={dramaData} type={"show"} />
-            <CardsFlatlist navigation={navigation} heading={'Turkish'} data={turkishDrama} type={"show"} />
-            <View style={{ width: "100%", marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/9698237176"} />
-            </View>
-            <CardsFlatlist navigation={navigation} heading={'Indian'} data={indianDrama} type={"show"} />
-          </>
+          pakistni ? (
+            <>
+              <SectionPreLoader />
+            </>
+          ) : (
+            <>
+              <CardsFlatlist navigation={navigation} heading={'Pakistani'} data={dramaData} type={"show"} />
+              <BannersAdd id={'ca-app-pub-1700763198948198/3479124783'} />
+            </>
+          )
+        )}
+        {value === 'tv' && (
+          indian ? (
+            <>
+              <SectionPreLoader />
+            </>
+          ) : (
+            <>
+              <CardsFlatlist navigation={navigation} heading={'Turkish'} data={turkishDrama} type={"show"} />
+              <BannersAdd id={'ca-app-pub-1700763198948198/3986676654'} />
+            </>
+          )
+        )}
+        {value === 'tv' && (
+          turkish ? (
+            <>
+              <SectionPreLoader />
+            </>
+          ) : (
+            <>
+              <CardsFlatlist navigation={navigation} heading={'Indian'} data={indianDrama} type={"show"} />
+              <BannersAdd id={'ca-app-pub-1700763198948198/4396679739'} />
+            </>
+          )
         )}
 
       </ScrollView>

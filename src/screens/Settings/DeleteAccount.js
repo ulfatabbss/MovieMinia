@@ -8,35 +8,16 @@ import lightTheme from '../../utillis/theme/lightTheme'
 import darkTheme from '../../utillis/theme/darkTheme'
 import { text, Heading } from '../../utillis/styles'
 import { RF } from '../../utillis/theme/Responsive'
-import { DeleteAccountApi, SendOTP } from '../../services/AppServices'
-import HeadingText from '../../components/CustomText'
+import { SendOTP } from '../../services/AppServices'
 import { Secondary, White } from '../../utillis/theme'
 import { Primary } from '../../utillis/colors'
 import Loader from '../../components/Loader'
 import { otpVerification } from '../../utillis/validationSchema'
 import { Formik } from 'formik'
 const DeleteAccount = ({ navigation }) => {
-    const { myTheme, user } = useSelector(state => state.root.user);
+    const { myTheme } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
-    const [modalVisible, setModalVisible] = useState(false)
-    const handleDeleteAccount = async () => {
-
-        const id = user._id
-        // const id = '64c3e3b0eb8bd300eb4cad71'
-        const result = await DeleteAccountApi(id)
-        if (result.data.status == true) {
-            setModalVisible(false)
-        }
-        else {
-            setModalVisible(false)
-            Alert.alert('something went wronggggg!')
-        }
-        // dispatch(setLoading(false))
-        // console.log(result.data, "uyghihiouioj");
-    }
-
     const [logoVisible, setLogoVisible] = useState(true);
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
@@ -88,45 +69,6 @@ const DeleteAccount = ({ navigation }) => {
     return (
         <SafeAreaView
             style={[styles.V1, { backgroundColor: theme?.colors?.topbar }]}>
-
-            {modalVisible ? <View style={styles.modal_FadeView} /> : null}
-            <Modal animationType="slide" transparent={true} visible={modalVisible}><View style={styles.modalContainer}>
-                <View style={styles.modalCard}>
-                    <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
-                    <HeadingText title={'Alert'} bold size={20} top={5} />
-                    <HeadingText
-                        title={
-                            'Are you sure to delete this Account?'
-                        }
-                        regular
-                        size={16}
-                        top={10}
-                        alignCenter
-                    />
-                    <View style={styles.button_View}>
-
-                        <TouchableOpacity
-                            style={styles.button}
-                            onPress={() => handleDeleteAccount()}>
-                            <HeadingText
-                                title={'Ok'}
-                                semi_bold
-                                size={16}
-                                color={White}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, styles.signUp_Button]}
-                            onPress={() => setModalVisible(!modalVisible)}>
-                            <HeadingText
-                                title={'Cancel'}
-                                semi_bold
-                                size={16}
-                                color={Secondary}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View></Modal>
             <Formik
                 initialValues={initialValues}
                 validateOnMount={true}

@@ -24,6 +24,8 @@ import darkTheme from '../../utillis/theme/darkTheme';
 import { GetDrama, GetMovies } from '../../services/AppServices';
 import { setAnimated2Data, setAnimatedData, setCartoonData, setLoading, setNewAnimSeason, setPopularAnimSeason } from '../../redux/reducers/userReducers';
 import ScreenPreLoader from '../../components/ScreenPreLoader';
+import SectionPreLoader from '../../components/ShimmerPlaceHolder/SectionPreLoader';
+import BannersAdd from '../../components/BannersAdd';
 const Cartoons = ({ navigation }) => {
   const { cartoonData, animated1Data, animated2Data, animatedSlider, myTheme, popularAnimSeason, newAnimSeason, loading } =
     useSelector(state => state.root.user);
@@ -66,7 +68,14 @@ const Cartoons = ({ navigation }) => {
     };
   }, [refreshInterval]);
   if (loading) {
-    return <ScreenPreLoader />;
+    return (
+      <>
+        <ScreenPreLoader />
+        <SectionPreLoader />
+        <SectionPreLoader />
+      </>
+
+    )
   }
   return (
     <>
@@ -98,21 +107,19 @@ const Cartoons = ({ navigation }) => {
           {value === 'movies' && (
             <>
               <CardsFlatlist navigation={navigation} heading={'Trending'} data={cartoonData} type={"Movies"} />
-              <View style={{ width: "100%", marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-                <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/4396679739"} />
-              </View>
+              <BannersAdd id={'ca-app-pub-1700763198948198/2098879910'} />
+
               <CardsFlatlist navigation={navigation} heading={'Popular'} data={animated1Data} type={"Movies"} />
-              <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-                <BannerAd size={BannerAdSize.BANNER} unitId={"ca-app-pub-1700763198948198/9698237176"} />
-              </View>
+              <BannersAdd id={'ca-app-pub-1700763198948198/9661389755'} />
               <CardsFlatlist navigation={navigation} heading={'new'} data={animated2Data} type={"Movies"} />
 
             </>)}
           {value === 'seasons' && (
             <>
               <CardsFlatlist navigation={navigation} heading={'New Season'} data={newAnimSeason} type={"show"} />
-              {/* <CardsFlatlist navigation={navigation} heading={'Trend Season'} data={trendAnimSeason} type={"show"} /> */}
+              <BannersAdd id={'ca-app-pub-1700763198948198/4396679739'} />
               <CardsFlatlist navigation={navigation} heading={'Popular Season'} data={popularAnimSeason} type={"show"} />
+              <BannersAdd id={'ca-app-pub-1700763198948198/8930762011'} />
             </>)}
 
         </ScrollView>

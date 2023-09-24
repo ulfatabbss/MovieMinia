@@ -31,6 +31,7 @@ import { store } from '../../redux/store';
 import { setGuest, setIsLogin } from '../../redux/reducers/userReducers';
 import Loader from '../../components/Loader';
 import { useFocusEffect } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MovieDetailPage = ({ navigation, route }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -176,6 +177,33 @@ const MovieDetailPage = ({ navigation, route }) => {
       </View>
     );
   };
+  const renderEpisods = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Player', {
+          name: item.title,
+          url: item.url,
+          data: data,
+          type: type,
+        })} style={{ ...styles.screenshot_images, gap: 10, borderRadius: 5, overflow: 'hidden' }}>
+        <ImageBackground
+          style={{ height: 100, width: 100 }}
+          resizeMode={'stretch'}
+          source={{ uri: data?.poster[0]?.image }} >
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
+            style={styles.gradientOverlay}
+          />
+          <Text numberOfLines={1} style={{ ...styles.title, bottom: RF(20) }}>
+            Episods No
+          </Text>
+          <Text numberOfLines={1} style={styles.title}>
+            {item.epi_no}
+          </Text>
+        </ImageBackground>
+      </TouchableOpacity>
+    )
+  }
   const renderCast = ({ item }) => {
     return (
       <View style={styles.cast_Images}>
@@ -205,7 +233,7 @@ const MovieDetailPage = ({ navigation, route }) => {
           <Image
             style={{ height: RF(40), width: RF(40), borderRadius: 20 }}
             source={{
-              uri: feedbackData[0]?.user_id?.profilePicture,
+              uri: feedbackData[0]?.user_id?.profilePicture ? feedbackData[0]?.user_id?.profilePicture : 'https://cdn-icons-png.flaticon.com/128/149/149071.png',
             }}
             resizeMode={'contain'}
           />
@@ -326,6 +354,16 @@ const MovieDetailPage = ({ navigation, route }) => {
           size={14}
           top={20} color={theme?.colors?.text}
         />
+        {type == 'show' &&
+          <>
+            <HeadingText title={'All Episods'} size={16} top={20} color={theme?.colors?.text} />
+            <FlatList
+              data={data.episods}
+              renderItem={renderEpisods}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </>}
         <HeadingText title={'Screenshots'} size={16} top={20} color={theme?.colors?.text} />
         <FlatList
           data={item?.poster}
@@ -471,5 +509,18 @@ const styles = StyleSheet.create({
     backgroundColor: White,
     padding: 20,
     alignItems: 'center',
+  },
+  gradientOverlay: {
+    ...StyleSheet.absoluteFillObject
+  }, title: {
+    color: '#FFFFFF',
+    fontSize: RF(14),
+    fontFamily: 'Raleway-Bold',
+    textAlign: 'center',
+    position: 'absolute',
+    bottom: RF(10),
+    left: 0,
+    right: 0,
+    paddingHorizontal: RF(5),
   },
 });

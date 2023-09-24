@@ -40,6 +40,7 @@ import darkTheme from '../../utillis/theme/darkTheme';
 import lightTheme from '../../utillis/theme/lightTheme';
 import { store } from '../../redux/store';
 import SectionPreLoader from '../../components/ShimmerPlaceHolder/SectionPreLoader';
+import BannersAdd from '../../components/BannersAdd';
 
 const Dashboard = ({ navigation }) => {
 
@@ -121,10 +122,6 @@ const Dashboard = ({ navigation }) => {
       clearInterval(intervalId);
     };
   }, [dispatch, refreshInterval]);
-
-  // if (loading) {
-  //   return <ScreenPreLoader />;
-  // }
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: theme?.colors?.background }]}
@@ -169,9 +166,7 @@ const Dashboard = ({ navigation }) => {
           </>
           :
           <>
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
-            </View>
+            <BannersAdd id={'ca-app-pub-1700763198948198/9698237176'} />
             <CardsFlatlist navigation={navigation} heading={'Hollywood'} data={hollywood} type={'Movies'} />
           </>
         }
@@ -182,9 +177,7 @@ const Dashboard = ({ navigation }) => {
           </>
           :
           <>
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
-            </View>
+            <BannersAdd id={'ca-app-pub-1700763198948198/4396679739'} />
             <CardsFlatlist navigation={navigation} heading={'Hindi Dubbed'} data={popularMoviesData} type={'Movies'} />
 
           </>
@@ -197,9 +190,7 @@ const Dashboard = ({ navigation }) => {
           </>
           :
           <>
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
-            </View>
+            <BannersAdd id={'ca-app-pub-1700763198948198/2284343051'} />
             <CardsFlatlist navigation={navigation} heading={'Bollywood'} data={hindiMoviesData} type={'Movies'} />
 
           </>
@@ -211,9 +202,7 @@ const Dashboard = ({ navigation }) => {
           </>
           :
           <>
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
-            </View>
+            <BannersAdd id={'ca-app-pub-1700763198948198/4976324693'} />
             <CardsFlatlist navigation={navigation} heading={'South Indian'} data={south} type={'Movies'} />
           </>
         }
@@ -223,13 +212,9 @@ const Dashboard = ({ navigation }) => {
           </>
           :
           <>
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} unitId={'ca-app-pub-1700763198948198/9698237176'} />
-            </View>
+            <BannersAdd id={'ca-app-pub-1700763198948198/8723998019'} />
             <CardsFlatlist navigation={navigation} heading={'Punjabi'} data={punjabiMoviesData} type={'Movies'} />
-            <View style={{ marginVertical: 5, justifyContent: 'center', alignItems: 'center' }}>
-              <BannerAd size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} unitId={'ca-app-pub-1700763198948198/4396679739'} />
-            </View>
+            <BannersAdd id={'ca-app-pub-1700763198948198/2158589664'} />
           </>
         }
       </ScrollView>
