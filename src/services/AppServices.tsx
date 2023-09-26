@@ -70,10 +70,13 @@ const UserPasswordUpdate = (obj: any) => {
 const GetAllMovies = () => {
   return HTTP_APP.get(endPoints.get_All_Movies);
 };
-const SearchMovies_Db = (obj: any) => {
+const SearchMovies_Db = (obj: any, page: any) => {
   // console.log(`${endPoints.searchMovies}${obj}`);
+  console.log(`${endPoints.searchMovies}${obj}&page=${page ? page : 1}`);
 
-  return HTTP_APP.post(`${endPoints.searchMovies}${obj}`);
+  return HTTP_APP.post(
+    `${endPoints.searchMovies}${obj}&page=${page ? page : 1}`,
+  );
 };
 export {
   GetMovies,

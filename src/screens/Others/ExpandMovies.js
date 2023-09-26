@@ -49,7 +49,7 @@ const ExpandMovies = ({ route, navigation }) => {
   };
   useEffect(() => {
     Integrate()
-    console.log(data[0]?.category);
+    // console.log(data[0]?.category);
   }, [])
   const Integrate = async () => {
     if (loading) return; // Prevent making multiple requests simultaneously

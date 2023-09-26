@@ -24,23 +24,12 @@ import { Heading, smalltext, text } from '../../utillis/styles';
 import EmptyImage from '../../assets/emptyplaylist.png';
 import Loader from '../../components/Loader';
 import { RF } from '../../utillis/theme/Responsive';
-import { AppOpenAd, InterstitialAd, RewardedAd, BannerAd, TestIds, BannerAdSize, AdEventType, RewardedAdEventType } from 'react-native-google-mobile-ads';
 import BannersAdd from '../../components/BannersAdd';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
-// const adUnitIds = 'ca-app-pub-1700763198948198/2979565361';
-// const adUnitIds = TestIds.INTERSTITIAL;
-// const interstitial = InterstitialAd.createForAdRequest(adUnitIds, {
-//   requestNonPersonalizedAdsOnly: true,
-//   keywords: ['fashion', 'clothing'],
-// });
-// const adUnitId = TestIds.REWARDED;
-const adUnitId = 'ca-app-pub-1700763198948198/3678682750'
-const rewarded = RewardedAd.createForAdRequest(adUnitId, {
-  requestNonPersonalizedAdsOnly: true,
-  keywords: ['fashion', 'clothing'],
-});
-const Player = ({ route }) => {
+import { useInterstitialAd, TestIds } from 'react-native-google-mobile-ads';
+const adUnitid = 'ca-app-pub-1700763198948198/2979565361';
+const Player = ({ navigation, route }) => {
   const { url, data, type } = route.params;
   const { myTheme } = useSelector((state) => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
@@ -51,40 +40,23 @@ const Player = ({ route }) => {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
-  })
-
-
-  // useEffect(() => {
-  //   const unsubscribe = interstitial.addAdEventListener(AdEventType.LOADED, () => {
-  //     console.log("hejkhasjkdhjksh");
-  //     interstitial.show();
-  //   });
-  //   // Start loading the interstitial straight away
-  //   interstitial.load();
-  //   // Unsubscribe from events on unmount
-  //   return unsubscribe;
-  // }, []);
-  useEffect(() => {
-    const unsubscribeLoaded = rewarded.addAdEventListener(RewardedAdEventType.LOADED, () => {
-      console.log('Loaded ??')
-      rewarded.show();
-    });
-    const unsubscribeEarned = rewarded.addAdEventListener(
-      RewardedAdEventType.EARNED_REWARD,
-      reward => {
-        console.log('User earned reward of ', reward);
-      },
-    );
-
-    // Start loading the rewarded ad straight away
-    rewarded.load();
-
-    // Unsubscribe from events on unmount
-    return () => {
-      unsubscribeLoaded();
-      unsubscribeEarned();
-    };
   }, []);
+  const { isLoaded, isClosed, load, show } = useInterstitialAd(adUnitid, {
+    requestNonPersonalizedAdsOnly: true,
+  });
+
+  useEffect(() => {
+    // Start loading the interstitial straight away
+    load();
+  }, [load]);
+
+  useEffect(() => {
+    if (isClosed) {
+      // Action after the ad is closed
+      console.log('add close');
+    }
+  }, [isClosed]);
+
   const PlaylistItem = ({ item }) => (
     <View style={{ ...styles.playlistItemContainer, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: 3, gap: 5, padding: 5 }}>
       <Image style={styles.playlistItemImage} resizeMode="contain" source={{
@@ -136,6 +108,9 @@ const Player = ({ route }) => {
   );
   if (loading) {
     return <Loader />
+  }
+  if (isLoaded) {
+    return show();
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>

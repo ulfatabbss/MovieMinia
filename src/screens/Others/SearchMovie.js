@@ -29,6 +29,7 @@ import { backErrow, searchIcon } from '../../assets';
 import { HP, RF, WP } from '../../utillis/theme/Responsive';
 import { SearchMovies_Db } from '../../services/AppServices';
 import Loader from '../../components/Loader';
+import { ActivityIndicator } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']);
 const SearchMovie = ({ navigation }) => {
     const {
@@ -41,32 +42,41 @@ const SearchMovie = ({ navigation }) => {
     const [isRecent, setIsRecent] = useState(true);
     const [loading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
-    const searchFilter = async (text) => {
-        setIsLoading(true)
-        if (text) {
-            const result = await SearchMovies_Db(text)
-            const masterData = result.data.movies
-            const newData = masterData.filter(item => {
-                const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
-                const textData = text.toUpperCase();
-                if (textData.length >= 1) {
-                    setIsRecent(false)
-                }
-                else {
-                    setIsRecent(true)
-                }
-                return itemData.indexOf(textData) > -1;
-            });
-            setMovie(newData);
-            setSearch(text);
-            setIsLoading(false)
-        } else {
-            setMovie([]);
-            setSearch(text);
-            setIsLoading(false)
-            setIsRecent(true);
-        }
+    const [page, setPage] = useState(1);
+    const [loadMore, setLoadMore] = useState(false);
+    const [activityLoader, setActivityLoader] = useState(false);
 
+
+    const onEndReached = async () => {
+        if (loadMore && movie.length >= 10) {
+            setActivityLoader(true);
+            const result = await SearchMovies_Db(search, page + 1); // Increment page here
+            setMovie([...movie, ...result.data.movies]);
+            setActivityLoader(false);
+            setPage(page + 1); // Increment page here
+        }
+    };
+
+    const searchFilter = async () => {
+        setIsLoading(true);
+        setPage(1); // Reset the page to 1 for a new search
+        const result = await SearchMovies_Db(search, 1); // Always start with page 1 for a new search
+        console.log(result.data.movies);
+        const newMovies = result.data.movies;
+
+        // Set the search, loading, and pagination states
+        setSearch(search);
+        setIsLoading(false);
+
+        if (newMovies.length > 0) {
+            // Update the movie state with new data
+            setMovie(newMovies);
+            setLoadMore(true); // You may want to set this to true if you have more results to load
+        } else {
+            // Handle cases where no new movies are found
+            setMovie([]); // Clear old data
+            setLoadMore(false); // No more results to load
+        }
     };
     const ClickMovie = (item) => {
         if (item && item.title) {
@@ -84,7 +94,9 @@ const SearchMovie = ({ navigation }) => {
         }
     };
     const handleSearch = () => {
-        searchFilter(search); // Call the searchFilter function with the current search text
+        setPage(1)
+        searchFilter();
+
     };
     const handleClearRecentSearches = () => {
         store.dispatch(setRecentSearches([]));
@@ -120,10 +132,11 @@ const SearchMovie = ({ navigation }) => {
             </ImageBackground>
         </TouchableOpacity>
     ));
-    const recentSearchButtons = (item) => {
-        searchFilter(item);
-
-
+    const recentSearchButtons = async (item) => {
+        setSearch(item);
+        setPage(1);
+        setIsRecent(false); // Set isRecent to false to hide recent searches
+        await searchFilter(); // Await the API call to complete
     }
     const recentListView = ({ item }) => (
         <TouchableOpacity onPress={() => recentSearchButtons(item)} style={{ width: RF(100), margin: 5, backgroundColor: Gray200, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
@@ -180,7 +193,7 @@ const SearchMovie = ({ navigation }) => {
                     }}>
                     {movie.length} Result Found
                 </Text>}
-                {movie.length == 0 ? (
+                {!isRecent && movie.length == 0 ? (
                     <View
                         style={{
                             marginTop: 30,
@@ -215,9 +228,12 @@ const SearchMovie = ({ navigation }) => {
                         <FlatList
                             numColumns={2}
                             data={movie}
+                            onEndReached={onEndReached}
+                            onEndReachedThreshold={0.1}
                             renderItem={({ item }) => (
                                 <SearchView item={item} onPress={ClickMovie} />
                             )}
+                            ListFooterComponent={() => activityLoader && <ActivityIndicator size="small" color={theme?.colors?.primary} />}
                         />
                     </View>
                 )}
