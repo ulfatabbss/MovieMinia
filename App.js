@@ -14,7 +14,9 @@ import lightTheme from './src/utillis/theme/lightTheme';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
-
+import { MiniPlayerProvider } from './src/components/MiniPlayerContext';
+import MiniPlayer from './src/components/MiniPlayer';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme(lightTheme); // Get the active theme
@@ -43,12 +45,19 @@ const App = () => {
   }
 
   return (
+
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <SafeAreaProvider>
-          <NavigationContainer theme={theme} >
-            <Routes />
-          </NavigationContainer>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <MiniPlayerProvider>
+              <NavigationContainer theme={theme} >
+                <Routes />
+              </NavigationContainer>
+              <MiniPlayer />
+            </MiniPlayerProvider>
+          </GestureHandlerRootView>
+
         </SafeAreaProvider>
       </PersistGate>
     </Provider>

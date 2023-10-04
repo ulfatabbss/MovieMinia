@@ -122,8 +122,8 @@ const OTPverification = ({ navigation, route }) => {
                             handleCodeFilled(text); // Handle OTP input completion
                         }
                     }}
-                    ref={otpInput}></OTPTextInput>
-
+                    ref={otpInput}>
+                </OTPTextInput>
                 <View style={[FlexDirection, { marginBottom: RF(30) }]}>
                     <Text
                         onPress={() => resetTimer()}

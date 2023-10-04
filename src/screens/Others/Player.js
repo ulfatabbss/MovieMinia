@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-
 import {
   FlatList,
   SafeAreaView,
@@ -11,10 +10,12 @@ import {
   Pressable,
   Share,
   StatusBar,
-  Dimensions, ActivityIndicator, Image
+  Dimensions,
+  ActivityIndicator,
+  Image, BackHandler
 } from 'react-native';
-
 import { WebView } from 'react-native-webview';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { useTheme } from 'react-native-paper';
@@ -25,22 +26,31 @@ import EmptyImage from '../../assets/emptyplaylist.png';
 import Loader from '../../components/Loader';
 import { RF } from '../../utillis/theme/Responsive';
 import BannersAdd from '../../components/BannersAdd';
+import { useDispatch } from 'react-redux';
+import { useMiniPlayer } from '../../components/MiniPlayerContext';
+import { useInterstitialAd } from 'react-native-google-mobile-ads';
+import { setMiniPlayerState } from '../../redux/reducers/miniPlayerReducers';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
-import { useInterstitialAd, TestIds } from 'react-native-google-mobile-ads';
 const adUnitid = 'ca-app-pub-1700763198948198/2979565361';
+
 const Player = ({ navigation, route }) => {
   const { url, data, type } = route.params;
+  const dispatch = useDispatch();
   const { myTheme } = useSelector((state) => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-  const [currentUrl, setUrl] = useState(url)
+  const [currentUrl, setUrl] = useState(url);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const webViewRef = useRef(null);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
   }, []);
+
   const { isLoaded, isClosed, load, show } = useInterstitialAd(adUnitid, {
     requestNonPersonalizedAdsOnly: true,
   });
@@ -50,18 +60,118 @@ const Player = ({ navigation, route }) => {
     load();
   }, [load]);
 
+  const handleBack = () => {
+    // Call your handleMiniplayer function here
+    handleMiniplayer();
+    // Return false to prevent the default behavior (going back)
+    return false;
+  };
+
   useEffect(() => {
-    if (isClosed) {
-      // Action after the ad is closed
-      console.log('add close');
-    }
-  }, [isClosed]);
+    // Add a back button listener when the component mounts
+    BackHandler.addEventListener('hardwareBackPress', handleBack);
+
+    // Remove the back button listener when the component unmounts
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBack);
+    };
+  }, []);
+
+  const handleMiniplayer = () => {
+    setVideoUrl(currentUrl);
+    playVideo(currentUrl);
+    toggleMiniPlayer();
+    const newIsPlaying = true;
+    const newVideoUrl = currentUrl;
+    dispatch(setMiniPlayerState({ isPlaying: newIsPlaying, videoUrl: newVideoUrl }));
+  };
+
+  const { miniPlayerVisible, toggleMiniPlayer, playVideo, setVideoUrl } = useMiniPlayer();
+
+  // Add a state to track the movie duration
+  const [movieDuration, setMovieDuration] = useState(0);
+
+  useEffect(() => {
+    // Add a function to save the duration
+    const saveMovieDuration = async (duration) => {
+      try {
+        await AsyncStorage.setItem('movieDuration', duration.toString());
+      } catch (error) {
+        console.error('Error saving movie duration:', error);
+      }
+    };
+
+    // Add a function to load the saved duration when the component mounts
+    const loadMovieDuration = async () => {
+      try {
+        const savedDuration = await AsyncStorage.getItem('movieDuration');
+        if (savedDuration !== null) {
+          setMovieDuration(parseFloat(savedDuration));
+        }
+      } catch (error) {
+        console.error('Error loading movie duration:', error);
+      }
+    };
+
+    loadMovieDuration();
+
+    // Add an event listener to update the duration when the video progresses
+    webViewRef.current?.injectJavaScript(`
+      document.querySelector('video').addEventListener('timeupdate', function() {
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+          type: 'timeupdate',
+          data: this.currentTime
+        }));
+      });
+    `);
+
+    // Add a message handler for time updates from the WebView
+    const handleMessage = (event) => {
+      const message = JSON.parse(event.nativeEvent.data);
+      if (message.type === 'timeupdate') {
+        const currentDuration = message.data;
+        setMovieDuration(currentDuration);
+        saveMovieDuration(currentDuration);
+      }
+    };
+
+    webViewRef.current?.addEventListener('message', handleMessage);
+
+    return () => {
+      // Remove the message handler when the component unmounts
+      webViewRef.current?.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
+  // Add a function to seek to the saved duration
+  const seekToSavedDuration = () => {
+    webViewRef.current?.injectJavaScript(`
+      var video = document.querySelector('video');
+      if (video) {
+        video.currentTime = ${movieDuration};
+      }
+    `);
+  };
+
+  useEffect(() => {
+    // Seek to the saved duration when the WebView finishes loading
+    const onLoadEnd = () => {
+      seekToSavedDuration();
+    };
+
+    webViewRef.current?.addEventListener('loadend', onLoadEnd);
+
+    return () => {
+      // Remove the event listener when the component unmounts
+      webViewRef.current?.removeEventListener('loadend', onLoadEnd);
+    };
+  }, []);
+
 
   const PlaylistItem = ({ item }) => (
     <View style={{ ...styles.playlistItemContainer, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: 3, gap: 5, padding: 5 }}>
       <Image style={styles.playlistItemImage} resizeMode="contain" source={{
-        uri:
-          type == 'Movies' ? item?.poster[0]?.image : data?.poster[0]?.image
+        uri: type == 'Movies' ? item?.poster[0]?.image : data?.poster[0]?.image,
       }} />
       <View style={styles.playlistItemInfo}>
         <Text numberOfLines={1} style={{ ...smalltext, color: theme?.colors?.text }}>
@@ -76,54 +186,59 @@ const Player = ({ navigation, route }) => {
         <View style={styles.playlistItemDetail}>
           <Text style={{ ...text, color: theme?.colors?.text }}>Release year:</Text>
           <Text style={{ ...text, color: theme?.colors?.text }}>
-            {type == 'Movies' ? item.releaseYear : data?.releaseYear}</Text>
+            {type == 'Movies' ? item.releaseYear : data?.releaseYear}
+          </Text>
         </View>
-        {type == 'Movies' &&
+        {type == 'Movies' && (
           <View style={styles.playlistItemDetail}>
             <Text style={{ ...text, color: theme?.colors?.text }}>Category:</Text>
             <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
               {item?.category}
             </Text>
           </View>
-        }
-        {type == 'show' &&
+        )}
+        {type == 'show' && (
           <View style={styles.playlistItemDetail}>
             <Text style={{ ...text, color: theme?.colors?.text }}>Episode No:</Text>
             <Text numberOfLines={1} style={{ ...text, color: theme?.colors?.text }}>
               {item?.epi_no}
             </Text>
           </View>
-        }
-
+        )}
       </View>
       <View style={styles.playlistItemActions}>
-        <TouchableOpacity style={styles.playlistItemAction} onPress={async () => {
-          setUrl(item?.url)
-        }
-        }>
+        <TouchableOpacity
+          style={styles.playlistItemAction}
+          onPress={async () => {
+            setUrl(item?.url);
+          }}>
           <Image style={styles.actionIcon} resizeMode="contain" source={PlayImage} />
         </TouchableOpacity>
       </View>
     </View>
   );
+
   if (loading) {
-    return <Loader />
+    return <Loader />;
   }
+
   if (isLoaded) {
     return show();
   }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
       <StatusBar backgroundColor="#333333" />
       <View
         style={{
-          height: "40%",
+          height: '40%',
           alignItems: 'center',
-          width: Dimensions.get("window").width, borderRadius: 10,
+          width: Dimensions.get('window').width,
+          borderRadius: 10,
           justifyContent: 'center',
-          //  borderColor: 'red',borderWidth:2
         }}>
         <WebView
+          ref={webViewRef}
           onLoadStart={() => setVisible(true)}
           onLoadEnd={() => setVisible(false)}
           source={{
@@ -145,22 +260,25 @@ const Player = ({ navigation, route }) => {
               width: width / 2,
             }}></ActivityIndicator>
         )}
-
       </View>
-
-      <Text style={{ ...Heading, color: theme?.colors?.text, margin: 10, }}>
+      <Text style={{ ...Heading, color: theme?.colors?.text, margin: 10 }}>
         Related Videos
       </Text>
       <BannersAdd id={'ca-app-pub-1700763198948198/2098879910'} />
 
-      {data.length != 0 || data?.episods.length != 0 ?
+      {data.length != 0 || data?.episods.length != 0 ? (
         <FlatList
           data={type == 'show' ? data?.episods : data}
           showsVerticalScrollIndicator={false}
           renderItem={PlaylistItem}
-        /> : <Image resizeMode='contain' style={{ height: RF(300), width: RF(300), alignSelf: 'center' }} source={EmptyImage} />
-      }
-
+        />
+      ) : (
+        <Image
+          resizeMode='contain'
+          style={{ height: RF(300), width: RF(300), alignSelf: 'center' }}
+          source={EmptyImage}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -170,6 +288,10 @@ export default Player;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  mediaPlayer: {
+    marginTop: '10%',
+    width: Dimensions.get('window').width,
   },
   toolbar: {
     backgroundColor: 'white',

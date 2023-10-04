@@ -107,7 +107,7 @@ const AccountType = ({ navigation }) => {
                             style={{
                                 ...Heading,
                                 color: theme?.colors?.text,
-                                fontSize: 20,
+                                fontSize: RF(20),
                                 textAlign: 'center',
                                 marginTop: RF(10),
                             }}>

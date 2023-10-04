@@ -49,33 +49,26 @@ const SearchMovie = ({ navigation }) => {
 
     const onEndReached = async () => {
         if (loadMore && movie.length >= 10) {
-            setActivityLoader(true);
             const result = await SearchMovies_Db(search, page + 1); // Increment page here
             setMovie([...movie, ...result.data.movies]);
-            setActivityLoader(false);
             setPage(page + 1); // Increment page here
         }
     };
 
-    const searchFilter = async () => {
+    const searchFilter = async (item) => {
         setIsLoading(true);
-        setPage(1); // Reset the page to 1 for a new search
-        const result = await SearchMovies_Db(search, 1); // Always start with page 1 for a new search
-        console.log(result.data.movies);
+        setPage(1);
+        const result = await SearchMovies_Db(item ? item : search, 1);
         const newMovies = result.data.movies;
-
-        // Set the search, loading, and pagination states
         setSearch(search);
         setIsLoading(false);
 
         if (newMovies.length > 0) {
-            // Update the movie state with new data
             setMovie(newMovies);
-            setLoadMore(true); // You may want to set this to true if you have more results to load
+            setLoadMore(true);
         } else {
-            // Handle cases where no new movies are found
-            setMovie([]); // Clear old data
-            setLoadMore(false); // No more results to load
+            setMovie([]);
+            setLoadMore(false);
         }
     };
     const ClickMovie = (item) => {
@@ -85,7 +78,7 @@ const SearchMovie = ({ navigation }) => {
                 dispatch(setRecentSearches(updatedRecentSearches));
             }
             setIsRecent(true);
-            setSearch("");
+            setSearch('')
             navigation.navigate('MovieDiscription', {
                 item: item,
                 data: item,
@@ -133,10 +126,8 @@ const SearchMovie = ({ navigation }) => {
         </TouchableOpacity>
     ));
     const recentSearchButtons = async (item) => {
-        setSearch(item);
-        setPage(1);
-        setIsRecent(false); // Set isRecent to false to hide recent searches
-        await searchFilter(); // Await the API call to complete
+        setPage(1)
+        await searchFilter(item);
     }
     const recentListView = ({ item }) => (
         <TouchableOpacity onPress={() => recentSearchButtons(item)} style={{ width: RF(100), margin: 5, backgroundColor: Gray200, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>

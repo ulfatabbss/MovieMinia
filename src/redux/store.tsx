@@ -3,16 +3,18 @@ import {combineReducers, compose} from 'redux';
 import {persistReducer, persistStore} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userReducers from './reducers/userReducers';
+import miniPlayerReducer from './reducers/miniPlayerReducers';
 declare var window: any;
 
 const reducers = combineReducers({
   user: userReducers,
+  miniPlayer: miniPlayerReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['user'],
+  whitelist: ['user', 'miniPlayer'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

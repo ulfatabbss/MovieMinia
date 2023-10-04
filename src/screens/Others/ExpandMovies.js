@@ -35,7 +35,7 @@ const ExpandMovies = ({ route, navigation }) => {
   const [page, setPage] = useState(1);
   const searchFilter = text => {
     if (text) {
-      const newData = sortedData.filter(item => {
+      const newData = movie.filter(item => {
         const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
@@ -43,7 +43,8 @@ const ExpandMovies = ({ route, navigation }) => {
       setMovie(newData);
       setSearch(text);
     } else {
-      setMovie(sortedData);
+      setPage(1);
+      Integrate()
       setSearch(text);
     }
   };
@@ -55,13 +56,13 @@ const ExpandMovies = ({ route, navigation }) => {
     if (loading) return; // Prevent making multiple requests simultaneously
     setLoading(true);
     try {
+      setPage(1);
       const response = type === "Movies" ? await GetMovies(data[0]?.category, page) : await GetDrama(data[0]?.category, page);
       // console.log(response.data.movies.length);
       if (type === "Movies" ? response?.data.movies.length > 0 : response?.data.dramas.length > 0) {
-        setMovie(prevMovieData => [...prevMovieData, ...(type === "Movies" ? response.data.movies : response.data.dramas)]); // Append new data to existing data
-        // dispatch(setHollywood(newHollywoodData));
-        // dispatch(setHollywood(...hollywood, ...response.data.movies));
+        setMovie((type === "Movies" ? response.data.movies : response.data.dramas));
         setPage(page + 1);
+        setLoadMore(true);
       } else {
         setLoadMore(false); // No more data to load
       }
@@ -72,11 +73,20 @@ const ExpandMovies = ({ route, navigation }) => {
       setLoading(false);
     }
   };
-  const onEndReached = () => {
-    if (loadMore) {
-      Integrate()
+  const onEndReached = async () => {
+    console.log(loadMore, "load");
+    console.log(movie.length, "lenght");
+    setLoading(true);
+    if (loadMore && movie.length >= 10) {
+      const result = type === "Movies" ? await GetMovies(data[0]?.category, page + 1) : await GetDrama(data[0]?.category, page + 1);
+      // const result = await GetMovies(data[0]?.category, page + 1);
+      if (type === "Movies" ? result?.data.movies.length > 0 : result?.data.dramas.length > 0) {
+        setMovie([...movie, ...result.data.movies]);
+      }
+      setPage(page + 1); // Increment page here
     }
-  }
+    setLoading(false);
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
       <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
@@ -113,6 +123,7 @@ const ExpandMovies = ({ route, navigation }) => {
           numColumns={2}
           data={movie.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))}
           onEndReached={onEndReached}
+          onEndReachedThreshold={0.1}
           renderItem={({ item }) => {
             // console.log("Render item:", item);
             return <ExpandCard item={item} data={type === 'show' ? item : movie} navigation={navigation} type={type} />
