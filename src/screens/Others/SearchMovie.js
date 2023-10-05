@@ -6,7 +6,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View, StatusBar
+    View, StatusBar, ActivityIndicator
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import MyWrapper from '../../components/myWrapper';
@@ -29,7 +29,6 @@ import { backErrow, searchIcon } from '../../assets';
 import { HP, RF, WP } from '../../utillis/theme/Responsive';
 import { SearchMovies_Db } from '../../services/AppServices';
 import Loader from '../../components/Loader';
-import { ActivityIndicator } from 'react-native';
 LogBox.ignoreLogs(['Warning: ...']);
 const SearchMovie = ({ navigation }) => {
     const {
@@ -45,14 +44,32 @@ const SearchMovie = ({ navigation }) => {
     const [page, setPage] = useState(1);
     const [loadMore, setLoadMore] = useState(false);
     const [activityLoader, setActivityLoader] = useState(false);
-
-
     const onEndReached = async () => {
+        setActivityLoader(true);
+
         if (loadMore && movie.length >= 10) {
-            const result = await SearchMovies_Db(search, page + 1); // Increment page here
-            setMovie([...movie, ...result.data.movies]);
-            setPage(page + 1); // Increment page here
+            try {
+                const nextPage = page + 1;
+                const result = await SearchMovies_Db(search, nextPage);
+                const newMovies = result.data.movies;
+
+                // Filter out duplicates based on title and category
+                const uniqueNewMovies = newMovies.filter((newMovie) => (
+                    !movie.some((existingMovie) =>
+                        existingMovie.title === newMovie.title &&
+                        existingMovie.category === newMovie.category
+                    )
+                ));
+
+                setMovie([...movie, ...uniqueNewMovies]);
+                setPage(nextPage);
+            } catch (error) {
+                // Handle API request error here
+                console.error('API request error:', error);
+            }
         }
+
+        setActivityLoader(false);
     };
 
     const searchFilter = async (item) => {
@@ -62,7 +79,6 @@ const SearchMovie = ({ navigation }) => {
         const newMovies = result.data.movies;
         setSearch(search);
         setIsLoading(false);
-
         if (newMovies.length > 0) {
             setMovie(newMovies);
             setLoadMore(true);
@@ -73,12 +89,16 @@ const SearchMovie = ({ navigation }) => {
     };
     const ClickMovie = (item) => {
         if (item && item.title) {
-            if (!recentSearches.includes(item?.title)) {
-                const updatedRecentSearches = [...recentSearches, item?.title];
+            const movieTitle = item.title;
+
+            if (!recentSearches.includes(movieTitle)) {
+                // Movie title doesn't exist in recent searches, add it
+                const updatedRecentSearches = [...recentSearches, movieTitle];
                 dispatch(setRecentSearches(updatedRecentSearches));
             }
+
             setIsRecent(true);
-            setSearch('')
+            setSearch('');
             navigation.navigate('MovieDiscription', {
                 item: item,
                 data: item,
@@ -86,18 +106,15 @@ const SearchMovie = ({ navigation }) => {
             });
         }
     };
+
     const handleSearch = () => {
         setPage(1)
         searchFilter();
-
     };
     const handleClearRecentSearches = () => {
         store.dispatch(setRecentSearches([]));
         setIsRecent(true);
     };
-    if (loading) {
-        return <Loader />
-    }
     const SearchView = React.memo(({ item, onPress }) => (
         <TouchableOpacity
             onPress={() => onPress(item)}
@@ -130,7 +147,7 @@ const SearchMovie = ({ navigation }) => {
         await searchFilter(item);
     }
     const recentListView = ({ item }) => (
-        <TouchableOpacity onPress={() => recentSearchButtons(item)} style={{ width: RF(100), margin: 5, backgroundColor: Gray200, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity onPress={() => recentSearchButtons(item)} style={{ width: "30%", margin: 5, backgroundColor: Gray200, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
             <Text numberOfLines={1} style={{ width: '100%', color: Black, fontSize: 13, fontFamily: 'Raleway-Medium' }}>{item}</Text>
         </TouchableOpacity>
     );
@@ -159,20 +176,28 @@ const SearchMovie = ({ navigation }) => {
                         placeholder="Search Movies"
                         placeholderTextColor={theme?.colors?.text}
                         color="gray"
-                        style={{ width: '95%' }} onEndEditing={handleSearch} />
+                        style={{ width: '75%' }}
+                    //  onEndEditing={handleSearch} 
+                    />
+                    <TouchableOpacity disabled={search == ''} onPress={handleSearch}>
+                        <Image style={{ ...SmallIcons, tintColor: '#EAAE23' }} source={{ uri: "https://cdn-icons-png.flaticon.com/128/660/660333.png" }} />
+                    </TouchableOpacity>
                 </View>
+
             </View>
             <View style={{ flex: 1, padding: 10 }}>
-                {isRecent &&
+                {isRecent && recentSearches.length != 0 &&
                     <View>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{ color: theme?.colors?.text }}>{recentSearches.length == 0 ? 'No recent searches' : 'Recent Searches'}</Text>
                             <Text onPress={() => handleClearRecentSearches()} style={{ color: '#EAAE23' }}>{recentSearches.length == 0 ? null : 'Clear All'}</Text>
 
                         </View>
-                        <FlatList numColumns={2}
+                        <FlatList numColumns={3}
                             data={recentSearches}
-                            renderItem={recentListView}></FlatList>
+                            renderItem={recentListView}
+                            ListFooterComponent={() => loading && <ActivityIndicator size="small" color={theme?.colors?.primary} />}>
+                        </FlatList>
                     </View>
                 }
 
@@ -184,7 +209,7 @@ const SearchMovie = ({ navigation }) => {
                     }}>
                     {movie.length} Result Found
                 </Text>}
-                {!isRecent && movie.length == 0 ? (
+                {movie.length == 0 ? (
                     <View
                         style={{
                             marginTop: 30,
@@ -215,7 +240,10 @@ const SearchMovie = ({ navigation }) => {
                         </Text>
                     </View>
                 ) : (
-                    <View style={{ alignSelf: 'center', marginTop: 10, paddingBottom: 10 }}>
+                    <View style={{
+                        width: '100%',
+                        paddingBottom: !isRecent ? '25%' : '5%'
+                    }}>
                         <FlatList
                             numColumns={2}
                             data={movie}

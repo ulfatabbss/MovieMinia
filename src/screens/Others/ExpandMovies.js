@@ -18,6 +18,7 @@ import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { backErrow, searchIcon } from '../../assets';
 import { GetDrama, GetMovies } from '../../services/AppServices';
+import Loader from '../../components/Loader';
 const ExpandMovies = ({ route, navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const {
@@ -33,6 +34,8 @@ const ExpandMovies = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const [loadMore, setLoadMore] = useState(true);
   const [page, setPage] = useState(1);
+  const [activityLoader, setActivityLoader] = useState(false);
+
   const searchFilter = text => {
     if (text) {
       const newData = movie.filter(item => {
@@ -57,7 +60,7 @@ const ExpandMovies = ({ route, navigation }) => {
     setLoading(true);
     try {
       setPage(1);
-      const response = type === "Movies" ? await GetMovies(data[0]?.category, page) : await GetDrama(data[0]?.category, page);
+      const response = type === "Movies" ? await GetMovies(data[0]?.category, 1) : await GetDrama(data[0]?.category, page);
       // console.log(response.data.movies.length);
       if (type === "Movies" ? response?.data.movies.length > 0 : response?.data.dramas.length > 0) {
         setMovie((type === "Movies" ? response.data.movies : response.data.dramas));
@@ -74,9 +77,9 @@ const ExpandMovies = ({ route, navigation }) => {
     }
   };
   const onEndReached = async () => {
-    console.log(loadMore, "load");
-    console.log(movie.length, "lenght");
-    setLoading(true);
+    // console.log(loadMore, "load");
+    // console.log(movie.length, "lenght");
+    setActivityLoader(true);
     if (loadMore && movie.length >= 10) {
       const result = type === "Movies" ? await GetMovies(data[0]?.category, page + 1) : await GetDrama(data[0]?.category, page + 1);
       // const result = await GetMovies(data[0]?.category, page + 1);
@@ -85,8 +88,11 @@ const ExpandMovies = ({ route, navigation }) => {
       }
       setPage(page + 1); // Increment page here
     }
-    setLoading(false);
+    setActivityLoader(false);
   };
+  if (loading) {
+    return <Loader />
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme?.colors?.background }}>
       <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
@@ -122,14 +128,14 @@ const ExpandMovies = ({ route, navigation }) => {
         <FlatList
           numColumns={2}
           data={movie.filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))}
-          onEndReached={onEndReached}
+          onEndReached={() => onEndReached()}
           onEndReachedThreshold={0.1}
           renderItem={({ item }) => {
             // console.log("Render item:", item);
             return <ExpandCard item={item} data={type === 'show' ? item : movie} navigation={navigation} type={type} />
           }}
           showsVerticalScrollIndicator={false}
-          ListFooterComponent={() => loading && <ActivityIndicator size="small" color={theme?.colors?.primary} />}
+          ListFooterComponent={() => activityLoader && <ActivityIndicator size="small" color={theme?.colors?.primary} />}
         />
       </View>
     </SafeAreaView>
@@ -167,7 +173,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '100%',
-    alignItems: 'center', paddingBottom: '35%'
+    paddingBottom: '35%'
   },
   InputView: {
     height: 40,
