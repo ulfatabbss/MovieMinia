@@ -56,8 +56,7 @@ const ScreenPreLoader = () => {
         );
     };
     return (
-        // <View style={{...styles.container,backgroundColor:theme.colors.background}}>
-        <View style={{...styles.container,backgroundColor:'red'}}>
+        <View style={{...styles.container,backgroundColor:theme.colors.background}}>
 
             <View style={styles.header}>
                 <ShimmerPlaceholder style={styles.logo}
@@ -88,7 +87,7 @@ const ScreenPreLoader = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: Dimensions.get('window').width - 10,
+        width: Dimensions.get('window').width,
         paddingHorizontal: 10,
         alignItems: 'center',
         paddingTop: 10,
