@@ -9,13 +9,13 @@ import darkTheme from '../../utillis/theme/darkTheme';
 
 // Utility function to create a shimmer component
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const shimmerColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
-const shimmerColors1 = ['#0000', 'rgba(255, 255, 255, 0.1)', '#0000'];
+const LightColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
+const DarkColors = ['#333333', 'rgba(255, 255, 255, 0.1)', '#555555'];
 
 const SectionPreLoader = () => {
     const { myTheme } = useSelector(state => state.root.user);
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-    const [change, setChange] = useState(myTheme == 'lightTheme' ? shimmerColors : shimmerColors1)
+    const [change, setChange] = useState(myTheme == 'lightTheme' ? LightColors : DarkColors)
     const renderShimmerSection = (height) => {
         return (
             <ShimmerPlaceholder

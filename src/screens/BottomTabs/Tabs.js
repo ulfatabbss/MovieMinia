@@ -12,6 +12,7 @@ import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { HP, RF, WP } from '../../utillis/theme/Responsive';
+import { darkColors, lightColors } from '@rneui/base';
 
 
 const Tabs = () => {
@@ -21,7 +22,9 @@ const Tabs = () => {
   } = useSelector(state => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme); // Get the active theme
   const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient)
-  const shimmerColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
+  const LightColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
+  const DarkColors = ['#333333', 'rgba(255, 255, 255, 0.1)', '#555555'];
+
 
   const TabIcon = ({ focused, source, text }) => (
 
@@ -66,13 +69,13 @@ const Tabs = () => {
         height: 60
       }}
     >
-      <ShimmerPlaceholder duration={2000} shimmerColors={shimmerColors}
+      <ShimmerPlaceholder duration={2000} shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
         style={{
           height: 30, width: 30, borderRadius: 15,
         }}
       />
 
-      <ShimmerPlaceholder duration={2000} shimmerColors={shimmerColors}
+      <ShimmerPlaceholder duration={2000} shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
         style={{
           height: 10, width: 40, borderRadius: 10, marginTop: 3,
         }}

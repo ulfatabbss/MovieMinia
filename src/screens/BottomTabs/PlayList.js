@@ -211,7 +211,7 @@ const Playlist = ({ navigation }) => {
             onChangeText={searchFilter}
             placeholder="Search Movies"
             placeholderTextColor={theme?.colors?.text}
-            color="gray"
+            color="#fff"
             style={{ width: '90%' }}
           />
         </View>
