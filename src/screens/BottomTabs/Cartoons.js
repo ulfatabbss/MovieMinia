@@ -69,11 +69,13 @@ const Cartoons = ({ navigation }) => {
   }, [refreshInterval]);
   if (loading) {
     return (
-      <>
+      <SafeAreaView
+      style={[styles.container, { backgroundColor: theme?.colors?.background, flex:1 }]}
+    >
         <ScreenPreLoader />
         <SectionPreLoader />
         <SectionPreLoader />
-      </>
+    </SafeAreaView>
 
     )
   }

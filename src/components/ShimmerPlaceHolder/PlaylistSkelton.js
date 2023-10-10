@@ -17,18 +17,20 @@ import { useTheme } from 'react-native-paper';
 
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
+
 const DATA = Array(8).fill({ id: 'placeholder' }); // Generate placeholder data
-const shimmerColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
+const LightColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
+const DarkColors = ['#333333', 'rgba(255, 255, 255, 0.1)', '#555555'];
 
 const PlaylistSkelton = () => {
     const { myTheme } = useSelector((state) => state.root.user);
     const theme = useTheme(myTheme === 'lightTheme' ? lightTheme : darkTheme);
 
     const renderItem = () => (
-        <View style={styles.mainCard}>
+        <View style={[styles.mainCard,{ backgroundColor: theme?.colors?.background }]}>
             <ShimmerPlaceholder
                 duration={2000}
-                shimmerColors={shimmerColors}
+                shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
                 style={styles.movieImg}
             />
             <View style={{ marginLeft: 10, alignSelf: 'center' }}>
@@ -38,7 +40,7 @@ const PlaylistSkelton = () => {
                         <ShimmerPlaceholder
                             key={index}
                             duration={2000}
-                            shimmerColors={shimmerColors}
+                            shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
                             style={styles.textShimmer}
                         >
                             <Text style={styles.movieTitle}>''</Text>
@@ -62,7 +64,7 @@ const PlaylistSkelton = () => {
                         <TouchableOpacity key={index}>
                             <ShimmerPlaceholder
                                 duration={2000}
-                                shimmerColors={shimmerColors}
+                                shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
                                 style={[styles.playIcon, { alignSelf: 'center' }]}
                             />
                         </TouchableOpacity>
@@ -72,7 +74,7 @@ const PlaylistSkelton = () => {
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: theme?.colors?.background }]}>
             <StatusBar
                 backgroundColor={theme?.colors?.topbar}
                 barStyle={theme.dark ? 'light-content' : 'dark-content'}
@@ -80,13 +82,13 @@ const PlaylistSkelton = () => {
             <View style={{ ...styles.headerContainer, backgroundColor: theme?.colors?.topbar }}>
                 <Text style={{ ...styles.headerText, color: theme?.colors?.text }}>My Playlist</Text>
             </View>
-            <View style={styles.contentContainer}>
+            <View style={[styles.contentContainer,{ backgroundColor: theme?.colors?.background }]}>
                 <ShimmerPlaceholder
                     duration={2000}
-                    shimmerColors={shimmerColors}
-                    style={styles.InputView}
+                    shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
+                    style={{...styles.InputView,backgroundColor: theme?.colors?.background}}
                 />
-                <View style={styles.playlistContainer}>
+                <View style={[styles.playlistContainer, { backgroundColor: theme?.colors?.background }]}>
                     {/* Removed commented code */}
                     <View style={{ flex: 1 }}>
                         <FlatList
@@ -153,14 +155,12 @@ const styles = StyleSheet.create({
         height: 45,
         width: '92%',
         alignSelf: 'center',
-        backgroundColor: '#E1E4E8',
-        borderRadius: 60,
+        borderRadius: 100,
         marginLeft: 10,
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 20,
         margin: 10,
-        paddingHorizontal: 10,
     },
     playlistContainer: {
         width: '95%',

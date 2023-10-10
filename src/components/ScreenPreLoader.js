@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dimensions, StatusBar, StyleSheet, View } from 'react-native';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -9,19 +9,20 @@ import darkTheme from '../utillis/theme/darkTheme';
 
 // Utility function to create a shimmer component
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
-const shimmerColors = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
-const shimmerColors1 = ['#0000', 'rgba(255, 255, 255, 0.1)', '#0000'];
-
 
 const ScreenPreLoader = () => {
     const { myTheme } = useSelector(state => state.root.user);
+     const lightShimar = ['#ebebeb', 'rgba(0, 0, 0, 0.1)', '#ebebeb'];
+     const darkShimar =['#1a1a1a', 'rgba(255, 255, 255, 0.1)', '#1a1a1a'];
+
     const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
-    const [change, setChange] = useState(myTheme == 'lightTheme' ? shimmerColors : shimmerColors1)
+
+// Render a shimmer section with given height
     const renderShimmerSection = (height) => {
         return (
             <ShimmerPlaceholder
                 duration={2000}
-                shimmerColors={change}
+                shimmerColors={myTheme == 'lightTheme' ?lightShimar :darkShimar}
                 style={{
                     width: '100%',
                     height: height,
@@ -36,31 +37,60 @@ const ScreenPreLoader = () => {
             />
         );
     };
-
+    
+    // Render shimmer card sections with given count and height
+    const renderShimmerCards = (count, height, styleName) => {
+        const cardStyles = [styles[styleName], { height: height }];
+    
+        return (
+            <View style={{ flexDirection: 'row', width: '100%', gap: 10 }}>
+                {[...Array(count)].map((_, index) => (
+                    <ShimmerPlaceholder
+                        key={index}
+                        duration={2000}
+                        shimmerColors={myTheme == 'lightTheme' ?lightShimar :darkShimar}
+                        style={cardStyles}
+                    />
+                ))}
+            </View>
+        );
+    };
     return (
-        <View style={styles.container}>
+        <View style={{...styles.container,backgroundColor:theme.colors.background}}>
+
             <View style={styles.header}>
-                <ShimmerPlaceholder duration={2000}
-                    shimmerColors={change} style={styles.logo} />
+                <ShimmerPlaceholder style={styles.logo}
+                shimmerColors={myTheme == 'lightTheme' ?lightShimar :darkShimar}
+                />
                 <View style={styles.iconContainer}>
-                    <ShimmerPlaceholder duration={2000}
-                        shimmerColors={change} style={styles.logoutIcon} />
+                    <ShimmerPlaceholder style={styles.logoutIcon}
+                shimmerColors={myTheme == 'lightTheme' ?lightShimar :darkShimar}
+                />
                 </View>
             </View>
 
             {renderShimmerSection(172)}
+            {renderShimmerSection(30)}
+            {renderShimmerCards(3, 150, 'card')}
+            {renderShimmerSection(30)}
+
+            {renderShimmerCards(3, 150, 'card')}
+            {renderShimmerSection(30)}
+
+            {renderShimmerCards(3, 150, 'card')}
         </View>
     );
 };
 
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        width: Dimensions.get('window').width - 20,
-        marginHorizontal: 10,
+        width: Dimensions.get('window').width,
+        paddingHorizontal: 10,
         alignItems: 'center',
-        marginTop: 10,
+        paddingTop: 10,
     },
     header: {
         width: '100%',
