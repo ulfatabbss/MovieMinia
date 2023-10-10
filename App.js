@@ -6,7 +6,6 @@ import Routes from './src/routes/routes';
 import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './src/redux/store';
-import Splash from './src/screens/Splash';
 import { LogBox } from 'react-native';
 import mobileAds from 'react-native-google-mobile-ads';
 import { useTheme } from 'react-native-paper'; // Import useTheme
@@ -17,13 +16,13 @@ LogBox.ignoreAllLogs();
 import { MiniPlayerProvider } from './src/components/MiniPlayerContext';
 import MiniPlayer from './src/components/MiniPlayer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import SplashScreen from 'react-native-splash-screen';
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme(lightTheme); // Get the active theme
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+      SplashScreen.hide()
+    }, 2000);
   }, []);
 
   // Configure the Google Sign-In client ID
@@ -38,11 +37,6 @@ const App = () => {
   }, [])
   mobileAds()
     .initialize()
-  if (isLoading) {
-    return (
-      <Splash />
-    );
-  }
 
   return (
 
