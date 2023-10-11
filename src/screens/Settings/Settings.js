@@ -7,7 +7,7 @@ import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { backErrow, caution, dellUser, faq, passSettings, policy, terms } from '../../assets';
 import { resetUserState, setGuest, setIsFacebook, setIsGoogle, setIsLogin, setLoading, setTheme } from '../../redux/reducers/userReducers';
-import { Heading } from '../../utillis/styles';
+import { Heading, button, button_View, modalCard, modalContainer, signUp_Button } from '../../utillis/styles';
 import { Primary, Secondary, White } from '../../utillis/theme';
 import { RF } from '../../utillis/theme/Responsive';
 import HeadingText from '../../components/CustomText';
@@ -33,15 +33,15 @@ const Settings = ({ navigation }) => {
     const renderSettingItem = (icon, label, onPress) => (
         <TouchableOpacity style={styles.settingItem} onPress={onPress}>
             <Image style={{ ...styles.settingIcon, tintColor: theme?.colors?.icon }} resizeMode="contain" source={icon} />
-            <Text style={{ ...Heading, color: theme?.colors?.text, fontSize: 16 }}>{label}</Text>
+            <Text style={{ ...Heading, color: theme?.colors?.text, fontSize: RF(16) }}>{label}</Text>
         </TouchableOpacity>
     );
     return (
         <SafeAreaView style={{ ...styles.container, backgroundColor: theme?.colors?.topbar }}>
             <StatusBar backgroundColor={theme?.colors?.topbar} barStyle={theme.dark ? 'light-content' : 'dark-content'} />
             {logOutModalVisible ? <View style={styles.modal_FadeView} /> : null}
-            <Modal animationType="slide" transparent={true} visible={logOutModalVisible}><View style={styles.modalContainer}>
-                <View style={styles.modalCard}>
+            <Modal animationType="slide" transparent={true} visible={logOutModalVisible}><View style={modalContainer}>
+                <View style={modalCard}>
                     <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
                     <HeadingText title={'Come back Soon!'} bold size={20} top={5} />
                     <HeadingText
@@ -53,9 +53,9 @@ const Settings = ({ navigation }) => {
                         top={10}
                         alignCenter
                     />
-                    <View style={styles.button_View}>
+                    <View style={button_View}>
                         <TouchableOpacity
-                            style={styles.button}
+                            style={button}
                             onPress={() => handleLogout()}>
                             <HeadingText
                                 title={'Yes'}
@@ -64,7 +64,7 @@ const Settings = ({ navigation }) => {
                                 color={White}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, styles.signUp_Button]}
+                        <TouchableOpacity style={[button, signUp_Button]}
                             onPress={() => setIsLogOutModalVisible(!logOutModalVisible)}>
                             <HeadingText
                                 title={'Cancel'}
@@ -123,12 +123,12 @@ const styles = StyleSheet.create({
         height: '10%',
         alignSelf: 'center',
         alignItems: 'center',
-        gap: 10
+        gap: RF(10)
         // justifyContent: 'space-between',
     },
     backButton: {
-        height: 25,
-        width: 20,
+        height: RF(25),
+        width: RF(20),
         alignSelf: 'center',
     },
     headerText: {
@@ -146,12 +146,13 @@ const styles = StyleSheet.create({
     },
     settingItem: {
         flexDirection: 'row',
-        marginVertical: 10,
-        gap: 10,
+        marginVertical: RF(10),
+        gap: RF(10),
+        alignItems: 'center'
     },
     settingIcon: {
-        height: 20,
-        width: 20,
+        height: RF(20),
+        width: RF(20),
     },
     settingLabel: {
         ...heading.h5,
@@ -161,70 +162,30 @@ const styles = StyleSheet.create({
     themeSetting: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 10,
+        marginVertical: RF(10),
     },
     themeSettingContent: {
-        flexDirection: 'row', gap: 10
+        flexDirection: 'row', gap: RF(10)
     },
     themeSwitch: {
         transform: [{ scaleX: 1 }, { scaleY: 1 }],
     },
-    modal_FadeView: {
-        height: '100%',
-        width: '100%',
-        position: 'absolute',
-        zIndex: 500,
-        backgroundColor: 'rgba(0,0,0,0.7)',
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-    },
-    modalCard: {
-        height: RF(300),
-        width: '100%',
-        borderRadius: RF(30),
-        backgroundColor: White,
-        padding: 20,
-        alignItems: 'center',
-    },
-    button_View: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-        alignItems: 'center',
-        marginTop: RF(40),
-    },
-    button: {
-        height: RF(40),
-        width: '45%',
-        borderRadius: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Primary,
-    },
-    signUp_Button: {
-        backgroundColor: White,
-        borderColor: Secondary, elevation: 5
-    },
+
     deleteAccount: {
         width: '100%',
         flexDirection: 'row',
-        borderTopWidth: 2,
+        borderTopWidth: RF(2),
         position: 'absolute',
         bottom: 0,
-        height: 60,
-        alignItems: 'center', paddingHorizontal: 10
-
+        height: RF(60),
+        alignItems: 'center', paddingHorizontal: RF(10)
     },
     deleteAccountButton: {
-        flexDirection: 'row', gap: 10
+        flexDirection: 'row', gap: RF(10), alignItems: 'center'
     },
     deleteAccountIcon: {
-        height: 25,
-        width: 25
+        height: RF(25),
+        width: RF(25)
     },
 });
 

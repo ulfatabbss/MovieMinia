@@ -70,12 +70,9 @@ const Cartoons = ({ navigation }) => {
   if (loading) {
     return (
       <SafeAreaView
-      style={[styles.container, { backgroundColor: theme?.colors?.background, flex:1 }]}
-    >
+        style={{ ...styles.container, backgroundColor: theme?.colors?.background }}>
         <ScreenPreLoader />
-        <SectionPreLoader />
-        <SectionPreLoader />
-    </SafeAreaView>
+      </SafeAreaView>
 
     )
   }
@@ -89,7 +86,7 @@ const Cartoons = ({ navigation }) => {
             position: 'absolute',
             top: 0,
             left: 0,
-            backgroundColor: theme?.colors?.background, // Use the active theme's background color
+            backgroundColor: theme?.colors?.background,
           }}
         />
       )}
@@ -123,7 +120,6 @@ const Cartoons = ({ navigation }) => {
               <CardsFlatlist navigation={navigation} heading={'Popular Season'} data={popularAnimSeason} type={"show"} />
               <BannersAdd id={'ca-app-pub-1700763198948198/8930762011'} />
             </>)}
-
         </ScrollView>
       </SafeAreaView>
     </>
@@ -134,7 +130,6 @@ export default Cartoons;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F8F8F8",
     flex: 1
   },
   Heading: {

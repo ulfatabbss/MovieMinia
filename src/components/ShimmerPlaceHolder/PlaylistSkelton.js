@@ -27,10 +27,10 @@ const PlaylistSkelton = () => {
     const theme = useTheme(myTheme === 'lightTheme' ? lightTheme : darkTheme);
 
     const renderItem = () => (
-        <View style={[styles.mainCard,{ backgroundColor: theme?.colors?.background }]}>
+        <View style={[styles.mainCard, { backgroundColor: theme?.colors?.background }]}>
             <ShimmerPlaceholder
                 duration={2000}
-                shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
+                shimmerColors={myTheme == 'lightTheme' ? LightColors : DarkColors}
                 style={styles.movieImg}
             />
             <View style={{ marginLeft: 10, alignSelf: 'center' }}>
@@ -40,7 +40,7 @@ const PlaylistSkelton = () => {
                         <ShimmerPlaceholder
                             key={index}
                             duration={2000}
-                            shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
+                            shimmerColors={myTheme == 'lightTheme' ? LightColors : DarkColors}
                             style={styles.textShimmer}
                         >
                             <Text style={styles.movieTitle}>''</Text>
@@ -64,7 +64,7 @@ const PlaylistSkelton = () => {
                         <TouchableOpacity key={index}>
                             <ShimmerPlaceholder
                                 duration={2000}
-                                shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
+                                shimmerColors={myTheme == 'lightTheme' ? LightColors : DarkColors}
                                 style={[styles.playIcon, { alignSelf: 'center' }]}
                             />
                         </TouchableOpacity>
@@ -82,11 +82,11 @@ const PlaylistSkelton = () => {
             <View style={{ ...styles.headerContainer, backgroundColor: theme?.colors?.topbar }}>
                 <Text style={{ ...styles.headerText, color: theme?.colors?.text }}>My Playlist</Text>
             </View>
-            <View style={[styles.contentContainer,{ backgroundColor: theme?.colors?.background }]}>
+            <View style={[styles.contentContainer, { backgroundColor: theme?.colors?.background }]}>
                 <ShimmerPlaceholder
                     duration={2000}
-                    shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
-                    style={{...styles.InputView,backgroundColor: theme?.colors?.background}}
+                    shimmerColors={myTheme == 'lightTheme' ? LightColors : DarkColors}
+                    style={{ ...styles.InputView, backgroundColor: theme?.colors?.background }}
                 />
                 <View style={[styles.playlistContainer, { backgroundColor: theme?.colors?.background }]}>
                     {/* Removed commented code */}

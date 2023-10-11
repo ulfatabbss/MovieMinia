@@ -43,27 +43,27 @@ const Review = ({ navigation, route }) => {
     const FLV = ({ item }) => (
 
         <View
-            style={{ height: 90, width: '100%', marginTop: '5%' }}>
+            style={{ width: '100%', marginTop: '5%' }}>
             <View
-                style={{ flexDirection: 'row', height: 50, }}>
+                style={{ flexDirection: 'row', height: RF(50), }}>
                 <Image
-                    style={{ height: 50, width: 50, borderRadius: 90, }}
+                    style={{ height: RF(40), width: RF(40), borderRadius: RF(90), }}
                     resizeMode='contain'
                     source={{ uri: item?.user_id?.profilePicture ? item?.user_id?.profilePicture : 'https://cdn-icons-png.flaticon.com/128/149/149071.png' }}>
                 </Image>
                 <View
                     style={{ marginLeft: '2%' }}>
                     <Text
-                        style={{ ...Heading, color: theme?.colors?.text }}>{item?.user_id?.name}</Text>
+                        style={{ ...Heading, color: theme?.colors?.text, fontSize: RF(16) }}>{item?.user_id?.name}</Text>
                     <View
-                        style={{ flexDirection: 'row', marginTop: 5 }}>
+                        style={{ flexDirection: 'row', marginTop: RF(5), justifyContent: 'center', alignItems: 'center' }}>
                         <Image
-                            style={{ height: 20, width: 20, }}
+                            style={{ height: RF(20), width: RF(20), }}
                             resizeMode='contain'
                             source={clock}>
                         </Image>
                         <Text
-                            style={{ ...smalltext, marginLeft: '2%', color: theme?.colors?.text }}>{formatDate(item?.timestamp)}
+                            style={{ ...text, marginLeft: '2%', color: theme?.colors?.text }}>{formatDate(item?.timestamp)}
 
                         </Text>
                     </View>
@@ -72,9 +72,8 @@ const Review = ({ navigation, route }) => {
 
             </View>
             <Text
-                numberOfLines={2}
-                style={{ ...text, color: theme?.colors?.text, marginTop: 5 }}>{item?.feedback_text}
-
+                style={{ ...text, color: theme?.colors?.text, marginTop: RF(5), textAlign: 'justify' }}>
+                {item?.feedback_text}
             </Text>
 
         </View>

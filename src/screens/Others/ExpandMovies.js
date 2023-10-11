@@ -119,7 +119,7 @@ const ExpandMovies = ({ route, navigation }) => {
         <TextInput
           value={search}
           onChangeText={text => searchFilter(text)}
-          placeholder="Search Movies"
+          placeholder="Search here..."
           placeholderTextColor={theme?.colors?.text}
           color="gray"
           style={{ width: '90%' }} />

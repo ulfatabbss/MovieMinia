@@ -16,7 +16,7 @@ import PlayImage from '../../assets/play.png';
 import TrashImage from '../../assets/dell.png';
 import { GetPlaylist } from '../../services/AppServices';
 import { useFocusEffect } from '@react-navigation/native';
-import { Heading, SmallIcons, smalltext, text } from '../../utillis/styles';
+import { Heading, SmallIcons, button, button_View, modalCard, modalContainer, modal_FadeView, signUp_Button, smalltext, text } from '../../utillis/styles';
 import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
@@ -162,9 +162,9 @@ const Playlist = ({ navigation }) => {
       <View style={{ ...styles.headerContainer, backgroundColor: theme?.colors?.topbar }}>
         <Text style={{ ...styles.headerText, color: theme?.colors?.text }}>My Playlist</Text>
       </View>
-      {isModalVisible ? <View style={styles.modal_FadeView} /> : null}
-      <Modal animationType="slide" transparent={true} visible={isModalVisible}><View style={styles.modalContainer}>
-        <View style={styles.modalCard}>
+      {isModalVisible ? <View style={modal_FadeView} /> : null}
+      <Modal animationType="slide" transparent={true} visible={isModalVisible}><View style={modalContainer}>
+        <View style={modalCard}>
           <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
           <HeadingText title={'Are you sure?'} bold size={20} top={5} />
           <HeadingText
@@ -176,7 +176,7 @@ const Playlist = ({ navigation }) => {
             top={10}
             alignCenter
           />
-          <View style={styles.button_View}>
+          <View style={button_View}>
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleDeleteConfirm()}>
@@ -187,7 +187,7 @@ const Playlist = ({ navigation }) => {
                 color={White}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.signUp_Button]}
+            <TouchableOpacity style={[button, signUp_Button]}
               onPress={() => setIsModalVisible(!isModalVisible)}>
               <HeadingText
                 title={'Cancel'}
@@ -209,7 +209,7 @@ const Playlist = ({ navigation }) => {
           <TextInput
             value={searchQuery}
             onChangeText={searchFilter}
-            placeholder="Search Movies"
+            placeholder="Search here..."
             placeholderTextColor={theme?.colors?.text}
             color="#fff"
             style={{ width: '90%' }}
@@ -354,34 +354,6 @@ const styles = StyleSheet.create({
   details_View: {
     height: '100%',
     width: '68%',
-  },
-  modal_FadeView: {
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-    zIndex: 500,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  modalCard: {
-    height: RF(300),
-    width: '100%',
-    borderRadius: RF(30),
-    backgroundColor: White,
-    padding: 20,
-    alignItems: 'center',
-  },
-  button_View: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    alignItems: 'center',
-    marginTop: RF(40),
   },
   button: {
     height: RF(40),

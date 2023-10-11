@@ -69,13 +69,13 @@ const Tabs = () => {
         height: 60
       }}
     >
-      <ShimmerPlaceholder duration={2000} shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
+      <ShimmerPlaceholder duration={2000} shimmerColors={myTheme == 'lightTheme' ? LightColors : DarkColors}
         style={{
           height: 30, width: 30, borderRadius: 15,
         }}
       />
 
-      <ShimmerPlaceholder duration={2000} shimmerColors={myTheme == 'lighttheme' ? LightColors : DarkColors}
+      <ShimmerPlaceholder duration={2000} shimmerColors={myTheme == 'lightTheme' ? LightColors : DarkColors}
         style={{
           height: 10, width: 40, borderRadius: 10, marginTop: 3,
         }}

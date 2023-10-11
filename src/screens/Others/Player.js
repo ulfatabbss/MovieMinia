@@ -15,7 +15,6 @@ import {
   Image, BackHandler
 } from 'react-native';
 import { WebView } from 'react-native-webview';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 import lightTheme from '../../utillis/theme/lightTheme';
 import darkTheme from '../../utillis/theme/darkTheme';
 import { useTheme } from 'react-native-paper';
@@ -27,16 +26,13 @@ import Loader from '../../components/Loader';
 import { RF } from '../../utillis/theme/Responsive';
 import BannersAdd from '../../components/BannersAdd';
 import { useDispatch } from 'react-redux';
-import { useMiniPlayer } from '../../components/MiniPlayerContext';
 import { useInterstitialAd } from 'react-native-google-mobile-ads';
-import { setMiniPlayerState } from '../../redux/reducers/miniPlayerReducers';
 const height = Dimensions.get('window').height;
 const width = Dimensions.get('window').width;
 const adUnitid = 'ca-app-pub-1700763198948198/2979565361';
 
 const Player = ({ navigation, route }) => {
   const { url, data, type } = route.params;
-  const dispatch = useDispatch();
   const { myTheme } = useSelector((state) => state.root.user);
   const theme = useTheme(myTheme == 'lightTheme' ? lightTheme : darkTheme);
   const [currentUrl, setUrl] = useState(url);
@@ -60,113 +56,33 @@ const Player = ({ navigation, route }) => {
     load();
   }, [load]);
 
-  const handleBack = () => {
-    // Call your handleMiniplayer function here
-    handleMiniplayer();
-    // Return false to prevent the default behavior (going back)
-    return false;
-  };
+  // const handleBack = () => {
+  //   // Call your handleMiniplayer function here
+  //   handleMiniplayer();
+  //   // Return false to prevent the default behavior (going back)
+  //   return false;
+  // };
 
-  useEffect(() => {
-    // Add a back button listener when the component mounts
-    BackHandler.addEventListener('hardwareBackPress', handleBack);
+  // useEffect(() => {
+  //   // Add a back button listener when the component mounts
+  //   BackHandler.addEventListener('hardwareBackPress', handleBack);
 
-    // Remove the back button listener when the component unmounts
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBack);
-    };
-  }, []);
+  //   // Remove the back button listener when the component unmounts
+  //   return () => {
+  //     BackHandler.removeEventListener('hardwareBackPress', handleBack);
+  //   };
+  // }, []);
 
-  const handleMiniplayer = () => {
-    setVideoUrl(currentUrl);
-    playVideo(currentUrl);
-    toggleMiniPlayer();
-    const newIsPlaying = true;
-    const newVideoUrl = currentUrl;
-    dispatch(setMiniPlayerState({ isPlaying: newIsPlaying, videoUrl: newVideoUrl }));
-  };
+  // const handleMiniplayer = () => {
+  //   setVideoUrl(currentUrl);
+  //   playVideo(currentUrl);
+  //   toggleMiniPlayer();
+  //   const newIsPlaying = true;
+  //   const newVideoUrl = currentUrl;
+  //   dispatch(setMiniPlayerState({ isPlaying: newIsPlaying, videoUrl: newVideoUrl }));
+  // };
 
-  const { miniPlayerVisible, toggleMiniPlayer, playVideo, setVideoUrl } = useMiniPlayer();
-
-  // Add a state to track the movie duration
-  const [movieDuration, setMovieDuration] = useState(0);
-
-  useEffect(() => {
-    // Add a function to save the duration
-    const saveMovieDuration = async (duration) => {
-      try {
-        await AsyncStorage.setItem('movieDuration', duration.toString());
-      } catch (error) {
-        console.error('Error saving movie duration:', error);
-      }
-    };
-
-    // Add a function to load the saved duration when the component mounts
-    const loadMovieDuration = async () => {
-      try {
-        const savedDuration = await AsyncStorage.getItem('movieDuration');
-        if (savedDuration !== null) {
-          setMovieDuration(parseFloat(savedDuration));
-        }
-      } catch (error) {
-        console.error('Error loading movie duration:', error);
-      }
-    };
-
-    loadMovieDuration();
-
-    // Add an event listener to update the duration when the video progresses
-    webViewRef.current?.injectJavaScript(`
-      document.querySelector('video').addEventListener('timeupdate', function() {
-        window.ReactNativeWebView.postMessage(JSON.stringify({
-          type: 'timeupdate',
-          data: this.currentTime
-        }));
-      });
-    `);
-
-    // Add a message handler for time updates from the WebView
-    const handleMessage = (event) => {
-      const message = JSON.parse(event.nativeEvent.data);
-      if (message.type === 'timeupdate') {
-        const currentDuration = message.data;
-        setMovieDuration(currentDuration);
-        saveMovieDuration(currentDuration);
-      }
-    };
-
-    webViewRef.current?.addEventListener('message', handleMessage);
-
-    return () => {
-      // Remove the message handler when the component unmounts
-      webViewRef.current?.removeEventListener('message', handleMessage);
-    };
-  }, []);
-
-  // Add a function to seek to the saved duration
-  const seekToSavedDuration = () => {
-    webViewRef.current?.injectJavaScript(`
-      var video = document.querySelector('video');
-      if (video) {
-        video.currentTime = ${movieDuration};
-      }
-    `);
-  };
-
-  useEffect(() => {
-    // Seek to the saved duration when the WebView finishes loading
-    const onLoadEnd = () => {
-      seekToSavedDuration();
-    };
-
-    webViewRef.current?.addEventListener('loadend', onLoadEnd);
-
-    return () => {
-      // Remove the event listener when the component unmounts
-      webViewRef.current?.removeEventListener('loadend', onLoadEnd);
-    };
-  }, []);
-
+  // const { miniPlayerVisible, toggleMiniPlayer, playVideo, setVideoUrl } = useMiniPlayer();
 
   const PlaylistItem = ({ item }) => (
     <View style={{ ...styles.playlistItemContainer, backgroundColor: theme?.colors?.tabs, elevation: 2, shadowOffset: 3, gap: 5, padding: 5 }}>

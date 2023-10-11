@@ -6,7 +6,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View, StatusBar, ActivityIndicator
+    View, StatusBar, ActivityIndicator, Dimensions
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import MyWrapper from '../../components/myWrapper';
@@ -38,6 +38,7 @@ const SearchMovie = ({ navigation }) => {
     const [search, setSearch] = useState('');
     // const [masterData, setMasterData] = useState([]);
     const [movie, setMovie] = useState([]);
+    const [emptyImage, setImage] = useState(false);
     const [isRecent, setIsRecent] = useState(true);
     const [loading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
@@ -46,7 +47,6 @@ const SearchMovie = ({ navigation }) => {
     const [activityLoader, setActivityLoader] = useState(false);
     const onEndReached = async () => {
         setActivityLoader(true);
-
         if (loadMore && movie.length >= 10) {
             try {
                 const nextPage = page + 1;
@@ -82,9 +82,11 @@ const SearchMovie = ({ navigation }) => {
         if (newMovies.length > 0) {
             setMovie(newMovies);
             setLoadMore(true);
+            setImage(false)
         } else {
             setMovie([]);
             setLoadMore(false);
+            setImage(true)
         }
     };
     const ClickMovie = (item) => {
@@ -147,8 +149,19 @@ const SearchMovie = ({ navigation }) => {
         await searchFilter(item);
     }
     const recentListView = ({ item }) => (
-        <TouchableOpacity onPress={() => recentSearchButtons(item)} style={{ width: "30%", margin: 5, backgroundColor: Gray200, padding: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}>
-            <Text numberOfLines={1} style={{ width: '100%', color: Black, fontSize: 13, fontFamily: 'Raleway-Medium' }}>{item}</Text>
+        <TouchableOpacity
+            onPress={() => recentSearchButtons(item)}
+            style={{
+                width: Dimensions.get('window').width / 3 - RF(15), // Set the width to one-third of the screen width
+                margin: RF(3),
+                backgroundColor: Gray200,
+                padding: 10,
+                borderRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <Text numberOfLines={1} style={{ width: '100%', color: Black, fontSize: RF(13), fontFamily: 'Raleway-Medium' }}>{item}</Text>
         </TouchableOpacity>
     );
     if (loading) {
@@ -173,7 +186,7 @@ const SearchMovie = ({ navigation }) => {
                     <TextInput
                         value={search}
                         onChangeText={text => setSearch(text)}
-                        placeholder="Search Movies"
+                        placeholder="Search here..."
                         placeholderTextColor={theme?.colors?.text}
                         color="gray"
                         style={{ width: '75%' }}
@@ -191,13 +204,13 @@ const SearchMovie = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{ color: theme?.colors?.text }}>{recentSearches.length == 0 ? 'No recent searches' : 'Recent Searches'}</Text>
                             <Text onPress={() => handleClearRecentSearches()} style={{ color: '#EAAE23' }}>{recentSearches.length == 0 ? null : 'Clear All'}</Text>
-
                         </View>
-                        <FlatList numColumns={3}
+                        <FlatList
+                            horizontal={true}
                             data={recentSearches}
+                            showsHorizontalScrollIndicator={false}
                             renderItem={recentListView}
-                            ListFooterComponent={() => loading && <ActivityIndicator size="small" color={theme?.colors?.primary} />}>
-                        </FlatList>
+                        />
                     </View>
                 }
 
@@ -205,21 +218,22 @@ const SearchMovie = ({ navigation }) => {
                     style={{
                         color: '#EAAE23',
                         fontFamily: 'Raleway-Medium',
-                        fontSize: 14,
+                        fontSize: RF(14),
                     }}>
                     {movie.length} Result Found
                 </Text>}
-                {movie.length == 0 ? (
+                {emptyImage &&
                     <View
                         style={{
-                            marginTop: 30,
+                            marginTop: RF(30),
                             alignItems: 'center',
                             justifyContent: 'center',
                         }}>
                         <Image
                             resizeMode="contain"
                             style={{ height: RF(300), width: RF(300) }}
-                            source={require('../../assets/appIcons/error404.png')}></Image>
+                            source={require('../../assets/appIcons/error404.png')}>
+                        </Image>
                         <Text
                             style={{
                                 color: Secondary,
@@ -238,8 +252,8 @@ const SearchMovie = ({ navigation }) => {
                             Sorry, the keyword you entered cannot be found, please check
                             again or search with another keyword.
                         </Text>
-                    </View>
-                ) : (
+                    </View>}
+                {movie.length != 0 &&
                     <View style={{
                         width: '100%',
                         paddingBottom: !isRecent ? '25%' : '5%'
@@ -255,7 +269,7 @@ const SearchMovie = ({ navigation }) => {
                             ListFooterComponent={() => activityLoader && <ActivityIndicator size="small" color={theme?.colors?.primary} />}
                         />
                     </View>
-                )}
+                }
 
             </View>
         </View>

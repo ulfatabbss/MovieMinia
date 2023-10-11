@@ -21,7 +21,7 @@ import {
   Secondary,
   White,
 } from '../../utillis/theme';
-import { Extra, FlexDirection, Heading } from '../../utillis/styles';
+import { Extra, FlexDirection, Heading, button, button_View, modalCard, modalContainer, modal_FadeView, signUp_Button } from '../../utillis/styles';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'react-native-paper';
 import lightTheme from '../../utillis/theme/lightTheme';
@@ -125,7 +125,7 @@ const MovieDetailPage = ({ navigation, route }) => {
     return (
       <>
         <View style={{ ...FlexDirection, gap: 5, justifyContent: 'space-between', marginHorizontal: 5, alignSelf: 'center', marginTop: 10 }}>
-          <Text style={{ ...Heading, color: theme?.colors?.text, fontSize: 20, width: "70%" }}>{item.title}</Text>
+          <Text style={{ ...Heading, color: theme?.colors?.text, fontSize: RF(20), width: "70%" }}>{item.title.replace(/^\s+/, '')}</Text>
           {type == 'Movies' && <TouchableOpacity style={{ ...styles.playframe, backgroundColor: Gray200 }} disabled={playlistAdded || isGuest}
             onPress={() => {
               HandlePlaylist()
@@ -284,7 +284,7 @@ const MovieDetailPage = ({ navigation, route }) => {
         backgroundColor="transparent"
         barStyle={'light-content'}
       />
-      {modalVisible ? <View style={styles.modal_FadeView} /> : null}
+      {modalVisible ? <View style={modal_FadeView} /> : null}
       <Modal
         animationType="slide"
         transparent={true}
@@ -293,8 +293,8 @@ const MovieDetailPage = ({ navigation, route }) => {
           Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalCard}>
+        <View style={modalContainer}>
+          <View style={modalCard}>
             <Image style={{ height: RF(90), width: RF(90) }} source={caution} />
             <HeadingText title={'OPPOSES...'} bold size={20} top={5} />
             <HeadingText
@@ -306,7 +306,7 @@ const MovieDetailPage = ({ navigation, route }) => {
               top={10}
               alignCenter
             />
-            <View style={styles.button_View}>
+            <View style={button_View}>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => store.dispatch(setGuest(false)) && store.dispatch(setIsLogin(false))}>
@@ -317,7 +317,7 @@ const MovieDetailPage = ({ navigation, route }) => {
                   color={White}
                 />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.button, styles.signUp_Button]}
+              <TouchableOpacity style={[button, signUp_Button]}
                 onPress={() => setModalVisible(!modalVisible)}>
                 <HeadingText
                   title={'Cancel'}
@@ -468,47 +468,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: 'center',
     width: RF(95),
-  },
-  modal_FadeView: {
-    height: '100%',
-    width: '100%',
-    position: 'absolute',
-    zIndex: 500,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-  },
-  button: {
-    height: RF(40),
-    width: '45%',
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Primary,
-  },
-  button_View: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    alignItems: 'center',
-    marginTop: RF(20),
-  },
-  signUp_Button: {
-    borderWidth: 1,
-    backgroundColor: White,
-    borderColor: Secondary,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  modalCard: {
-    height: RF(300),
-    width: '100%',
-    borderRadius: RF(30),
-    backgroundColor: White,
-    padding: 20,
-    alignItems: 'center',
   },
   gradientOverlay: {
     ...StyleSheet.absoluteFillObject

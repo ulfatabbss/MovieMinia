@@ -81,7 +81,7 @@ const CustomDrawerContent = ({ navigation }) => {
             style={styles.logoutImage}
             source={require('../assets/them.png')}
           />
-          <Text style={{ ...styles.otherText, color: textColor }}>Switch Theme</Text>
+          <Text style={{ ...styles.otherText, color: textColor }}>{myTheme == 'darkTheme' ? "Light Theme" : "Dark Theme"}</Text>
         </TouchableOpacity>
         {
           !isGuest &&

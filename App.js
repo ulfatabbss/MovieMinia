@@ -13,16 +13,11 @@ import lightTheme from './src/utillis/theme/lightTheme';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
-import { MiniPlayerProvider } from './src/components/MiniPlayerContext';
-import MiniPlayer from './src/components/MiniPlayer';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import SplashScreen from 'react-native-splash-screen';
 const App = () => {
   const theme = useTheme(lightTheme); // Get the active theme
   useEffect(() => {
-    setTimeout(() => {
-      SplashScreen.hide()
-    }, 2000);
+    SplashScreen.hide()
   }, []);
 
   // Configure the Google Sign-In client ID
@@ -43,15 +38,9 @@ const App = () => {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <SafeAreaProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <MiniPlayerProvider>
-              <NavigationContainer theme={theme} >
-                <Routes />
-              </NavigationContainer>
-              <MiniPlayer />
-            </MiniPlayerProvider>
-          </GestureHandlerRootView>
-
+          <NavigationContainer theme={theme} >
+            <Routes />
+          </NavigationContainer>
         </SafeAreaProvider>
       </PersistGate>
     </Provider>
