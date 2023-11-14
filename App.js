@@ -25,16 +25,13 @@ const App = () => {
     GoogleSignin.configure({
       webClientId: '300565158181-6r9mvusrh44a72jor1hkofdcbdof1d23.apps.googleusercontent.com', // Replace with your Web Client ID
       androidClientId: '300565158181-utbl6omqm9479pfrq1no43uvbd78pt00.apps.googleusercontent.com',
-      offlineAccess: false, // Set to true if you need offline access
-
+      offlineAccess: false,
     }
     )
   }, [])
   mobileAds()
     .initialize()
-
   return (
-
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <SafeAreaProvider>
